@@ -153,7 +153,7 @@ function AppContent() {
                 aria-disabled={!level2Unlocked}
               >
                 {!level2Unlocked && (
-                  <span className="level-lock-icon" aria-hidden="true">Locked</span>
+                  <span className="level-lock-icon" aria-hidden="true">🔒</span>
                 )}
                 <span className="level-btn-text">Stage 2: Place the Sheep</span>
                 <span className="level-btn-desc" id="level2-desc">
@@ -175,7 +175,7 @@ function AppContent() {
                 aria-disabled={!level3Unlocked}
               >
                 {!level3Unlocked && (
-                  <span className="level-lock-icon" aria-hidden="true">Locked</span>
+                  <span className="level-lock-icon" aria-hidden="true">🔒</span>
                 )}
                 <span className="level-btn-text">Stage 3: Build Your Own</span>
                 <span className="level-btn-desc" id="level3-desc">
