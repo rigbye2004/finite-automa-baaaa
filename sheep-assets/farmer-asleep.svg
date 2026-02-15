@@ -1,0 +1,55 @@
+<svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes yawn {
+      0%, 100% { ry: 2.5; }
+      50% { ry: 3.5; }
+    }
+    .yawn-mouth { animation: yawn 3s ease-in-out infinite; }
+  </style>
+
+  <g transform="translate(80,0) scale(-1,1)">
+    <!-- Bed frame - headboard -->
+    <rect x="2" y="16" width="8" height="44" rx="2" fill="#8B4513" stroke="#5D3A1A" stroke-width="1"/>
+    <rect x="4" y="18" width="4" height="16" rx="1" fill="#A0522D"/>
+    
+    <!-- Bed frame - footboard -->
+    <rect x="70" y="28" width="8" height="32" rx="2" fill="#8B4513" stroke="#5D3A1A" stroke-width="1"/>
+    <rect x="72" y="30" width="4" height="12" rx="1" fill="#A0522D"/>
+    
+    <!-- Mattress -->
+    <rect x="10" y="36" width="60" height="16" rx="3" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    
+    <!-- Blanket -->
+    <rect x="10" y="40" width="60" height="14" rx="2" fill="#81c784" stroke="#66bb6a" stroke-width="1"/>
+    <path d="M 10 46 Q 25 43, 40 46 Q 55 49, 70 46" stroke="#66bb6a" stroke-width="1" fill="none"/>
+    
+    <!-- Pillow -->
+    <ellipse cx="24" cy="38" rx="12" ry="6" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    
+    <!-- Farmer head -->
+    <circle cx="26" cy="30" r="12" fill="#ffd9b3" stroke="#e8c090" stroke-width="1"/>
+    
+    <!-- Nightcap -->
+    <path d="M 14 28 Q 14 18, 26 16 Q 38 18, 38 28" fill="#e74c3c" stroke="#c0392b" stroke-width="1"/>
+    <circle cx="26" cy="12" r="3" fill="#fff"/>
+    
+    <!-- Eyes - soft, closed happy curves -->
+    <path d="M 19 28 Q 22 30, 25 28" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M 27 28 Q 30 30, 33 28" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Eyebrows - relaxed, gentle -->
+    <path d="M 19 25 L 25 25" stroke="#8B4513" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M 27 25 L 33 25" stroke="#8B4513" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Rosy cheeks -->
+    <circle cx="18" cy="31" r="2" fill="#ffb6c1" opacity="0.4"/>
+    <circle cx="34" cy="31" r="2" fill="#ffb6c1" opacity="0.4"/>
+    
+    <!-- Mouth - animated cute yawn -->
+    <ellipse class="yawn-mouth" cx="26" cy="35" rx="3" ry="2.5" fill="#333"/>
+    
+    <!-- Bed legs -->
+    <rect x="4" y="56" width="6" height="6" rx="1" fill="#5D3A1A"/>
+    <rect x="70" y="56" width="6" height="6" rx="1" fill="#5D3A1A"/>
+  </g>
+</svg>
