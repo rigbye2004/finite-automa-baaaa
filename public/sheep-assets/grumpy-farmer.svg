@@ -1,0 +1,62 @@
+<svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes eye-dart {
+      0%, 100% { transform: translateX(0); }
+      30% { transform: translateX(-0.5px); }
+      70% { transform: translateX(0.5px); }
+    }
+    .pupils { animation: eye-dart 2s ease-in-out infinite; }
+  </style>
+
+  <g transform="translate(80,0) scale(-1,1)">
+    <!-- Bed frame - headboard -->
+    <rect x="2" y="16" width="8" height="44" rx="2" fill="#8B4513" stroke="#5D3A1A" stroke-width="1"/>
+    <rect x="4" y="18" width="4" height="16" rx="1" fill="#A0522D"/>
+    
+    <!-- Bed frame - footboard -->
+    <rect x="70" y="28" width="8" height="32" rx="2" fill="#8B4513" stroke="#5D3A1A" stroke-width="1"/>
+    <rect x="72" y="30" width="4" height="12" rx="1" fill="#A0522D"/>
+    
+    <!-- Mattress -->
+    <rect x="10" y="36" width="60" height="16" rx="3" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    
+    <!-- Blanket -->
+    <rect x="10" y="40" width="60" height="14" rx="2" fill="#81c784" stroke="#66bb6a" stroke-width="1"/>
+    <path d="M 10 46 Q 25 43, 40 46 Q 55 49, 70 46" stroke="#66bb6a" stroke-width="1" fill="none"/>
+    
+    <!-- Pillow -->
+    <ellipse cx="24" cy="38" rx="12" ry="6" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    
+    <!-- Farmer head -->
+    <circle cx="26" cy="30" r="12" fill="#ffd9b3" stroke="#e8c090" stroke-width="1"/>
+    
+    <!-- Nightcap -->
+    <path d="M 14 28 Q 14 18, 26 16 Q 38 18, 38 28" fill="#e74c3c" stroke="#c0392b" stroke-width="1"/>
+    <circle cx="26" cy="12" r="3" fill="#fff"/>
+    
+    <!-- Eyes - cute but grumpy -->
+    <circle cx="22" cy="27" r="2.2" fill="#fff" stroke="#333" stroke-width="0.5"/>
+    <circle cx="30" cy="27" r="2.2" fill="#fff" stroke="#333" stroke-width="0.5"/>
+    
+    <!-- Pupils - animated darting -->
+    <g class="pupils">
+      <circle cx="22" cy="26.5" r="1.2" fill="#333"/>
+      <circle cx="30" cy="26.5" r="1.2" fill="#333"/>
+    </g>
+    
+    <!-- Eyebrows - slightly furrowed but cute -->
+    <path d="M 19 24 Q 21 23.5, 24 24.5" stroke="#8B4513" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M 28 24.5 Q 31 23.5, 33 24" stroke="#8B4513" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Tired bags under eyes -->
+    <path d="M 19 29 Q 22 30, 25 29" stroke="#e8c090" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 27 29 Q 30 30, 33 29" stroke="#e8c090" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.7"/>
+    
+    <!-- Mouth - pouty frown -->
+    <path d="M 23 35 Q 26 33.5, 29 35" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Bed legs -->
+    <rect x="4" y="56" width="6" height="6" rx="1" fill="#5D3A1A"/>
+    <rect x="70" y="56" width="6" height="6" rx="1" fill="#5D3A1A"/>
+  </g>
+</svg>

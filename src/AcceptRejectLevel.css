@@ -1,0 +1,1115 @@
+.accept-reject-level {
+  display: flex;
+  flex-direction: row;
+  min-height: 100dvh;
+  padding: 0;
+}
+
+/* ── Left sheep progress panel ── */
+.accept-reject-level .sheep-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 6px;
+  background: #f0faf0;
+  border-right: 2px solid #C8E6C9;
+  width: 76px;
+  min-width: 76px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.accept-reject-level .home-btn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: #f5f5f5;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.accept-reject-level .home-btn:hover {
+  background: #e0e0e0;
+}
+
+.accept-reject-level .sheep-panel-label {
+  background: #4FC3F7;
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  margin-top: 6px;
+}
+
+.accept-reject-level .sheep-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.accept-reject-level .sheep-slot {
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.accept-reject-level .sheep-slot.status-future {
+  filter: grayscale(100%) opacity(0.25);
+}
+
+.accept-reject-level .sheep-slot.status-current {
+  filter: grayscale(30%) opacity(0.7);
+  background: #FFF9C4;
+  box-shadow: 0 0 0 2px #FFD54F;
+  transform: scale(1.1);
+}
+
+.accept-reject-level .sheep-slot.status-correct {
+  filter: none;
+  background: #E8F5E9;
+  animation: sheep-pop 0.4s ease;
+}
+
+.accept-reject-level .sheep-slot.status-wrong {
+  filter: none;
+  background: #FFEBEE;
+  animation: sheep-pop 0.4s ease;
+}
+
+/* ✓ / ✗ badge overlay */
+.accept-reject-level .sheep-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  border: 2px solid white;
+  line-height: 1;
+}
+
+.accept-reject-level .badge-correct {
+  background: #43A047;
+}
+
+.accept-reject-level .badge-wrong {
+  background: #E53935;
+}
+
+/* Score label at bottom of panel */
+
+@keyframes sheep-pop {
+  0%   { transform: scale(0.5); }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ── Main content area ── */
+.accept-reject-level .main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+}
+
+/* Compact header bar — just hint button */
+.accept-reject-level .header-compact {
+  display: flex;
+  align-items: center;
+  padding: 0 0 8px 0;
+}
+
+/* Hint button — top-right of main content */
+.accept-reject-level .hint-button {
+  height: 38px;
+  width: 38px;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background: #E65100;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(230, 81, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.accept-reject-level .hint-button:hover,
+.accept-reject-level .hint-button:active,
+.accept-reject-level .hint-button:focus,
+.accept-reject-level .hint-button:focus-visible {
+  background: #BF360C;
+  outline: none;
+}
+
+/* Game container */
+.accept-reject-level .game-container {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  min-height: 0;
+}
+
+.accept-reject-level .graph-area {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-height: 350px;
+  /* Ensure ReactFlow has space to render */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.accept-reject-level .graph-area .react-flow {
+  flex: 1;
+  min-height: 100%;
+}
+
+/* Fit to View button */
+.accept-reject-level .fit-view-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  min-width: 2.5em;
+  min-height: 2.5em;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  color: #666;
+  font-size: clamp(16px, 1.25rem, 24px);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 5;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accept-reject-level .fit-view-btn:hover {
+  background: white;
+  color: #333;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.accept-reject-level .fit-view-btn:active {
+  transform: scale(0.95);
+}
+
+
+.accept-reject-level .sidebar {
+  width: var(--sidebar-width, 400px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 100%;
+  padding-bottom: 8px;
+}
+
+/* Question Card - now just shows pattern */
+.question-card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.question-card h3 {
+  margin: 0;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.score-display {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4CAF50;
+  background: #E8F5E9;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.test-pattern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.test-pattern img {
+  width: var(--sheep-img-md, 64px);
+  height: var(--sheep-img-md, 64px);
+}
+
+.pattern-sheep {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pattern-sheep .arrow {
+  font-size: 24px;
+  color: #888;
+}
+
+/* Compact pattern when result is showing */
+.result-section ~ .question-card .test-pattern img,
+.sidebar:has(.result-section) .question-card .test-pattern img {
+  width: clamp(36px, 6vw, 52px);
+  height: clamp(36px, 6vw, 52px);
+}
+
+.sidebar:has(.result-section) .question-card {
+  padding: 10px;
+}
+
+.sidebar:has(.result-section) .test-pattern {
+  padding: 8px;
+  gap: 4px;
+}
+
+.sidebar:has(.result-section) .pattern-sheep {
+  gap: 4px;
+}
+
+.sidebar:has(.result-section) .pattern-sheep .arrow {
+  font-size: 20px;
+}
+
+/* Answer Buttons */
+.answer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.answer-btn {
+  padding: 0.7em 1em;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 2.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+}
+
+.answer-icon {
+  font-size: 1.3em;
+  line-height: 1;
+}
+
+.answer-btn:hover {
+  transform: translateY(-2px);
+}
+
+.accept-btn {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.accept-btn:hover {
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+}
+
+.reject-btn {
+  background: linear-gradient(135deg, #f44336, #c62828);
+  color: white;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+.reject-btn:hover {
+  box-shadow: 0 6px 16px rgba(244, 67, 54, 0.5);
+}
+
+/* Result Card */
+.result-card {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.result-card.correct {
+  border: 3px solid #4CAF50;
+  background: linear-gradient(to bottom, #E8F5E9, white);
+}
+
+.result-card.incorrect {
+  border: 3px solid #FF9800;
+  background: linear-gradient(to bottom, #FFF3E0, white);
+}
+
+.result-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.15rem;
+}
+
+.result-card.correct h3 {
+  color: #2E7D32;
+}
+
+.result-card.incorrect h3 {
+  color: #E65100;
+}
+
+.explanation {
+  color: #555;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* Inline sheep images in explanations */
+.explanation .inline-sheep {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-bottom;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.next-btn {
+  padding: 0.8em 2em;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 2.5em;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
+  animation: pulse-attention 1.5s ease-in-out 1.5s infinite;
+  animation-fill-mode: backwards;
+  position: relative;
+}
+
+.next-btn::after {
+  content: ' →';
+  display: inline-block;
+  margin-left: 8px;
+  animation: bounce-arrow 1s ease-in-out infinite;
+}
+
+@keyframes bounce-arrow {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes pulse-attention {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(76, 175, 80, 0.7);
+  }
+}
+
+.next-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+  animation: none;
+}
+
+.next-btn:hover::after {
+  animation: none;
+}
+
+.next-btn.secondary {
+  background: #f5f5f5;
+  color: #333;
+  margin-left: 12px;
+  animation: none;
+}
+
+.next-btn.secondary::after {
+  content: none;
+}
+
+.next-btn.secondary:hover {
+  background: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.final-score {
+  margin-top: 10px;
+}
+
+.final-score p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2E7D32;
+  margin-bottom: 12px;
+}
+
+.final-score .star-display {
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.final-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.final-buttons .next-btn {
+  padding: 0.6em 1.2em;
+  font-size: 0.9rem;
+}
+
+/* Watch again button */
+.watch-again-btn {
+  display: block;
+  width: 100%;
+  padding: 0.55em 1em;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #e8f0fe;
+  color: #1a56c4;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.watch-again-btn:hover {
+  background: #d0e2ff;
+}
+
+/* Watching indicator — shown while animation plays on wrong answer */
+.watching-indicator {
+  text-align: center;
+  padding: 0.6em 1em;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #E8F5E9;
+  color: #2E7D32;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  animation: pulse-watch 1s ease-in-out infinite;
+}
+
+@keyframes pulse-watch {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Animation result overlay */
+.accept-reject-level .animation-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  z-index: 25;
+  animation: resultPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.accept-reject-level .animation-result.success {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  box-shadow: 0 8px 30px rgba(76, 175, 80, 0.5);
+}
+
+.accept-reject-level .animation-result.fail {
+  background: linear-gradient(135deg, #f44336, #c62828);
+  color: white;
+  box-shadow: 0 8px 30px rgba(244, 67, 54, 0.5);
+}
+
+@keyframes resultPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Edge label styling — farm-themed sign */
+.sheep-edge-label {
+  position: absolute;
+  background: #fffdf0;
+  padding: 3px;
+  border-radius: 8px;
+  border: 2px solid #c8a84b;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  pointer-events: none;
+  transition: none;
+}
+
+/* Hide React Flow attribution */
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* Level Complete Overlay */
+.level-complete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.level-complete-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 40px;
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.level-complete-modal h2 {
+  font-size: 1.8rem;
+  color: #2E7D32;
+  margin: 0 0 16px 0;
+}
+
+.level-complete-score {
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.level-complete-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.level-complete-buttons .btn {
+  padding: 1em 2em;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 3em;
+}
+
+.level-complete-buttons .primary-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.level-complete-buttons .primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.level-complete-buttons .secondary-btn {
+  background: #f5f5f5;
+  color: #333;
+  border: 2px solid #ddd;
+}
+
+.level-complete-buttons .secondary-btn:hover {
+  background: #eee;
+  border-color: #ccc;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE STYLES
+   ═══════════════════════════════════════ */
+
+/* Medium screens */
+@media (max-width: 1050px) {
+  .question-card {
+    padding: 10px;
+  }
+}
+
+/* Tablet / narrow: stack vertically */
+@media (max-width: 900px) {
+  /* Allow the page to scroll rather than clip */
+  .accept-reject-level {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .accept-reject-level .main-content {
+    overflow-y: visible;
+    flex: none;
+  }
+
+  .accept-reject-level .game-container {
+    flex-direction: column;
+    flex: none;
+  }
+
+  .accept-reject-level .sidebar {
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .accept-reject-level .graph-area {
+    min-height: 220px;
+    height: 40vh;
+    max-height: 400px;
+    flex: none;
+  }
+
+  /* Answer buttons horizontal on tablet when stacked */
+  .answer-buttons {
+    flex-direction: row;
+  }
+
+  .answer-btn {
+    flex: 1;
+  }
+}
+
+/* Small tablet / large phone */
+@media (max-width: 768px) {
+  .accept-reject-level .sheep-panel {
+    width: 62px;
+    min-width: 62px;
+    padding: 10px 4px;
+  }
+
+  .accept-reject-level .sheep-slot {
+    width: 42px;
+    height: 42px;
+  }
+
+  .accept-reject-level .sheep-slot img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .accept-reject-level .sheep-panel-label {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .accept-reject-level .home-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .accept-reject-level .home-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .accept-reject-level .main-content {
+    padding: 8px 12px;
+  }
+  
+  .accept-reject-level .graph-area {
+    min-height: 200px;
+    height: 30vh;
+    max-height: 300px;
+  }
+  
+  .level-complete-modal {
+    padding: 24px 28px;
+    max-width: 320px;
+  }
+  
+  .level-complete-modal h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Phone */
+@media (max-width: 500px) {
+  .accept-reject-level .sheep-panel {
+    width: 48px;
+    min-width: 48px;
+    padding: 8px 3px;
+  }
+
+  .accept-reject-level .sheep-slot {
+    width: 34px;
+    height: 34px;
+  }
+
+  .accept-reject-level .sheep-slot img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .accept-reject-level .sheep-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+  
+  .accept-reject-level .main-content {
+    padding: 6px 8px;
+  }
+  
+  .accept-reject-level .game-container {
+    gap: 10px;
+  }
+  
+  .accept-reject-level .test-pattern {
+    gap: 3px;
+    padding: 8px;
+  }
+
+  .accept-reject-level .pattern-sheep {
+    gap: 3px;
+  }
+  
+  .accept-reject-level .graph-area {
+    min-height: 180px;
+    height: 28vh;
+    max-height: 260px;
+    border-radius: 12px;
+  }
+  
+  .question-card {
+    padding: 8px;
+    border-radius: 10px;
+  }
+  
+  .question-card h3 {
+    font-size: 0.85rem;
+  }
+  
+  .result-card {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+  
+  .result-card h3 {
+    font-size: 1rem;
+  }
+  
+  .explanation {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  
+  .explanation .inline-sheep {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .answer-btn {
+    padding: 0.6em 0.8em;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+  
+  .next-btn {
+    padding: 0.6em 1.5em;
+    font-size: 0.9rem;
+  }
+  
+  .final-buttons .next-btn {
+    padding: 0.5em 1em;
+    font-size: 0.85rem;
+  }
+  
+  .watch-path-btn {
+    padding: 0.4em 0.8em;
+    font-size: 0.8rem;
+  }
+  
+  .score-display {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+  }
+  
+  .level-complete-modal {
+    padding: 20px 24px;
+    max-width: 290px;
+    border-radius: 20px;
+  }
+  
+  .level-complete-modal h2 {
+    font-size: 1.3rem;
+  }
+  
+  .level-complete-score {
+    font-size: 1.1rem;
+  }
+  
+  .level-complete-buttons .btn {
+    padding: 0.8em 1.5em;
+    font-size: 1rem;
+  }
+}
+
+/* Very small phone */
+@media (max-width: 360px) {
+  .accept-reject-level .sheep-panel {
+    width: 42px;
+    min-width: 42px;
+    padding: 6px 2px;
+  }
+  
+  .accept-reject-level .sheep-slot {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .accept-reject-level .sheep-slot img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  
+  .accept-reject-level .sheep-panel-label {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+  
+  .accept-reject-level .home-btn {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .accept-reject-level .graph-area {
+    min-height: 160px;
+    height: 25vh;
+  }
+}
+
+/* Landscape phone */
+@media (max-height: 500px) and (orientation: landscape) {
+  .accept-reject-level {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .accept-reject-level .game-container {
+    flex-direction: row;
+  }
+  
+  .accept-reject-level .sidebar {
+    width: 260px;
+    min-width: 260px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+  
+  .accept-reject-level .graph-area {
+    min-height: unset;
+    height: auto;
+    max-height: unset;
+    flex: 1;
+  }
+  
+  .accept-reject-level .sheep-panel {
+    width: 48px;
+    min-width: 48px;
+    padding: 6px 3px;
+  }
+  
+  .accept-reject-level .sheep-slot {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .accept-reject-level .sheep-slot img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  
+  .question-card {
+    padding: 8px;
+  }
+
+  .answer-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .answer-btn {
+    padding: 0.4em 0.8em;
+    font-size: 0.85rem;
+  }
+  
+  .result-card {
+    padding: 8px;
+  }
+  
+  .result-card h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  
+  .explanation {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+}
+
+/* Level complete score styling */
+.level-complete-score .final-score {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2E7D32;
+}
+
+/* Dev mode buttons */
+.dev-auto-btn {
+  padding: 8px 16px;
+  border: 2px dashed #9C27B0;
+  border-radius: 8px;
+  background: #F3E5F5;
+  color: #7B1FA2;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dev-auto-btn:hover {
+  background: #E1BEE7;
+  border-color: #7B1FA2;
+}
+
+/* Badges earned summary on completion screen */
+.badges-earned {
+  margin: 12px 0 4px;
+  text-align: center;
+}
+
+.badges-earned-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
+  margin: 0 0 8px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+.badges-earned-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.badges-earned-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #FFF8E1, #FFF3C4);
+  border: 1px solid #FFE082;
+  border-radius: 20px;
+  padding: 4px 12px 4px 6px;
+}
+
+.badges-earned-icon {
+  font-size: 1.2rem;
+}
+
+.badges-earned-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #5D4037;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}

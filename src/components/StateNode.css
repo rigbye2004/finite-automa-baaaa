@@ -1,0 +1,142 @@
+.state-node {
+  position: relative;
+  width: var(--node-size, 120px);
+  height: var(--node-size, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 8px;
+  margin: 0 auto;
+}
+
+/* Fence visual */
+.fence {
+  display: flex;
+  align-items: flex-end;
+  height: 50%;
+  width: 100%;
+}
+
+.fence-post {
+  width: 10%;
+  height: 100%;
+  background: linear-gradient(to right, #8B4513, #A0522D, #8B4513);
+  border-radius: 2px;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.3);
+}
+
+.fence-rails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 75%;
+  padding: 6px 0;
+}
+
+.rail {
+  height: 7px;
+  background: linear-gradient(to bottom, #A0522D, #8B4513);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Sheep area */
+.sheep-area {
+  position: absolute;
+  top: 4px;
+  width: 100%;
+  height: 58%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sheep-placeholder {
+  width: 42%;
+  height: 42%;
+  border: 3px dashed #999;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #999;
+  background: rgba(255,255,255,0.6);
+}
+
+.placed-sheep {
+  font-size: 40px;
+  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.35));
+}
+
+/* Start state indicator */
+.state-node.start::before {
+  content: '→';
+  position: absolute;
+  left: -42%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(22px, 3vw, 32px);
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.state-node.start::after {
+  content: 'Start';
+  position: absolute;
+  left: -42%;
+  top: calc(50% + 22px);
+  font-size: clamp(10px, 1.5vw, 14px);
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+/* Accepting state indicator */
+.accepting-indicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 16px;
+}
+
+.state-node.accepting .fence-post {
+  background: linear-gradient(to right, #2E7D32, #4CAF50, #2E7D32);
+}
+
+.state-node.accepting .rail {
+  background: linear-gradient(to bottom, #4CAF50, #2E7D32);
+}
+
+/* React Flow handles */
+.state-node .react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  border: 2px solid white;
+}
+
+/* Bed for accepting state */
+.accepting-bed {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+}
+
+/* Node label below fence/bed */
+.node-label {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

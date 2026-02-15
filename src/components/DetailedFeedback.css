@@ -1,0 +1,271 @@
+/* ═══════════════════════════════════════
+   DetailedFeedback — Simplified for kids
+   ═══════════════════════════════════════ */
+
+.detailed-feedback {
+  background: white;
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.detailed-feedback.correct {
+  border: 2px solid #4CAF50;
+  background: linear-gradient(to bottom, #E8F5E9, white);
+}
+
+.detailed-feedback.incorrect {
+  border: 2px solid #FF9800;
+  background: linear-gradient(to bottom, #FFF8E1, white);
+}
+
+
+/* ═══════════════════════════════════════
+   Celebration flash — correct answers
+   ═══════════════════════════════════════ */
+
+.feedback-flash {
+  animation: flash-in 0.4s ease-out;
+}
+
+@keyframes flash-in {
+  0%   { opacity: 0; transform: scale(0.8); }
+  60%  { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.feedback-celebrate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.feedback-big-icon {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #4CAF50;
+  animation: icon-pop 0.5s ease-out;
+}
+
+.feedback-big-icon.wrong {
+  color: #E65100;
+  animation: icon-shake 0.5s ease-out;
+}
+
+@keyframes icon-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  50%  { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes icon-shake {
+  0%   { transform: translateX(0) scale(0); opacity: 0; }
+  30%  { transform: translateX(0) scale(1.2); opacity: 1; }
+  45%  { transform: translateX(-6px) scale(1); }
+  60%  { transform: translateX(6px); }
+  75%  { transform: translateX(-3px); }
+  90%  { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+.feedback-matched-count {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2E7D32;
+}
+
+
+/* ═══════════════════════════════════════
+   Wrong answer — minimal feedback
+   ═══════════════════════════════════════ */
+
+.feedback-wrong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 0 6px 0;
+}
+
+.feedback-try-again {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.feedback-score-pill {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #E65100;
+  background: rgba(255, 152, 0, 0.12);
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+
+/* ═══════════════════════════════════════
+   Unmatched patterns — visual only
+   ═══════════════════════════════════════ */
+
+.patterns-unmatched {
+  margin: 6px 0 8px 0;
+}
+
+.pattern-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: #FFEBEE;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.pattern-row img {
+  width: 60px;
+  height: 60px;
+}
+
+
+/* ═══════════════════════════════════════
+   Button
+   ═══════════════════════════════════════ */
+
+.feedback-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  width: 100%;
+  box-shadow: 0 3px 12px rgba(76, 175, 80, 0.4);
+  animation: feedback-pulse 1.5s ease-in-out infinite;
+}
+
+.feedback-btn::after {
+  content: ' →';
+  display: inline-block;
+  margin-left: 6px;
+  animation: feedback-arrow 1s ease-in-out infinite;
+}
+
+@keyframes feedback-pulse {
+  0%, 100% {
+    box-shadow: 0 3px 12px rgba(76, 175, 80, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.6);
+  }
+}
+
+@keyframes feedback-arrow {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.feedback-btn:hover {
+  background: linear-gradient(135deg, #43A047, #1B5E20);
+  animation: none;
+}
+
+.feedback-btn:hover::after {
+  animation: none;
+}
+
+
+/* ═══════════════════════════════════════
+   Reflection prompt (kept for compatibility)
+   ═══════════════════════════════════════ */
+
+.reflection-prompt {
+  background: #E8F5E9;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px solid #A5D6A7;
+}
+
+.reflection-prompt h4 {
+  margin: 0 0 10px 0;
+  color: #2E7D32;
+  font-size: 1rem;
+}
+
+.reflection-question {
+  margin: 0 0 12px 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.reflection-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reflection-option {
+  padding: 10px 14px;
+  border: 1px solid #81C784;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  text-align: left;
+}
+
+.reflection-option:hover {
+  background: #C8E6C9;
+  border-color: #4CAF50;
+}
+
+
+/* ═══════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .pattern-row img {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .feedback-big-icon {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .detailed-feedback {
+    padding: 8px 10px;
+  }
+  
+  .feedback-big-icon {
+    font-size: 1.8rem;
+  }
+  
+  .pattern-row img {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .feedback-try-again {
+    font-size: 0.8rem;
+  }
+}

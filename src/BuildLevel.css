@@ -1,0 +1,1422 @@
+.build-level {
+  display: flex;
+  flex-direction: row;
+  min-height: 100dvh;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Left sheep progress panel ── */
+.build-level .sheep-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px;
+  background: #f0faf0;
+  border-right: 2px solid #C8E6C9;
+  width: 62px;
+  min-width: 62px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.build-level .home-btn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: #f5f5f5;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.build-level .home-btn:hover {
+  background: #e0e0e0;
+}
+
+.build-level .sheep-panel-label {
+  background: #4FC3F7;
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  margin-top: 6px;
+}
+
+.build-level .sheep-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.build-level .sheep-slot {
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.build-level .sheep-slot.status-future {
+  filter: grayscale(100%) opacity(0.25);
+}
+
+.build-level .sheep-slot.status-current {
+  filter: grayscale(30%) opacity(0.7);
+  background: #FFF9C4;
+  box-shadow: 0 0 0 2px #FFD54F;
+  transform: scale(1.1);
+}
+
+.build-level .sheep-slot.status-correct {
+  filter: none;
+  background: #E8F5E9;
+  animation: sheep-pop-build 0.4s ease;
+}
+
+/* ✓ badge overlay */
+.build-level .sheep-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  border: 2px solid white;
+  line-height: 1;
+}
+
+.build-level .badge-correct {
+  background: #43A047;
+}
+
+/* Score label at bottom of panel */
+
+@keyframes sheep-pop-build {
+  0%   { transform: scale(0.5); }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ── Main content area ── */
+.build-level .main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Compact header bar — just hint button */
+.build-level .header-compact {
+  display: flex;
+  align-items: center;
+  padding: 0 0 8px 0;
+  flex-shrink: 0;
+}
+
+/* Hint button - circle ? */
+.build-level .hint-button {
+  height: 38px;
+  width: 38px;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background: #E65100;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(230, 81, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.build-level .hint-button:hover,
+.build-level .hint-button:active,
+.build-level .hint-button:focus,
+.build-level .hint-button:focus-visible {
+  background: #BF360C;
+  outline: none;
+}
+
+/* Hint overlay - covers entire screen */
+.build-level .hint-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+/* Hint modal */
+.build-level .hint-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  border: 2px solid #E65100;
+  text-align: left;
+}
+
+.build-level .hint-modal p {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.build-level .hint-modal .hint-close {
+  background: #E65100;
+  color: white;
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  width: 100%;
+}
+
+.build-level .hint-modal .hint-close:hover {
+  background: #BF360C;
+}
+
+/* Game container - three column layout */
+.build-level .game-container {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Graph column: canvas + footer */
+.build-level .graph-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 130px;
+  gap: 12px;
+}
+
+/* Toolbar (left sidebar) */
+.build-level .toolbar {
+  width: clamp(160px, 15vw, 210px);
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* ── Arrow capsule (one button, two visual halves) ── */
+.build-level .arrow-capsule {
+  display: flex;
+  border-radius: 100px;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+  cursor: grab;
+  transition: border-color 0.15s;
+}
+
+.build-level .arrow-capsule.state-from,
+.build-level .arrow-capsule.state-to {
+  border-color: #4CAF50;
+}
+
+.build-level .arrow-cap {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #fafafa;
+  color: #999;
+  transition: background 0.15s, color 0.15s;
+}
+
+.build-level .arrow-cap > span {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.build-level .arrow-cap-divider {
+  width: 1px;
+  background: #eee;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+/* From side lit when picking source */
+.build-level .arrow-capsule.state-from .arrow-cap-from {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Both sides lit once source is chosen, To side brighter */
+.build-level .arrow-capsule.state-to .arrow-cap-from {
+  background: #C8E6C9;
+  color: #2E7D32;
+}
+
+.build-level .arrow-capsule.state-to .arrow-cap-to {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.build-level .arrow-capsule:hover .arrow-cap {
+  background: #f0f0f0;
+}
+
+.build-level .arrow-capsule.state-from:hover .arrow-cap-from,
+.build-level .arrow-capsule.state-to:hover .arrow-cap-from,
+.build-level .arrow-capsule.state-to:hover .arrow-cap-to {
+  background: #C8E6C9;
+}
+
+/* ── Top row: Select + Delete ── */
+.build-level .tool-row-top {
+  display: flex;
+  gap: 8px;
+}
+
+.build-level .tool-row-top .tool-cell {
+  flex: 1;
+}
+
+.build-level .tool-select {
+  color: #555;
+}
+
+.build-level .tool-select.active {
+  border-color: #666;
+  background: #f0f0f0;
+  color: #333;
+}
+
+.build-level .tool-select:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+/* ── Tool grid ── */
+.build-level .tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.build-level .tool-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #888;
+  min-height: 60px;
+}
+
+.build-level .tool-cell:hover {
+  background: #f0f0f0;
+}
+
+/* Fence - dashed border, drag cursor */
+.build-level .tool-fence {
+  border-style: dashed;
+  border-color: #ccc;
+  cursor: grab;
+  color: #1565C0;
+}
+
+.build-level .tool-fence:hover {
+  border-color: #42A5F5;
+  background: #f5f5f5;
+}
+
+/* Bed - dashed border like fence, drag cursor */
+.build-level .tool-bed {
+  border-style: dashed;
+  border-color: #ccc;
+  cursor: grab;
+  color: #E65100;
+}
+
+.build-level .tool-bed:hover {
+  border-color: #FF9800;
+  background: #FFF3E0;
+}
+
+/* Delete */
+.build-level .tool-delete {
+  color: #888;
+  grid-column: span 2;
+}
+
+.build-level .tool-delete.active {
+  border-color: #EF5350;
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.build-level .tool-delete:hover {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+/* Single tool in grid when only 1 visible - fill width */
+.build-level .tool-grid > :only-child {
+  grid-column: span 2;
+}
+
+/* ── Toolbar divider ── */
+.build-level .toolbar-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, #ddd 30%, #ddd 70%, transparent 95%);
+  margin: 2px 4px;
+}
+
+/* ── Toolbar sheep ── */
+.build-level .toolbar-sheep {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.build-level .toolbar-sheep-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: #fafafa;
+  cursor: grab;
+  transition: all 0.15s;
+}
+
+.build-level .toolbar-sheep-item img {
+  width: clamp(36px, 6vw, 56px);
+  height: clamp(36px, 6vw, 56px);
+}
+
+.build-level .toolbar-sheep-item:hover {
+  background: #f0f0f0;
+}
+
+.build-level .toolbar-sheep-item.selected {
+  border-color: #4CAF50;
+  background: #E8F5E9;
+  transform: scale(1.06);
+}
+
+.build-level .toolbar-sheep-item:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
+/* ── Tool icon images ── */
+.build-level .tool-bed-icon {
+  display: block;
+  object-fit: contain;
+}
+
+/* Graph area */
+.build-level .graph-area {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 300px;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Mode-specific cursors */
+.build-level .graph-area.mode-connect {
+  cursor: crosshair;
+}
+
+/* Dotted connecting line animation */
+.build-level .connecting-line line,
+.build-level .connecting-line path {
+  animation: dashMove 0.6s linear infinite;
+}
+
+@keyframes dashMove {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+.build-level .graph-area.mode-connect .react-flow__node {
+  cursor: crosshair;
+}
+
+.build-level .graph-area.mode-select {
+  cursor: default;
+}
+
+.build-level .graph-area.mode-select .react-flow__node {
+  cursor: grab;
+}
+
+.build-level .graph-area.mode-select .react-flow__node:active {
+  cursor: grabbing;
+}
+
+.build-level .graph-area.mode-delete {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23e53935' stroke-width='2.5'%3E%3Cline x1='4' y1='4' x2='20' y2='20'/%3E%3Cline x1='20' y1='4' x2='4' y2='20'/%3E%3C/svg%3E") 10 10, not-allowed;
+}
+
+.build-level .graph-area.mode-delete .react-flow__node,
+.build-level .graph-area.mode-delete .react-flow__edge {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23e53935' stroke-width='2.5'%3E%3Cline x1='4' y1='4' x2='20' y2='20'/%3E%3Cline x1='20' y1='4' x2='4' y2='20'/%3E%3C/svg%3E") 10 10, not-allowed;
+}
+
+.build-level .graph-area .react-flow {
+  flex: 1;
+  min-height: 100%;
+}
+
+/* Fit to View button */
+.build-level .fit-view-btn {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  min-width: 40px;
+  min-height: 40px;
+  width: auto;
+  height: auto;
+  padding: 0.4em;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  color: #666;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 5;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.build-level .fit-view-btn:hover {
+  background: white;
+  color: #333;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.build-level .fit-view-btn:active {
+  transform: scale(0.95);
+}
+
+/* ReactFlow Controls styling */
+.build-level .react-flow__controls {
+  bottom: 12px;
+  left: 60px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.build-level .react-flow__controls-button {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-bottom: 1px solid #eee;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+}
+
+.build-level .react-flow__controls-button:hover {
+  background: white;
+}
+
+.build-level .react-flow__controls-button:last-child {
+  border-bottom: none;
+}
+
+/* Sidebar (right) */
+.build-level .sidebar {
+  flex: 0 1 var(--sidebar-width, 35%);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.build-level .sidebar-score {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4CAF50;
+  background: #E8F5E9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+.build-level .patterns-with-score {
+  position: relative;
+}
+
+.build-level .patterns-with-score .pattern-display h3 {
+  padding-right: 90px;
+}
+
+/* Message box */
+.build-level .toast-message {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 11px 20px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  animation: toast-in 0.2s ease, toast-out 0.3s ease 2.7s forwards;
+}
+
+.build-level .toast-error {
+  background: #c62828;
+  color: white;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toast-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Result card */
+.build-level .result-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.build-level .result-card.correct {
+  border: 3px solid #4CAF50;
+  background: linear-gradient(to bottom, #E8F5E9, white);
+}
+
+.build-level .result-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.build-level .result-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.4rem;
+  color: #2E7D32;
+}
+
+.build-level .final-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.build-level .next-btn {
+  padding: 0.75em 1.5em;
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 2.5em;
+}
+
+.build-level .next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.build-level .next-btn.secondary {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.build-level .next-btn.secondary:hover {
+  background: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer - fixed at bottom with proper spacing */
+.build-level .footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 10px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.build-level .controls {
+  display: flex;
+  gap: 6px;
+}
+
+.build-level .footer .score-display {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4CAF50;
+  background: #E8F5E9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.build-level .btn {
+  padding: 0.75em 1.5em;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 2.5em;
+}
+
+.build-level .btn:hover {
+  transform: translateY(-2px);
+}
+
+.build-level .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.build-level .submit-btn {
+  background: #2E7D32;
+  color: white;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.4);
+}
+
+.build-level .submit-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.5);
+}
+
+.build-level .reset-btn {
+  background: #f5f5f5;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.build-level .reset-btn:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.build-level .level-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.build-level .level-progress .score-display {
+  color: #4CAF50;
+  background: #E8F5E9;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+/* React Flow customizations */
+.build-level .react-flow__node {
+  cursor: pointer;
+}
+
+.build-level .react-flow__node.selected {
+  outline: 3px solid #4CAF50;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.build-level .react-flow__edge {
+  cursor: pointer;
+}
+
+.build-level .react-flow__controls {
+  bottom: 10px;
+  left: 10px;
+}
+
+.build-level .react-flow__controls-button {
+  background: white;
+  border: 1px solid #ddd;
+}
+
+/* Hide attribution */
+.build-level .react-flow__attribution {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE STYLES
+   ═══════════════════════════════════════ */
+
+/* Medium-large: toolbar padding */
+@media (max-width: 1200px) {
+  .build-level .toolbar {
+    padding: 10px;
+  }
+}
+
+/* Medium: stack toolbar horizontally above graph */
+@media (max-width: 1000px) {
+  /* Allow scrolling instead of clipping on tablet */
+  .build-level {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .build-level .main-content {
+    overflow-y: visible;
+    flex: none;
+  }
+
+  .build-level .game-container {
+    flex: none;
+    flex-wrap: wrap;
+  }
+  
+  .build-level .toolbar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    order: -1;
+  }
+  
+  .build-level .tool-grid {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .build-level .tool-cell {
+    min-height: 50px;
+    padding: 10px 8px;
+  }
+  
+  .build-level .tool-delete {
+    grid-column: auto;
+  }
+  
+  .build-level .toolbar-divider {
+    display: none;
+  }
+  
+  .build-level .toolbar-sheep {
+    display: flex;
+    gap: 5px;
+  }
+
+  .build-level .graph-column {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .build-level .graph-area {
+    min-height: 220px;
+    height: 40vh;
+    max-height: 400px;
+    width: 100%;
+    min-width: auto;
+    flex: none;
+  }
+  
+  .build-level .sidebar {
+    width: 100%;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .build-level .sheep-panel {
+    width: 62px;
+    min-width: 62px;
+    padding: 10px 4px;
+  }
+
+  .build-level .sheep-slot {
+    width: 42px;
+    height: 42px;
+  }
+
+  .build-level .sheep-slot img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .build-level .sheep-panel-label {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .build-level .home-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .build-level .home-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .build-level .main-content {
+    padding: 8px 12px;
+  }
+
+  .build-level .toolbar {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+  
+  .build-level .tool-cell {
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 13px;
+  }
+  
+  .build-level .sidebar {
+    order: initial;
+  }
+  
+  .build-level .graph-area {
+    min-height: 220px;
+    height: 30vh;
+    max-height: 300px;
+  }
+  
+  .build-level .footer {
+    padding: 8px 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .build-level .footer .btn {
+    padding: 0.4em 0.8em;
+    font-size: 13px;
+  }
+  
+  .build-level .pattern-display {
+    padding: 10px;
+  }
+
+  .build-level .pattern-display h3 {
+    font-size: 0.9rem;
+  }
+}
+
+/* Phone */
+@media (max-width: 500px) {
+  .build-level .sheep-panel {
+    width: 48px;
+    min-width: 48px;
+    padding: 8px 3px;
+  }
+
+  .build-level .sheep-slot {
+    width: 34px;
+    height: 34px;
+  }
+
+  .build-level .sheep-slot img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .build-level .sheep-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+  
+  .build-level .main-content {
+    padding: 6px 8px;
+  }
+  
+  .build-level .game-container {
+    gap: 8px;
+  }
+  
+  .build-level .graph-area {
+    min-height: 180px;
+    height: 28vh;
+    max-height: 260px;
+    border-radius: 12px;
+  }
+  
+  .build-level .toolbar {
+    padding: 6px 8px;
+    gap: 4px;
+    border-radius: 12px;
+  }
+  
+  .build-level .tool-cell {
+    min-height: 40px;
+    padding: 6px 4px;
+    gap: 2px;
+    border-radius: 8px;
+  }
+  
+  .build-level .toolbar-sheep-item {
+    padding: 4px;
+    border-radius: 8px;
+  }
+  
+  .build-level .footer {
+    padding: 6px 8px;
+    gap: 6px;
+    border-radius: 10px;
+  }
+  
+  .build-level .footer .btn {
+    padding: 0.35em 0.6em;
+    font-size: 12px;
+    min-height: 2em;
+  }
+  
+  .build-level .footer .score-display {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .build-level .pattern-display .pattern-item {
+    padding: 6px 8px;
+  }
+
+  .build-level .sidebar .result-card {
+    padding: 10px;
+  }
+  
+  .build-level .sidebar .result-card h3 {
+    font-size: 0.9rem;
+  }
+  
+  .build-level .sidebar .next-btn {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .build-level .hint-button {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+  
+  .build-level .result-icon {
+    font-size: 36px;
+  }
+  
+  .build-level .result-card h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Very small phone */
+@media (max-width: 360px) {
+  .build-level .sheep-panel {
+    width: 42px;
+    min-width: 42px;
+    padding: 6px 2px;
+  }
+  
+  .build-level .sheep-slot {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .build-level .sheep-slot img {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  
+  .build-level .sheep-panel-label {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+  
+  .build-level .home-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .build-level .graph-area {
+    min-height: 150px;
+    height: 25vh;
+  }
+  
+}
+
+/* Landscape phone */
+@media (max-height: 500px) and (orientation: landscape) {
+  .build-level {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .build-level .game-container {
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+  
+  .build-level .toolbar {
+    width: auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding: 8px;
+    gap: 6px;
+    min-width: 140px;
+    max-width: 160px;
+    max-height: calc(100dvh - 60px);
+    overflow-y: auto;
+  }
+
+  .build-level .toolbar-divider {
+    display: block;
+  }
+  
+  .build-level .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .build-level .tool-delete {
+    grid-column: span 2;
+  }
+  
+  .build-level .toolbar-sheep {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .build-level .graph-column {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .build-level .graph-area {
+    min-height: unset;
+    height: auto;
+    max-height: unset;
+    flex: 1;
+  }
+  
+  .build-level .sidebar {
+    width: 220px;
+    min-width: 220px;
+    flex-basis: 220px;
+    max-height: calc(100dvh - 60px);
+    overflow-y: auto;
+  }
+  
+  .build-level .sheep-panel {
+    width: 48px;
+    min-width: 48px;
+    padding: 6px 3px;
+  }
+  
+  .build-level .sheep-slot {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .build-level .sheep-slot img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  .build-level .footer {
+    padding: 4px 8px;
+  }
+  
+  .build-level .footer .btn {
+    padding: 0.3em 0.5em;
+    font-size: 11px;
+    min-height: 1.8em;
+  }
+  
+}
+
+/* Watch Path Button */
+.build-level .watch-path-btn {
+  background: #E8F5E9 !important;
+  color: #2E7D32 !important;
+  border: 2px dashed #4CAF50 !important;
+}
+
+.build-level .watch-path-btn:hover:not(:disabled) {
+  background: #C8E6C9 !important;
+  border-style: solid !important;
+}
+
+.build-level .watch-path-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Animation result overlay */
+.build-level .graph-area .animation-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  z-index: 25;
+  animation: resultPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.build-level .graph-area .animation-result.success {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  box-shadow: 0 8px 30px rgba(76, 175, 80, 0.5);
+}
+
+.build-level .graph-area .animation-result.fail {
+  background: linear-gradient(135deg, #f44336, #c62828);
+  color: white;
+  box-shadow: 0 8px 30px rgba(244, 67, 54, 0.5);
+}
+
+@keyframes resultPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Header controls - hint */
+.build-level .header-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+/* Pattern display for sidebar */
+.build-level .pattern-display {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.build-level .pattern-display h3 {
+  font-size: 1rem;
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.build-level .pattern-display .pattern-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.build-level .pattern-display .pattern-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  flex-wrap: nowrap;
+}
+
+.build-level .pattern-display .pattern-item img {
+  width: var(--sheep-img-sm, 60px);
+  height: var(--sheep-img-sm, 60px);
+}
+
+.build-level .pattern-display .pattern-arrow {
+  font-size: clamp(14px, 2vw, 20px);
+  color: #888;
+}
+
+/* Compact result card in sidebar */
+.build-level .sidebar .result-card {
+  padding: 12px;
+}
+
+.build-level .sidebar .result-card h3 {
+  font-size: 1rem;
+  margin: 0 0 8px 0;
+}
+
+.build-level .sidebar .result-card p {
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+
+.build-level .sidebar .final-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.build-level .sidebar .next-btn {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+/* Dev mode buttons */
+.build-level .dev-auto-btn {
+  padding: 8px 16px !important;
+  border: 2px dashed #9C27B0 !important;
+  border-radius: 8px !important;
+  background: #F3E5F5 !important;
+  color: #7B1FA2 !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+}
+
+.build-level .dev-auto-btn:hover {
+  background: #E1BEE7 !important;
+  border-color: #7B1FA2 !important;
+}
+
+/* Smaller buttons in footer */
+.build-level .footer .btn {
+  padding: 0.5em 1em;
+  font-size: 14px;
+}
+
+/* Badges earned summary on completion screen */
+.badges-earned {
+  margin: 12px 0 4px;
+  text-align: center;
+}
+
+.badges-earned-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
+  margin: 0 0 8px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+.badges-earned-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.badges-earned-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #FFF8E1, #FFF3C4);
+  border: 1px solid #FFE082;
+  border-radius: 20px;
+  padding: 4px 12px 4px 6px;
+}
+
+.badges-earned-icon {
+  font-size: 1.2rem;
+}
+
+.badges-earned-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #5D4037;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}

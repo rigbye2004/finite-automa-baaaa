@@ -1,0 +1,2854 @@
+/* ═══════════════════════════════════════════════════
+   Tutorial Demo — Text-free animated demos
+   ═══════════════════════════════════════════════════ */
+
+/* Overlay */
+.demo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: demo-overlay-in 0.2s ease;
+}
+
+@keyframes demo-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scene container — flex column: animation area + bottom bar */
+.demo-scene {
+  position: relative;
+  width: 660px;
+  max-width: 95vw;
+  background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+  border-radius: 22px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  overflow: hidden;
+  border: 3px solid #a5d6a7;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title bar — appears at the top of every demo */
+.demo-title-bar {
+  padding: 10px 16px 8px;
+  background: rgba(255,255,255,0.6);
+  border-bottom: 1px solid rgba(165,214,167,0.5);
+  backdrop-filter: blur(6px);
+  text-align: center;
+}
+
+.demo-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2e7d32;
+  letter-spacing: 0.2px;
+}
+
+/* Animation area — scaled inner: 280 × 1.4 = 392px */
+.demo-anim-area {
+  position: relative;
+  width: 100%;
+  height: 392px;
+  overflow: hidden;
+}
+
+.demo-scene-inner {
+  position: relative;
+  width: 420px;
+  height: 280px;
+  transform: scale(1.4);
+  transform-origin: top left;
+  margin-left: 36px;
+}
+
+/* Bottom bar — clean row with dots centered, button right */
+.demo-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.55);
+  border-top: 1px solid rgba(165,214,167,0.5);
+  backdrop-filter: blur(6px);
+  gap: 8px;
+}
+
+/* Spacer to balance the button on the right and keep dots centered */
+.demo-bar-spacer {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+/* Dismiss button — sits in the bottom bar */
+.demo-dismiss {
+  min-height: 38px;
+  padding: 5px 14px;
+  border-radius: 19px;
+  border: 2px solid #4CAF50;
+  background: white;
+  color: #4CAF50;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s;
+  box-shadow: 0 2px 6px rgba(76,175,80,0.15);
+  flex-shrink: 0;
+}
+
+.demo-dismiss-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.demo-btn-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Responsive: shrink demo on small screens */
+@media (max-width: 700px) {
+  .demo-scene {
+    transform: scale(0.68);
+    transform-origin: center center;
+  }
+  
+  .demo-step-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .demo-scene {
+    transform: scale(0.5);
+    transform-origin: center center;
+  }
+  
+  .demo-bottom-bar {
+    padding: 6px 10px;
+  }
+  
+  .demo-bar-spacer {
+    width: 70px;
+  }
+}
+
+.demo-dismiss:hover {
+  background: #4CAF50;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(76,175,80,0.35);
+}
+
+/* Animation wrapper — fades when done */
+.demo-anim-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: opacity 0.6s ease;
+}
+
+/* Force all child animations to play exactly once */
+.demo-anim-wrap * {
+  animation-iteration-count: 1 !important;
+  animation-fill-mode: forwards !important;
+}
+
+.demo-anim-done {
+  opacity: 0.12;
+}
+
+/* Replay button — appears centered in the animation area */
+.demo-replay-btn {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 56px;
+  min-height: 56px;
+  padding: 8px 20px;
+  border-radius: 28px;
+  border: none;
+  background: rgba(255,255,255,0.95);
+  color: #4CAF50;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 10;
+  animation: replay-pop 0.3s ease-out;
+}
+
+.demo-replay-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.demo-replay-btn:hover {
+  background: #4CAF50;
+  color: white;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+@keyframes replay-pop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ═══════════════════════════════════════
+   Step progress dots
+   ═══════════════════════════════════════ */
+
+.demo-step-dots {
+  display: flex;
+  gap: 8px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 12px;
+}
+
+.demo-step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ccc;
+  border: 2px solid #bbb;
+  transition: all 0.35s ease;
+}
+
+.demo-step-dot.demo-step-active {
+  background: #66BB6A;
+  border-color: #4CAF50;
+  transform: scale(1.25);
+  box-shadow: 0 0 8px rgba(76,175,80,0.5);
+  animation: step-pulse 1.2s ease-in-out infinite;
+}
+
+.demo-step-dot.demo-step-done {
+  background: #4CAF50;
+  border-color: #388E3C;
+}
+
+@keyframes step-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(76,175,80,0.3); }
+  50%      { box-shadow: 0 0 12px rgba(76,175,80,0.6); }
+}
+
+/* ═══════════════════════════════════════
+   Post-demo nudge pulse
+   Applied to interactive elements after tutorial dismissal.
+   Add class "nudge-pulse" to the target element.
+   Uses box-shadow only — no transform/scale to avoid layout shifts.
+   ═══════════════════════════════════════ */
+
+.nudge-pulse {
+  animation: nudge-glow 1.2s ease-in-out 3;
+  border-radius: inherit;
+}
+
+@keyframes nudge-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
+  50%      { box-shadow: 0 0 0 6px rgba(76,175,80,0.35); }
+}
+
+/* Bouncing arrow nudge — points at first interactive element */
+.nudge-arrow {
+  position: absolute;
+  z-index: 100;
+  pointer-events: none;
+  animation: nudge-bounce 1s ease-in-out infinite, nudge-fade-out 4.5s ease forwards;
+}
+
+@keyframes nudge-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes nudge-fade-out {
+  0%, 70% { opacity: 1; }
+  100%    { opacity: 0; }
+}
+
+/* All demo elements are absolutely positioned */
+.demo-el {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Sidebar panel strip — shows items are dragged FROM the toolbar */
+.demo-sidebar-panel {
+  left: 0; top: 0;
+  width: 88px;
+  height: 100%;
+  background: rgba(255,255,255,0.55);
+  border-right: 2px solid #C8E6C9;
+  z-index: 0;
+}
+
+/* Cursor */
+.demo-cursor {
+  z-index: 5;
+  filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.3));
+}
+
+/* Click ripple */
+.demo-ripple {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #4CAF50;
+  opacity: 0;
+}
+
+/* Success check */
+.demo-check {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #4CAF50;
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  z-index: 6;
+  box-shadow: 0 2px 10px rgba(76,175,80,0.4);
+}
+
+
+/* ═══════════════════════════════════════
+   CONNECTING DEMO — 5.5s loop
+   Step 1: click "From" button in toolbar
+   Step 2: click fence A (source) → "To" button activates
+   Step 3: click fence B (target) → arrow + ? slot appear
+   ═══════════════════════════════════════ */
+
+/* Combined From/To split button */
+.demo-connecting .demo-connect-btn,
+.demo-build-loop .demo-connect-btn {
+  border-radius: 100px;
+  border: 2px solid #e0e0e0;
+  background: #fafafa;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  align-items: stretch;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.demo-connecting .demo-connect-btn {
+  left: 6px; top: 8px;
+  animation: c-connect-btn-fade 5.5s ease infinite;
+}
+
+.demo-connecting .demo-c-from,
+.demo-connecting .demo-c-to,
+.demo-build-loop .demo-c-from,
+.demo-build-loop .demo-c-to {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  color: #555;
+}
+
+.demo-connecting .demo-c-divider,
+.demo-build-loop .demo-c-divider {
+  width: 1px;
+  background: #ccc;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* From half: lights up when cursor clicks, dims to "done" after fence A */
+.demo-connecting .demo-c-from {
+  animation: c-from-half 5.5s ease infinite;
+}
+
+/* To half: grayed out until fence A is clicked, then turns green */
+.demo-connecting .demo-c-to {
+  opacity: 0.35;
+  animation: c-to-half 5.5s ease infinite;
+}
+
+.demo-connecting .demo-fence-a { left: 60px; top: 95px; }
+.demo-connecting .demo-fence-b { left: 290px; top: 95px; }
+.demo-connecting .demo-start-arrow { left: 40px; top: 112px; }
+.demo-connecting .demo-start-arrow { animation: c-persist 5.5s ease infinite; }
+
+.demo-connecting .demo-glow-a { left: 70px; top: 105px; }
+.demo-connecting .demo-glow-b { left: 300px; top: 105px; }
+
+.demo-connecting .demo-dotted-line {
+  left: 122px; top: 122px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #4CAF50 0px, #4CAF50 6px, transparent 6px, transparent 12px);
+  width: 0;
+  animation: c-dotted 5.5s ease infinite;
+}
+
+.demo-connecting .demo-arrow {
+  left: 118px; top: 110px;
+  width: 164px; height: 28px;
+  opacity: 0;
+  animation: c-arrow 5.5s ease infinite;
+}
+
+/* ? slot appears on the arrow after connection */
+.demo-connecting .demo-q-label {
+  left: 193px; top: 76px;
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: white;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #888;
+  opacity: 0;
+  animation: c-q-label 5.5s ease infinite;
+}
+
+.demo-connecting .demo-check {
+  left: 190px; top: 170px;
+  animation: c-check 5.5s ease infinite;
+}
+
+.demo-connecting .demo-cursor {
+  left: 18px; top: 28px;
+  animation: c-cursor 5.5s ease infinite;
+}
+
+.demo-connecting .demo-glow-a .demo-ripple {
+  animation: c-ripple-a 5.5s ease infinite;
+}
+
+.demo-connecting .demo-glow-b .demo-ripple {
+  animation: c-ripple-b 5.5s ease infinite;
+}
+
+/* Whole button fades in/out */
+@keyframes c-connect-btn-fade {
+  0%        { opacity: 0; }
+  4%        { opacity: 1; }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* From half: normal → active green when cursor clicks → dim "done" after fence A */
+@keyframes c-from-half {
+  0%        { background: white; color: #555; }
+  4%        { background: white; color: #555; }
+  /* Cursor clicks at ~9% */
+  11%       { background: #4CAF50; color: white; }
+  32%       { background: #4CAF50; color: white; }
+  /* Dims to "done" after fence A */
+  36%       { background: #C8E6C9; color: #2E7D32; opacity: 1; }
+  100%      { background: #C8E6C9; color: #2E7D32; opacity: 1; }
+}
+
+/* To half: grayed out → full green after fence A is clicked */
+@keyframes c-to-half {
+  0%        { opacity: 0.35; background: white; color: #555; }
+  32%       { opacity: 0.35; background: white; color: #555; }
+  /* Activates when fence A is clicked */
+  36%       { opacity: 1; background: #4CAF50; color: white; }
+  100%      { opacity: 1; background: #4CAF50; color: white; }
+}
+
+/* Cursor path: From button → fence A → fence B */
+@keyframes c-cursor {
+  0%        { left: 18px; top: 22px; opacity: 0; }
+  4%        { left: 18px; top: 22px; opacity: 1; }
+  /* Click From button */
+  8%        { left: 18px; top: 26px; }
+  11%       { left: 18px; top: 22px; }
+  /* Move to fence A */
+  26%       { left: 78px; top: 118px; }
+  /* Click fence A */
+  29%       { left: 78px; top: 124px; }
+  32%       { left: 78px; top: 118px; }
+  /* Move to fence B */
+  52%       { left: 308px; top: 118px; }
+  /* Click fence B */
+  55%       { left: 308px; top: 124px; }
+  58%       { left: 308px; top: 118px; }
+  84%       { left: 308px; top: 118px; opacity: 1; }
+  90%       { opacity: 0; }
+  100%      { left: 18px; top: 22px; opacity: 0; }
+}
+
+/* Ripple on fence A */
+@keyframes c-ripple-a {
+  0%, 29%   { opacity: 0; transform: scale(0.5); }
+  32%       { opacity: 1; transform: scale(1); }
+  44%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Ripple on fence B */
+@keyframes c-ripple-b {
+  0%, 55%   { opacity: 0; transform: scale(0.5); }
+  58%       { opacity: 1; transform: scale(1); }
+  70%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Dotted line extends A→B while cursor drags */
+@keyframes c-dotted {
+  0%, 30%   { width: 0; opacity: 0; }
+  33%       { width: 0; opacity: 1; }
+  53%       { width: 160px; opacity: 1; }
+  58%       { width: 160px; opacity: 0; }
+  100%      { opacity: 0; }
+}
+
+/* Solid arrow appears after click on fence B */
+@keyframes c-arrow {
+  0%, 57%   { opacity: 0; }
+  61%       { opacity: 1; }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* ? slot pops in on the arrow */
+@keyframes c-q-label {
+  0%, 60%   { opacity: 0; transform: scale(0.5); }
+  65%       { opacity: 1; transform: scale(1.1); }
+  68%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Check mark */
+@keyframes c-check {
+  0%, 70%   { opacity: 0; transform: scale(0.3); }
+  76%       { opacity: 1; transform: scale(1.1); }
+  80%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+
+/* Start arrow stays visible */
+@keyframes c-persist {
+  0%        { opacity: 0; }
+  4%        { opacity: 1; }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+
+/* ═══════════════════════════════════════
+   BUILD LOOP DEMO — 5.5s loop
+   Step 1: cursor clicks "From" half of button
+   Step 2: cursor clicks the fence (source)
+   Step 3: cursor clicks the SAME fence again (self-loop)
+           → curved loop arrow appears above the fence
+   ═══════════════════════════════════════ */
+
+/* Reuse the same connect-btn style from connecting demo */
+.demo-build-loop .demo-connect-btn {
+  left: 6px; top: 8px;
+}
+
+.demo-build-loop .demo-fence-a { left: 180px; top: 90px; }
+.demo-build-loop .demo-start-arrow { left: 160px; top: 108px; animation: bl-persist 5.5s ease infinite; }
+
+.demo-build-loop .demo-glow-a1 { left: 190px; top: 100px; }
+.demo-build-loop .demo-glow-a2 { left: 190px; top: 100px; }
+
+.demo-build-loop .demo-loop-arrow {
+  left: 174px; top: 38px;
+  opacity: 0;
+  animation: bl-loop-arrow 5.5s ease infinite;
+}
+
+.demo-build-loop .demo-q-label {
+  left: 193px; top: 24px;
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: white;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #888;
+  opacity: 0;
+  animation: bl-q-label 5.5s ease infinite;
+}
+
+.demo-build-loop .demo-check {
+  left: 224px; top: 170px;
+  animation: bl-check 5.5s ease infinite;
+}
+
+.demo-build-loop .demo-cursor {
+  left: 18px; top: 22px;
+  animation: bl-cursor 5.5s ease infinite;
+}
+
+.demo-build-loop .demo-glow-a1 .demo-ripple {
+  animation: bl-ripple-a1 5.5s ease infinite;
+}
+
+.demo-build-loop .demo-glow-a2 .demo-ripple {
+  animation: bl-ripple-a2 5.5s ease infinite;
+}
+
+/* Cursor: From button → fence (1st click) → same fence (2nd click) */
+@keyframes bl-cursor {
+  0%        { left: 18px; top: 22px; opacity: 0; }
+  4%        { left: 18px; top: 22px; opacity: 1; }
+  8%        { left: 18px; top: 26px; }
+  11%       { left: 18px; top: 22px; }
+  /* Move to fence A (first click) */
+  26%       { left: 198px; top: 118px; }
+  29%       { left: 198px; top: 124px; }
+  32%       { left: 198px; top: 118px; }
+  /* Move slightly, then click same fence again */
+  52%       { left: 198px; top: 118px; }
+  55%       { left: 198px; top: 124px; }
+  58%       { left: 198px; top: 118px; }
+  84%       { left: 198px; top: 118px; opacity: 1; }
+  90%       { opacity: 0; }
+  100%      { left: 18px; top: 22px; opacity: 0; }
+}
+
+/* First click on fence A */
+@keyframes bl-ripple-a1 {
+  0%, 29%   { opacity: 0; transform: scale(0.5); }
+  32%       { opacity: 1; transform: scale(1); }
+  44%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Second click on fence A (self-loop) */
+@keyframes bl-ripple-a2 {
+  0%, 55%   { opacity: 0; transform: scale(0.5); }
+  58%       { opacity: 1; transform: scale(1); }
+  70%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Loop arrow pops in after second click */
+@keyframes bl-loop-arrow {
+  0%, 57%   { opacity: 0; transform: scale(0.3); }
+  62%       { opacity: 1; transform: scale(1.15); }
+  66%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* ? slot on the loop arrow */
+@keyframes bl-q-label {
+  0%, 63%   { opacity: 0; transform: scale(0.5); }
+  68%       { opacity: 1; transform: scale(1.1); }
+  71%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Check mark */
+@keyframes bl-check {
+  0%, 72%   { opacity: 0; transform: scale(0.3); }
+  78%       { opacity: 1; transform: scale(1.1); }
+  82%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+
+/* Start arrow persists */
+@keyframes bl-persist {
+  0%        { opacity: 0; }
+  4%        { opacity: 1; }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Reuse the connect-btn-fade and half animations from connecting demo */
+.demo-build-loop .demo-c-from {
+  animation: c-from-half 5.5s ease infinite;
+}
+.demo-build-loop .demo-c-to {
+  opacity: 0.35;
+  animation: c-to-half 5.5s ease infinite;
+}
+.demo-build-loop .demo-connect-btn {
+  animation: c-connect-btn-fade 5.5s ease infinite;
+}
+
+
+/* ═══════════════════════════════════════
+   SET ACCEPTING DEMO — 4.5s loop
+   Drag the bed from the toolbar to an empty
+   spot on the canvas → a NEW accepting fence
+   appears there (double ring = accepting state)
+   ═══════════════════════════════════════ */
+
+/* Dotted drop-zone shows where to drop */
+.demo-set-accepting .demo-drop-zone {
+  left: 222px; top: 72px;
+  width: 76px; height: 76px;
+  border: 2px dashed #aaa;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.25);
+  animation: sa-dropzone 4.5s ease infinite;
+}
+
+.demo-set-accepting .demo-bed-icon {
+  left: 18px; top: 110px;
+  animation: sa-bed-static 4.5s ease infinite;
+}
+
+.demo-set-accepting .demo-bed-dragging {
+  left: 18px; top: 110px;
+  opacity: 0;
+  animation: sa-bed-drag 4.5s ease infinite;
+}
+
+/* New fence pops in on the drop zone */
+.demo-set-accepting .demo-new-fence {
+  left: 222px; top: 72px;
+  opacity: 0;
+  animation: sa-new-fence 4.5s ease infinite;
+}
+
+/* Accepting ring — double circle around the new fence */
+.demo-set-accepting .demo-accepting-ring {
+  left: 210px; top: 60px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 3px solid #4CAF50;
+  box-shadow: 0 0 0 5px rgba(76,175,80,0.2);
+  opacity: 0;
+  animation: sa-accepting-ring 4.5s ease infinite;
+}
+
+/* Small bed icon that sits above the new fence */
+.demo-set-accepting .demo-bed-placed {
+  left: 234px; top: 58px;
+  opacity: 0;
+  animation: sa-bed-placed 4.5s ease infinite;
+}
+
+.demo-set-accepting .demo-check {
+  left: 200px; top: 175px;
+  animation: sa-check 4.5s ease infinite;
+}
+
+.demo-set-accepting .demo-cursor {
+  left: 26px; top: 125px;
+  animation: sa-cursor 4.5s ease infinite;
+}
+
+/* Drop zone fades when fence appears */
+@keyframes sa-dropzone {
+  0%, 5%    { opacity: 0; }
+  10%       { opacity: 1; }
+  58%       { opacity: 1; }
+  64%       { opacity: 0; }
+  100%      { opacity: 0; }
+}
+
+/* Cursor: pick up bed → drag to empty canvas → release */
+@keyframes sa-cursor {
+  0%        { left: 26px; top: 125px; opacity: 0; }
+  5%        { left: 26px; top: 125px; opacity: 1; }
+  12%       { left: 28px; top: 129px; }
+  15%       { left: 28px; top: 125px; }
+  55%       { left: 258px; top: 105px; }
+  60%       { left: 258px; top: 110px; }
+  62%       { left: 258px; top: 105px; }
+  80%       { left: 258px; top: 105px; opacity: 1; }
+  88%       { opacity: 0; }
+  100%      { left: 26px; top: 125px; opacity: 0; }
+}
+
+/* Static bed dims when picked up */
+@keyframes sa-bed-static {
+  0%, 10%   { opacity: 1; }
+  16%       { opacity: 0.3; }
+  100%      { opacity: 0.3; }
+}
+
+/* Dragged bed follows cursor to empty space */
+@keyframes sa-bed-drag {
+  0%, 14%   { left: 18px; top: 110px; opacity: 0; }
+  16%       { left: 18px; top: 110px; opacity: 0.85; }
+  55%       { left: 238px; top: 97px; opacity: 0.85; }
+  60%       { left: 238px; top: 97px; opacity: 0; }
+  100%      { opacity: 0; }
+}
+
+/* New fence pops in at drop point */
+@keyframes sa-new-fence {
+  0%, 58%   { opacity: 0; transform: scale(0.7); }
+  63%       { opacity: 1; transform: scale(1.05); }
+  67%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Accepting ring scales in around the new fence */
+@keyframes sa-accepting-ring {
+  0%, 62%   { opacity: 0; transform: scale(0.6); }
+  68%       { opacity: 1; transform: scale(1.08); }
+  72%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Bed icon on top of new fence */
+@keyframes sa-bed-placed {
+  0%, 60%   { opacity: 0; }
+  67%       { opacity: 1; }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Check */
+@keyframes sa-check {
+  0%, 70%   { opacity: 0; transform: scale(0.3); }
+  76%       { opacity: 1; transform: scale(1.1); }
+  80%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+
+/* ═══════════════════════════════════════
+   ADD STATE DEMO — 4.5s loop
+   ═══════════════════════════════════════ */
+
+.demo-add-state .demo-ghost-fence {
+  left: 180px; top: 95px;
+  opacity: 0;
+  animation: as-ghost 4.5s ease infinite;
+}
+
+.demo-add-state .demo-toolbar-fence {
+  left: 20px; top: 110px;
+  animation: as-toolbar 4.5s ease infinite;
+}
+
+.demo-add-state .demo-fence-dragging {
+  left: 20px; top: 100px;
+  opacity: 0;
+  animation: as-drag 4.5s ease infinite;
+}
+
+.demo-add-state .demo-fence-landed {
+  left: 180px; top: 95px;
+  opacity: 0;
+  animation: as-landed 4.5s ease infinite;
+}
+
+.demo-add-state .demo-check {
+  left: 200px; top: 175px;
+  animation: as-check 4.5s ease infinite;
+}
+
+.demo-add-state .demo-cursor {
+  left: 30px; top: 125px;
+  animation: as-cursor 4.5s ease infinite;
+}
+
+/* Ghost outline pulsing at destination */
+@keyframes as-ghost {
+  0%, 5%   { opacity: 0; }
+  10%      { opacity: 0.2; }
+  30%      { opacity: 0.35; }
+  50%      { opacity: 0.2; }
+  58%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Toolbar fence fades when dragged */
+@keyframes as-toolbar {
+  0%, 10%  { opacity: 1; }
+  18%      { opacity: 0.3; }
+  100%     { opacity: 0.3; }
+}
+
+/* Fence being dragged */
+@keyframes as-drag {
+  0%, 15%  { left: 20px; top: 100px; opacity: 0; }
+  18%      { left: 20px; top: 100px; opacity: 0.8; }
+  55%      { left: 180px; top: 95px; opacity: 0.8; }
+  60%      { left: 180px; top: 95px; opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Landed fence pops in */
+@keyframes as-landed {
+  0%, 57%  { opacity: 0; transform: scale(0.85); }
+  62%      { opacity: 1; transform: scale(1.05); }
+  66%      { transform: scale(1); }
+  88%      { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Cursor: toolbar → canvas center */
+@keyframes as-cursor {
+  0%       { left: 30px; top: 125px; opacity: 0; }
+  5%       { left: 30px; top: 125px; opacity: 1; }
+  12%      { left: 32px; top: 129px; }
+  15%      { left: 32px; top: 125px; }
+  55%      { left: 200px; top: 112px; }
+  60%      { left: 200px; top: 116px; }
+  62%      { left: 200px; top: 112px; }
+  80%      { left: 200px; top: 112px; opacity: 1; }
+  88%      { opacity: 0; }
+  100%     { left: 52px; top: 125px; opacity: 0; }
+}
+
+/* Check */
+@keyframes as-check {
+  0%, 65%  { opacity: 0; transform: scale(0.3); }
+  72%      { opacity: 1; transform: scale(1.1); }
+  76%      { transform: scale(1); }
+  88%      { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+
+/* ═══════════════════════════════════════
+   PLACE SHEEP DEMO — 5s loop
+   Click 1: click sheep in left toolbar → selected (green border)
+   Click 2: click arrow → sheep placed on arrow
+   ═══════════════════════════════════════ */
+
+/* Fences shifted right to make room for left-toolbar sheep */
+.demo-place-sheep .demo-fence-a { left: 105px; top: 85px; }
+.demo-place-sheep .demo-fence-b { left: 340px; top: 85px; }
+
+.demo-place-sheep .demo-arrow {
+  left: 165px; top: 100px;
+  width: 167px; height: 28px;
+  animation: ps-persist 5s ease infinite;
+}
+
+/* Sheep in the toolbar — left side, like the actual sidebar */
+.demo-place-sheep .demo-toolbar-sheep {
+  left: 8px; top: 115px;
+  padding: 5px;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  background: #fafafa;
+  animation: ps-toolbar-sheep 5s ease infinite;
+}
+
+.demo-place-sheep .demo-sheep-placed {
+  left: 245px; top: 68px;
+  opacity: 0;
+  animation: ps-placed 5s ease infinite;
+}
+
+/* Ripple on sheep (click 1) */
+.demo-place-sheep .demo-glow-sheep { left: 8px; top: 115px; }
+.demo-place-sheep .demo-glow-sheep .demo-ripple {
+  animation: ps-ripple-sheep 5s ease infinite;
+}
+
+/* Ripple on arrow (click 2) */
+.demo-place-sheep .demo-glow-arrow { left: 252px; top: 102px; }
+.demo-place-sheep .demo-glow-arrow .demo-ripple {
+  animation: ps-ripple-arrow 5s ease infinite;
+}
+
+.demo-place-sheep .demo-check {
+  left: 230px; top: 165px;
+  animation: ps-check 5s ease infinite;
+}
+
+.demo-place-sheep .demo-cursor {
+  left: 16px; top: 130px;
+  animation: ps-cursor 5s ease infinite;
+}
+
+/* Toolbar sheep: normal → selected (green border) on click */
+@keyframes ps-toolbar-sheep {
+  0%, 4%    { border-color: #ccc; box-shadow: none; opacity: 1; }
+  /* Click happens at ~12% */
+  14%       { border-color: #4CAF50; box-shadow: 0 0 0 3px rgba(76,175,80,0.35); }
+  80%       { border-color: #4CAF50; box-shadow: 0 0 0 3px rgba(76,175,80,0.35); opacity: 1; }
+  88%       { opacity: 0.5; }
+  94%, 100% { opacity: 0; border-color: #ccc; box-shadow: none; }
+}
+
+/* Cursor: click sheep → move to arrow → click arrow */
+@keyframes ps-cursor {
+  0%        { left: 16px; top: 130px; opacity: 0; }
+  4%        { left: 16px; top: 130px; opacity: 1; }
+  /* Click sheep */
+  10%       { left: 18px; top: 134px; }
+  13%       { left: 18px; top: 130px; }
+  /* Move to arrow */
+  42%       { left: 252px; top: 105px; }
+  /* Click arrow */
+  46%       { left: 252px; top: 110px; }
+  49%       { left: 252px; top: 105px; }
+  76%       { left: 252px; top: 105px; opacity: 1; }
+  84%       { opacity: 0; }
+  100%      { left: 16px; top: 130px; opacity: 0; }
+}
+
+/* Ripple on sheep when clicked */
+@keyframes ps-ripple-sheep {
+  0%, 10%   { opacity: 0; transform: scale(0.5); }
+  13%       { opacity: 1; transform: scale(1); }
+  24%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Ripple on arrow when clicked */
+@keyframes ps-ripple-arrow {
+  0%, 46%   { opacity: 0; transform: scale(0.5); }
+  49%       { opacity: 1; transform: scale(1); }
+  62%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Sheep pops in on arrow */
+@keyframes ps-placed {
+  0%, 50%   { opacity: 0; transform: scale(0.7); }
+  56%       { opacity: 1; transform: scale(1.1); }
+  60%       { transform: scale(1); }
+  82%       { opacity: 1; }
+  90%, 100% { opacity: 0; }
+}
+
+/* Fences and arrow persist */
+@keyframes ps-persist {
+  0%        { opacity: 0; }
+  4%        { opacity: 1; }
+  82%       { opacity: 1; }
+  90%, 100% { opacity: 0; }
+}
+
+/* Check */
+@keyframes ps-check {
+  0%, 62%   { opacity: 0; transform: scale(0.3); }
+  68%       { opacity: 1; transform: scale(1.1); }
+  72%       { transform: scale(1); }
+  82%       { opacity: 1; }
+  90%, 100% { opacity: 0; transform: scale(1); }
+}
+
+
+/* ═══════════════════════════════════════
+   TRACE PATH DEMO — 12s loop, two phases
+   Phase 1: Accept (pattern matches → bed)
+   Phase 2: Reject (no matching arrow → stuck)
+   ═══════════════════════════════════════ */
+
+/* ── Pattern displays ── */
+.demo-trace-path .demo-pattern-accept,
+.demo-trace-path .demo-pattern-reject {
+  left: 50%; top: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  padding: 6px 14px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  white-space: nowrap;
+}
+
+.demo-pattern-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  font-family: 'Nunito', sans-serif;
+}
+
+.demo-pattern-arrow {
+  font-size: 14px;
+  color: #888;
+}
+
+.demo-trace-path .demo-pattern-accept { animation: tp-pattern-accept 12s ease infinite; }
+.demo-trace-path .demo-pattern-reject { animation: tp-pattern-reject 12s ease infinite; }
+
+/* ── Automaton layout ── */
+.demo-trace-path .demo-fence-a { left: 48px; top: 100px; animation: tp-scene 12s ease infinite; }
+.demo-trace-path .demo-fence-b { left: 185px; top: 100px; animation: tp-scene 12s ease infinite; }
+.demo-trace-path .demo-fence-c { left: 322px; top: 104px; animation: tp-scene 12s ease infinite; }
+
+.demo-trace-path .demo-start-arrow { left: 32px; top: 116px; animation: tp-scene 12s ease infinite; }
+
+.demo-trace-path .demo-arrow-1 { left: 96px; top: 110px; width: 92px; height: 20px; animation: tp-scene 12s ease infinite; }
+.demo-trace-path .demo-arrow-2 { left: 233px; top: 110px; width: 92px; height: 20px; animation: tp-scene 12s ease infinite; }
+
+.demo-trace-path .demo-sheep-label-1 { left: 126px; top: 82px; animation: tp-scene 12s ease infinite; }
+.demo-trace-path .demo-sheep-label-2 { left: 263px; top: 82px; animation: tp-scene 12s ease infinite; }
+
+/* ── Buttons ── */
+.demo-trace-path .demo-accept-btn {
+  left: 70px; top: 210px;
+  padding: 7px 14px;
+  background: #4CAF50;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  animation: tp-accept-btn 12s ease infinite;
+  white-space: nowrap;
+}
+
+.demo-trace-path .demo-reject-btn {
+  left: 225px; top: 210px;
+  padding: 7px 14px;
+  background: #f44336;
+  color: white;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  animation: tp-reject-btn 12s ease infinite;
+  white-space: nowrap;
+}
+
+/* ── Phase 1: Accept trace sheep ── */
+.demo-trace-path .demo-trace-accept {
+  left: 58px; top: 72px;
+  opacity: 0;
+  animation: tp-trace-accept 12s ease infinite;
+}
+
+.demo-trace-path .demo-glow-a1 { left: 58px; top: 110px; }
+.demo-trace-path .demo-glow-b1 { left: 195px; top: 110px; }
+.demo-trace-path .demo-glow-c1 { left: 332px; top: 110px; }
+.demo-trace-path .demo-glow-a1 .demo-ripple { animation: tp-glow-a1 12s ease infinite; }
+.demo-trace-path .demo-glow-b1 .demo-ripple { animation: tp-glow-b1 12s ease infinite; }
+.demo-trace-path .demo-glow-c1 .demo-ripple { animation: tp-glow-c1 12s ease infinite; }
+
+/* ── Phase 2: Reject trace sheep ── */
+.demo-trace-path .demo-trace-reject {
+  left: 58px; top: 72px;
+  opacity: 0;
+  animation: tp-trace-reject 12s ease infinite;
+}
+
+.demo-trace-path .demo-stuck-x {
+  left: 60px; top: 68px;
+  font-size: 28px;
+  font-weight: 900;
+  color: #f44336;
+  opacity: 0;
+  animation: tp-stuck 12s ease infinite;
+}
+
+/* ── Result checks ── */
+.demo-trace-path .demo-check-1 { left: 200px; top: 170px; animation: tp-check-1 12s ease infinite; }
+.demo-trace-path .demo-check-2 { left: 200px; top: 170px; animation: tp-check-2 12s ease infinite; }
+
+/* ── Cursor ── */
+.demo-trace-path .demo-cursor {
+  left: 58px; top: 120px;
+  animation: tp-cursor 12s ease infinite;
+}
+
+/* ═══ KEYFRAMES ═══ */
+
+/* Scene elements persistent */
+@keyframes tp-scene {
+  0%       { opacity: 0; }
+  3%       { opacity: 1; }
+  92%      { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+
+/* Accept pattern: visible first half */
+@keyframes tp-pattern-accept {
+  0%       { opacity: 0; }
+  3%       { opacity: 1; }
+  42%      { opacity: 1; }
+  46%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Reject pattern: visible second half */
+@keyframes tp-pattern-reject {
+  0%, 46%  { opacity: 0; }
+  50%      { opacity: 1; }
+  90%      { opacity: 1; }
+  94%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Accept button: visible first half, dims second half */
+@keyframes tp-accept-btn {
+  0%       { opacity: 0; }
+  3%       { opacity: 1; }
+  42%      { opacity: 1; }
+  46%      { opacity: 0.4; }
+  90%      { opacity: 0.4; }
+  96%, 100% { opacity: 0; }
+}
+
+/* Reject button: dimmed first half, visible second half */
+@keyframes tp-reject-btn {
+  0%       { opacity: 0; }
+  3%       { opacity: 0.4; }
+  42%      { opacity: 0.4; }
+  46%      { opacity: 1; }
+  90%      { opacity: 1; }
+  96%, 100% { opacity: 0; }
+}
+
+/* ── Phase 1: sheep traces Start → A → B → C(bed) ── */
+@keyframes tp-trace-accept {
+  0%, 5%   { left: 58px; top: 72px; opacity: 0; }
+  7%       { left: 58px; top: 72px; opacity: 1; }
+  /* hop to fence B */
+  16%      { left: 195px; top: 64px; opacity: 1; }
+  18%      { left: 195px; top: 72px; }
+  /* hop to fence C (bed) */
+  27%      { left: 332px; top: 64px; opacity: 1; }
+  29%      { left: 332px; top: 72px; opacity: 1; }
+  33%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Glow on fences as accept-sheep arrives */
+@keyframes tp-glow-a1 {
+  0%, 5%   { opacity: 0; transform: scale(0.5); }
+  7%       { opacity: 1; transform: scale(1); }
+  13%      { opacity: 0; transform: scale(1.6); }
+  100%     { opacity: 0; }
+}
+
+@keyframes tp-glow-b1 {
+  0%, 16%  { opacity: 0; transform: scale(0.5); }
+  18%      { opacity: 1; transform: scale(1); }
+  24%      { opacity: 0; transform: scale(1.6); }
+  100%     { opacity: 0; }
+}
+
+@keyframes tp-glow-c1 {
+  0%, 27%  { opacity: 0; transform: scale(0.5); }
+  29%      { opacity: 1; transform: scale(1); }
+  35%      { opacity: 0; transform: scale(1.6); }
+  100%     { opacity: 0; }
+}
+
+/* Cursor Phase 1: watch trace then click Accept */
+/* Cursor Phase 2: watch reject trace then click Reject */
+@keyframes tp-cursor {
+  0%       { left: 58px; top: 120px; opacity: 0; }
+  5%       { left: 58px; top: 120px; opacity: 1; }
+  /* follow accept trace to B */
+  16%      { left: 195px; top: 120px; }
+  /* follow to C */
+  27%      { left: 332px; top: 120px; }
+  /* move down to Falls Asleep button */
+  33%      { left: 110px; top: 224px; }
+  /* click Falls Asleep */
+  35%      { left: 110px; top: 230px; }
+  37%      { left: 110px; top: 224px; }
+  42%      { left: 110px; top: 224px; opacity: 1; }
+  44%      { opacity: 0; }
+
+  /* Phase 2 begins */
+  50%      { left: 58px; top: 120px; opacity: 0; }
+  52%      { left: 58px; top: 120px; opacity: 1; }
+  /* wait for stuck */
+  64%      { left: 58px; top: 120px; }
+  /* shake head with sheep */
+  66%      { left: 68px; top: 120px; }
+  68%      { left: 48px; top: 120px; }
+  70%      { left: 58px; top: 120px; }
+  /* move to Stays Awake button */
+  76%      { left: 260px; top: 224px; }
+  /* click Stays Awake */
+  78%      { left: 260px; top: 230px; }
+  80%      { left: 260px; top: 224px; }
+  86%      { left: 260px; top: 224px; opacity: 1; }
+  88%      { opacity: 0; }
+  100%     { left: 58px; top: 120px; opacity: 0; }
+}
+
+/* ── Phase 2: sheep tries but gets stuck ── */
+@keyframes tp-trace-reject {
+  0%, 52%  { left: 58px; top: 72px; opacity: 0; }
+  54%      { left: 58px; top: 72px; opacity: 1; }
+  /* try to move but no matching arrow — wobble */
+  60%      { left: 78px; top: 68px; }
+  62%      { left: 48px; top: 76px; }
+  64%      { left: 58px; top: 72px; opacity: 1; }
+  /* stay stuck */
+  74%      { left: 58px; top: 72px; opacity: 1; }
+  78%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* ✗ appears when sheep is stuck */
+@keyframes tp-stuck {
+  0%, 63%  { opacity: 0; transform: scale(0.3); }
+  66%      { opacity: 1; transform: scale(1.2); }
+  68%      { transform: scale(1); }
+  78%      { opacity: 1; }
+  82%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Check 1: after Accept click */
+@keyframes tp-check-1 {
+  0%, 36%  { opacity: 0; transform: scale(0.3); }
+  39%      { opacity: 1; transform: scale(1.1); }
+  41%      { transform: scale(1); }
+  44%      { opacity: 1; }
+  46%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+/* Check 2: after Reject click */
+@keyframes tp-check-2 {
+  0%, 80%  { opacity: 0; transform: scale(0.3); }
+  83%      { opacity: 1; transform: scale(1.1); }
+  85%      { transform: scale(1); }
+  90%      { opacity: 1; }
+  94%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+
+/* ═══════════════════════════════════════
+   CLICK EDGE DEMO — 5.5s loop
+   (DragLevel: drag sheep from palette onto arrow)
+   ═══════════════════════════════════════ */
+
+.demo-click-edge .demo-fence-a { left: 55px; top: 72px; }
+.demo-click-edge .demo-fence-b { left: 295px; top: 72px; }
+
+.demo-click-edge .demo-arrow {
+  left: 110px; top: 84px;
+  width: 190px; height: 24px;
+  animation: ce-persist 5.5s ease infinite;
+}
+
+.demo-click-edge .demo-glow-arrow { left: 195px; top: 84px; }
+.demo-click-edge .demo-glow-arrow .demo-ripple { animation: ce-ripple-drop 5.5s ease infinite; }
+
+/* Palette sheep */
+.demo-click-edge .demo-palette-1 {
+  left: 140px; top: 195px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 4px;
+  background: #fafafa;
+  animation: ce-palette-1 5.5s ease infinite;
+}
+
+.demo-click-edge .demo-palette-2 {
+  left: 210px; top: 195px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 4px;
+  background: #fafafa;
+  animation: ce-persist 5.5s ease infinite;
+}
+
+/* Sheep being dragged — follows cursor from palette up to arrow */
+.demo-click-edge .demo-sheep-dragging {
+  left: 150px; top: 200px;
+  opacity: 0;
+  animation: ce-drag-sheep 5.5s ease infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  z-index: 5;
+}
+
+/* Sheep placed on arrow (final position) */
+.demo-click-edge .demo-sheep-placed {
+  left: 185px; top: 52px;
+  opacity: 0;
+  animation: ce-placed 5.5s ease infinite;
+}
+
+.demo-click-edge .demo-check {
+  left: 190px; top: 140px;
+  animation: ce-check 5.5s ease infinite;
+}
+
+/* Cursor: move to palette → grab sheep → drag up to arrow → release */
+.demo-click-edge .demo-cursor {
+  left: 200px; top: 100px;
+  animation: ce-cursor 5.5s ease infinite;
+  z-index: 6;
+}
+
+@keyframes ce-persist {
+  0%       { opacity: 0; }
+  4%       { opacity: 1; }
+  86%      { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* Palette sheep 1 fades out when "picked up" */
+@keyframes ce-palette-1 {
+  0%       { opacity: 0; }
+  4%       { opacity: 1; }
+  /* sheep gets picked up */
+  24%      { opacity: 1; }
+  28%      { opacity: 0.3; }
+  86%      { opacity: 0.3; }
+  92%, 100% { opacity: 0; }
+}
+
+/* Cursor: idle → move to palette → grab → drag up → release */
+@keyframes ce-cursor {
+  0%       { left: 200px; top: 100px; opacity: 0; }
+  4%       { left: 200px; top: 100px; opacity: 1; }
+  /* Move down to palette sheep */
+  18%      { left: 155px; top: 210px; }
+  /* Press down (grab) */
+  22%      { left: 155px; top: 214px; }
+  24%      { left: 155px; top: 210px; }
+  /* Drag up toward arrow — smooth arc */
+  36%      { left: 165px; top: 170px; }
+  48%      { left: 185px; top: 115px; }
+  56%      { left: 195px; top: 80px; }
+  /* Release */
+  60%      { left: 200px; top: 72px; }
+  /* Drift away */
+  70%      { left: 230px; top: 60px; opacity: 1; }
+  80%      { opacity: 0; }
+  100%     { left: 200px; top: 100px; opacity: 0; }
+}
+
+/* Sheep follows cursor during drag */
+@keyframes ce-drag-sheep {
+  0%, 24%  { left: 150px; top: 200px; opacity: 0; transform: scale(1); }
+  26%      { left: 150px; top: 200px; opacity: 1; transform: scale(1.1); }
+  /* Follow cursor up */
+  36%      { left: 160px; top: 160px; opacity: 1; transform: scale(1.1); }
+  48%      { left: 180px; top: 105px; transform: scale(1.1); }
+  56%      { left: 190px; top: 70px; transform: scale(1.1); }
+  /* Drop — shrink into place */
+  60%      { left: 185px; top: 52px; opacity: 1; transform: scale(1.05); }
+  62%      { opacity: 0; transform: scale(1); }
+  100%     { opacity: 0; }
+}
+
+/* Ripple on arrow when sheep drops */
+@keyframes ce-ripple-drop {
+  0%, 58%  { opacity: 0; transform: scale(0.5); }
+  62%      { opacity: 1; transform: scale(1); }
+  72%      { opacity: 0; transform: scale(1.8); }
+  100%     { opacity: 0; }
+}
+
+/* Sheep pops into final place on arrow */
+@keyframes ce-placed {
+  0%, 59%  { opacity: 0; transform: scale(0.7); }
+  64%      { opacity: 1; transform: scale(1.1); }
+  68%      { transform: scale(1); }
+  86%      { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* Check */
+@keyframes ce-check {
+  0%, 66%  { opacity: 0; transform: scale(0.3); }
+  72%      { opacity: 1; transform: scale(1.1); }
+  76%      { transform: scale(1); }
+  86%      { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════════
+   DRAG-SINGLE DEMO
+   Simplest: one sheep onto one arrow. 6.5s duration.
+   
+   Timeline:
+     0-5%   fade in
+     8-44%  drag sheep-3 to arrow
+     50-60% "Matched!"
+     88-100% fade out
+   ══════════════════════════════════════════════════ */
+
+.demo-drag-single .demo-target-pattern {
+  position: absolute; left: 50%; top: 10px;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border-radius: 10px; padding: 5px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  font-size: 13px; font-weight: 600; color: #555;
+  animation: ds-persist 6.5s ease infinite;
+}
+
+.demo-drag-single .demo-fence-a { left: 80px; top: 90px; animation: ds-persist 6.5s ease infinite; }
+.demo-drag-single .demo-fence-b { left: 290px; top: 90px; animation: ds-persist 6.5s ease infinite; }
+.demo-drag-single .demo-start-arrow { left: 58px; top: 106px; animation: ds-persist 6.5s ease infinite; }
+
+.demo-drag-single .demo-arrow {
+  left: 132px; top: 100px; width: 160px; height: 24px;
+  animation: ds-persist 6.5s ease infinite;
+}
+
+.demo-drag-single .demo-pal-1 {
+  left: 150px; top: 200px; border: 2px solid #ccc; border-radius: 10px;
+  padding: 4px; background: #fafafa; animation: ds-pal1 6.5s ease infinite;
+}
+.demo-drag-single .demo-pal-2 {
+  left: 230px; top: 200px; border: 2px solid #ccc; border-radius: 10px;
+  padding: 4px; background: #fafafa; animation: ds-persist 6.5s ease infinite;
+}
+
+.demo-drag-single .demo-drag-1 {
+  left: 160px; top: 205px; opacity: 0;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); z-index: 5;
+  animation: ds-drag1 6.5s ease infinite;
+}
+.demo-drag-single .demo-placed-1 {
+  left: 195px; top: 74px; opacity: 0;
+  animation: ds-placed1 6.5s ease infinite;
+}
+
+.demo-drag-single .demo-glow-1 { left: 208px; top: 100px; }
+.demo-drag-single .demo-glow-1 .demo-ripple { animation: ds-ripple1 6.5s ease infinite; }
+
+.demo-drag-single .demo-match-tick {
+  position: absolute; left: 50%; top: 155px; transform: translateX(-50%);
+  background: #43A047; color: #fff; font-weight: 700;
+  padding: 6px 18px; border-radius: 20px; font-size: 15px;
+  box-shadow: 0 2px 8px rgba(67,160,71,0.4); white-space: nowrap;
+  animation: ds-match-tick 6.5s ease infinite;
+}
+
+.demo-drag-single .demo-cursor {
+  left: 210px; top: 140px; z-index: 6;
+  animation: ds-cursor 6.5s ease infinite;
+}
+
+@keyframes ds-persist {
+  0% { opacity: 0; } 4% { opacity: 1; } 88% { opacity: 1; } 94%, 100% { opacity: 0; }
+}
+@keyframes ds-pal1 {
+  0% { opacity: 0; } 4% { opacity: 1; } 20% { opacity: 1; } 24% { opacity: 0.3; }
+  88% { opacity: 0.3; } 94%, 100% { opacity: 0; }
+}
+@keyframes ds-cursor {
+  0%   { left: 210px; top: 140px; opacity: 0; }
+  5%   { left: 210px; top: 140px; opacity: 1; }
+  16%  { left: 168px; top: 218px; }
+  20%  { left: 168px; top: 222px; }
+  22%  { left: 168px; top: 218px; }
+  32%  { left: 190px; top: 160px; }
+  42%  { left: 210px; top: 104px; }
+  46%  { left: 215px; top: 92px; }
+  52%  { left: 235px; top: 80px; opacity: 1; }
+  60%  { opacity: 0; }
+  100% { left: 210px; top: 140px; opacity: 0; }
+}
+@keyframes ds-drag1 {
+  0%, 21% { left: 160px; top: 205px; opacity: 0; transform: scale(1); }
+  23%     { left: 160px; top: 205px; opacity: 1; transform: scale(1.12); }
+  32%     { left: 183px; top: 148px; transform: scale(1.12); }
+  42%     { left: 200px; top: 90px; transform: scale(1.1); }
+  46%     { left: 195px; top: 74px; opacity: 1; transform: scale(1.05); }
+  48%     { opacity: 0; transform: scale(1); }
+  100%    { opacity: 0; }
+}
+@keyframes ds-placed1 {
+  0%, 46% { opacity: 0; transform: scale(0.6); }
+  50%     { opacity: 1; transform: scale(1.15); }
+  54%     { transform: scale(1); }
+  88%     { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+@keyframes ds-ripple1 {
+  0%, 44% { opacity: 0; transform: scale(0.5); }
+  48%     { opacity: 1; transform: scale(1); }
+  56%     { opacity: 0; transform: scale(1.8); }
+  100%    { opacity: 0; }
+}
+@keyframes ds-match-tick {
+  0%, 56% { opacity: 0; transform: translateX(-50%) scale(0.4); }
+  62%     { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  66%     { transform: translateX(-50%) scale(1); }
+  88%     { opacity: 1; }
+  94%, 100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}
+
+/* ══════════════════════════════════════════════════
+   DRAG-MATCH DEMO
+   Full flow: drag two sheep from palette onto arrows
+   to match a target pattern. 9s duration.
+   
+   Timeline:
+     0-4%   fade in
+     6-34%  drag sheep-3 to arrow 1
+     40-68% drag sheep-8 to arrow 2
+     74-84% "Matched!" badge
+     88-100% fade out
+   ══════════════════════════════════════════════════ */
+
+/* ── Static layout ── */
+
+.demo-drag-match .demo-target-pattern {
+  position: absolute;
+  left: 50%; top: 8px;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 6px;
+  background: #fff; border-radius: 10px; padding: 4px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  font-size: 13px; font-weight: 600; color: #555;
+  animation: dm-persist 9s ease infinite;
+}
+.demo-target-label { color: #888; font-size: 12px; }
+.demo-target-arrow { color: #999; font-size: 16px; }
+
+.demo-drag-match .demo-fence-a { left: 35px; top: 88px; animation: dm-persist 9s ease infinite; }
+.demo-drag-match .demo-fence-b { left: 180px; top: 88px; animation: dm-persist 9s ease infinite; }
+.demo-drag-match .demo-fence-c { left: 325px; top: 90px; animation: dm-persist 9s ease infinite; }
+
+.demo-drag-match .demo-start-arrow { left: 18px; top: 104px; animation: dm-persist 9s ease infinite; }
+
+.demo-drag-match .demo-arrow-1 {
+  left: 82px; top: 98px; width: 90px; height: 20px;
+  animation: dm-persist 9s ease infinite;
+}
+.demo-drag-match .demo-arrow-2 {
+  left: 228px; top: 98px; width: 89px; height: 20px;
+  animation: dm-persist 9s ease infinite;
+}
+
+/* ── Palette tiles ── */
+
+.demo-drag-match .demo-pal-1 {
+  left: 140px; top: 215px;
+  border: 2px solid #ccc; border-radius: 10px;
+  padding: 4px; background: #fafafa;
+  animation: dm-pal1 9s ease infinite;
+}
+.demo-drag-match .demo-pal-2 {
+  left: 225px; top: 215px;
+  border: 2px solid #ccc; border-radius: 10px;
+  padding: 4px; background: #fafafa;
+  animation: dm-pal2 9s ease infinite;
+}
+
+/* ── Dragged sheep (phase 1: sheep-3) ── */
+
+.demo-drag-match .demo-drag-1 {
+  left: 150px; top: 220px; opacity: 0;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  z-index: 5;
+  animation: dm-drag1 9s ease infinite;
+}
+
+/* ── Placed sheep on arrow 1 ── */
+
+.demo-drag-match .demo-placed-1 {
+  left: 118px; top: 76px; opacity: 0;
+  animation: dm-placed1 9s ease infinite;
+}
+
+/* ── Dragged sheep (phase 2: sheep-8) ── */
+
+.demo-drag-match .demo-drag-2 {
+  left: 235px; top: 220px; opacity: 0;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  z-index: 5;
+  animation: dm-drag2 9s ease infinite;
+}
+
+/* ── Placed sheep on arrow 2 ── */
+
+.demo-drag-match .demo-placed-2 {
+  left: 264px; top: 76px; opacity: 0;
+  animation: dm-placed2 9s ease infinite;
+}
+
+/* ── Ripples ── */
+
+.demo-drag-match .demo-glow-1 { left: 120px; top: 96px; }
+.demo-drag-match .demo-glow-1 .demo-ripple { animation: dm-ripple1 9s ease infinite; }
+
+.demo-drag-match .demo-glow-2 { left: 266px; top: 96px; }
+.demo-drag-match .demo-glow-2 .demo-ripple { animation: dm-ripple2 9s ease infinite; }
+
+/* ── Match label ── */
+
+.demo-drag-match .demo-match-tick {
+  position: absolute;
+  left: 50%; top: 155px;
+  transform: translateX(-50%);
+  background: #43A047; color: #fff; font-weight: 700;
+  padding: 6px 18px; border-radius: 20px; font-size: 15px;
+  box-shadow: 0 2px 8px rgba(67,160,71,0.4);
+  white-space: nowrap;
+  animation: dm-match-tick 9s ease infinite;
+}
+
+/* ── Cursor ── */
+
+.demo-drag-match .demo-cursor {
+  left: 210px; top: 150px; z-index: 6;
+  animation: dm-cursor 9s ease infinite;
+}
+
+/* ══════════════════════════════
+   KEYFRAMES
+   ══════════════════════════════ */
+
+/* Persist — generic fade in / out */
+@keyframes dm-persist {
+  0%        { opacity: 0; }
+  3%        { opacity: 1; }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Palette 1 fades when picked up */
+@keyframes dm-pal1 {
+  0%        { opacity: 0; }
+  3%        { opacity: 1; }
+  16%       { opacity: 1; }
+  20%       { opacity: 0.3; }
+  88%       { opacity: 0.3; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Palette 2 fades when picked up */
+@keyframes dm-pal2 {
+  0%        { opacity: 0; }
+  3%        { opacity: 1; }
+  50%       { opacity: 1; }
+  54%       { opacity: 0.3; }
+  88%       { opacity: 0.3; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Cursor path: center → pal1 → arrow1 → pal2 → arrow2 → away */
+@keyframes dm-cursor {
+  0%        { left: 210px; top: 150px; opacity: 0; }
+  4%        { left: 210px; top: 150px; opacity: 1; }
+  /* Move to palette sheep-3 */
+  14%       { left: 158px; top: 232px; }
+  /* Press down */
+  17%       { left: 158px; top: 236px; }
+  18%       { left: 158px; top: 232px; }
+  /* Drag up to arrow 1 */
+  24%       { left: 145px; top: 180px; }
+  30%       { left: 135px; top: 120px; }
+  34%       { left: 130px; top: 98px; }
+  /* Release — drift */
+  37%       { left: 145px; top: 85px; opacity: 1; }
+  /* Move to palette sheep-8 */
+  44%       { left: 240px; top: 232px; }
+  /* Press down */
+  48%       { left: 240px; top: 236px; }
+  50%       { left: 240px; top: 232px; }
+  /* Drag up to arrow 2 */
+  56%       { left: 260px; top: 180px; }
+  62%       { left: 272px; top: 120px; }
+  66%       { left: 276px; top: 98px; }
+  /* Release — drift */
+  70%       { left: 290px; top: 85px; opacity: 1; }
+  78%       { left: 310px; top: 75px; opacity: 0; }
+  100%      { left: 210px; top: 150px; opacity: 0; }
+}
+
+/* Drag sheep-3: appear on grab, follow cursor, vanish on drop */
+@keyframes dm-drag1 {
+  0%, 17%   { left: 150px; top: 220px; opacity: 0; transform: scale(1); }
+  19%       { left: 150px; top: 220px; opacity: 1; transform: scale(1.12); }
+  24%       { left: 138px; top: 168px; opacity: 1; transform: scale(1.12); }
+  30%       { left: 126px; top: 108px; transform: scale(1.12); }
+  34%       { left: 118px; top: 76px; opacity: 1; transform: scale(1.05); }
+  36%       { opacity: 0; transform: scale(1); }
+  100%      { opacity: 0; }
+}
+
+/* Placed sheep-3 pops in after drop */
+@keyframes dm-placed1 {
+  0%, 34%   { opacity: 0; transform: scale(0.6); }
+  37%       { opacity: 1; transform: scale(1.15); }
+  40%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Drag sheep-8: appear on grab, follow cursor, vanish on drop */
+@keyframes dm-drag2 {
+  0%, 49%   { left: 235px; top: 220px; opacity: 0; transform: scale(1); }
+  51%       { left: 235px; top: 220px; opacity: 1; transform: scale(1.12); }
+  56%       { left: 252px; top: 168px; opacity: 1; transform: scale(1.12); }
+  62%       { left: 264px; top: 108px; transform: scale(1.12); }
+  66%       { left: 268px; top: 76px; opacity: 1; transform: scale(1.05); }
+  68%       { opacity: 0; transform: scale(1); }
+  100%      { opacity: 0; }
+}
+
+/* Placed sheep-8 pops in after drop */
+@keyframes dm-placed2 {
+  0%, 66%   { opacity: 0; transform: scale(0.6); }
+  69%       { opacity: 1; transform: scale(1.15); }
+  72%       { transform: scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+
+/* Ripple on arrow 1 */
+@keyframes dm-ripple1 {
+  0%, 33%   { opacity: 0; transform: scale(0.5); }
+  36%       { opacity: 1; transform: scale(1); }
+  42%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Ripple on arrow 2 */
+@keyframes dm-ripple2 {
+  0%, 65%   { opacity: 0; transform: scale(0.5); }
+  68%       { opacity: 1; transform: scale(1); }
+  74%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* "✓ Matched!" badge */
+@keyframes dm-match-tick {
+  0%, 72%   { opacity: 0; transform: translateX(-50%) scale(0.4); }
+  76%       { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  80%       { transform: translateX(-50%) scale(1); }
+  88%       { opacity: 1; }
+  94%, 100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}
+
+/* ══════════════════════════════════════════════════
+   DRAG-BRANCH DEMO
+   Branching: 4 fences, 4 arrows, 4 sheep. 11s duration.
+   Shows two patterns taking different paths (top vs bottom).
+
+   Timeline (% of 11s):
+     0-3%   fade in
+     5-24%  place sheep-3 on start→top
+     26-44% place sheep-13 on top→end
+     46-64% place sheep-8 on start→bot
+     66-82% place sheep-16 on bot→end
+     84-90% "Matched!"
+     92-100% fade out
+   ══════════════════════════════════════════════════ */
+
+/* Shared target pattern style for branch/loop */
+.demo-target-pattern {
+  display: flex; align-items: center; gap: 5px;
+  background: #fff; border-radius: 8px; padding: 3px 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 12px;
+}
+.demo-target-label { color: #888; font-size: 11px; }
+.demo-target-arrow { color: #999; font-size: 14px; }
+
+/* ── Layout ── */
+
+.demo-drag-branch .demo-target-1 { left: 70px; top: 6px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-target-2 { left: 260px; top: 6px; animation: db-persist 11s ease infinite; }
+
+.demo-drag-branch .demo-fence-start { left: 30px; top: 110px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-fence-top   { left: 182px; top: 38px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-fence-bot   { left: 182px; top: 182px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-fence-end   { left: 335px; top: 110px; animation: db-persist 11s ease infinite; }
+
+.demo-drag-branch .demo-start-arrow { left: 14px; top: 126px; animation: db-persist 11s ease infinite; }
+
+.demo-drag-branch .demo-arrow-st { left: 74px; top: 60px; width: 108px; height: 72px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-arrow-sb { left: 74px; top: 132px; width: 108px; height: 72px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-arrow-te { left: 226px; top: 60px; width: 109px; height: 68px; animation: db-persist 11s ease infinite; }
+.demo-drag-branch .demo-arrow-be { left: 226px; top: 128px; width: 109px; height: 76px; animation: db-persist 11s ease infinite; }
+
+/* Palette */
+.demo-drag-branch .demo-pal-1 { left: 100px; top: 235px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: db-pal1 11s ease infinite; }
+.demo-drag-branch .demo-pal-2 { left: 155px; top: 235px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: db-pal2 11s ease infinite; }
+.demo-drag-branch .demo-pal-3 { left: 210px; top: 235px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: db-pal3 11s ease infinite; }
+.demo-drag-branch .demo-pal-4 { left: 265px; top: 235px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: db-pal4 11s ease infinite; }
+
+/* Dragged & placed sheep */
+.demo-drag-branch .demo-drag-1 { left: 110px; top: 240px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: db-drag1 11s ease infinite; }
+.demo-drag-branch .demo-placed-1 { left: 113px; top: 82px; opacity: 0; animation: db-placed1 11s ease infinite; }
+
+.demo-drag-branch .demo-drag-2 { left: 220px; top: 240px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: db-drag2 11s ease infinite; }
+.demo-drag-branch .demo-placed-2 { left: 268px; top: 72px; opacity: 0; animation: db-placed2 11s ease infinite; }
+
+.demo-drag-branch .demo-drag-3 { left: 165px; top: 240px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: db-drag3 11s ease infinite; }
+.demo-drag-branch .demo-placed-3 { left: 113px; top: 150px; opacity: 0; animation: db-placed3 11s ease infinite; }
+
+.demo-drag-branch .demo-drag-4 { left: 275px; top: 240px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: db-drag4 11s ease infinite; }
+.demo-drag-branch .demo-placed-4 { left: 268px; top: 156px; opacity: 0; animation: db-placed4 11s ease infinite; }
+
+/* Ripples */
+.demo-drag-branch .demo-glow-1 { left: 120px; top: 90px; }
+.demo-drag-branch .demo-glow-1 .demo-ripple { animation: db-rip1 11s ease infinite; }
+.demo-drag-branch .demo-glow-2 { left: 275px; top: 80px; }
+.demo-drag-branch .demo-glow-2 .demo-ripple { animation: db-rip2 11s ease infinite; }
+.demo-drag-branch .demo-glow-3 { left: 120px; top: 158px; }
+.demo-drag-branch .demo-glow-3 .demo-ripple { animation: db-rip3 11s ease infinite; }
+.demo-drag-branch .demo-glow-4 { left: 275px; top: 164px; }
+.demo-drag-branch .demo-glow-4 .demo-ripple { animation: db-rip4 11s ease infinite; }
+
+/* Match label */
+.demo-drag-branch .demo-match-tick {
+  position: absolute; left: 50%; top: 130px; transform: translateX(-50%);
+  background: #43A047; color: #fff; font-weight: 700;
+  padding: 6px 18px; border-radius: 20px; font-size: 15px;
+  box-shadow: 0 2px 8px rgba(67,160,71,0.4); white-space: nowrap;
+  animation: db-match-tick 11s ease infinite;
+}
+
+/* Cursor */
+.demo-drag-branch .demo-cursor {
+  left: 200px; top: 150px; z-index: 6; animation: db-cursor 11s ease infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes db-persist { 0% { opacity:0; } 3% { opacity:1; } 90% { opacity:1; } 96%,100% { opacity:0; } }
+@keyframes db-pal1 { 0% { opacity:0; } 3% { opacity:1; } 14% { opacity:1; } 18% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+@keyframes db-pal2 { 0% { opacity:0; } 3% { opacity:1; } 54% { opacity:1; } 58% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+@keyframes db-pal3 { 0% { opacity:0; } 3% { opacity:1; } 34% { opacity:1; } 38% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+@keyframes db-pal4 { 0% { opacity:0; } 3% { opacity:1; } 74% { opacity:1; } 78% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+
+/* Cursor: pal1→arrow-st, pal3→arrow-te, pal2→arrow-sb, pal4→arrow-be */
+@keyframes db-cursor {
+  0%   { left: 200px; top: 150px; opacity: 0; }
+  4%   { left: 200px; top: 150px; opacity: 1; }
+  /* → pal1 (sheep-3) */
+  10%  { left: 118px; top: 252px; } 13% { left: 118px; top: 256px; } 14% { left: 118px; top: 252px; }
+  /* drag to arrow start→top */
+  20%  { left: 125px; top: 160px; } 24% { left: 122px; top: 100px; }
+  /* → pal3 (sheep-13) */
+  30%  { left: 228px; top: 252px; } 33% { left: 228px; top: 256px; } 34% { left: 228px; top: 252px; }
+  /* drag to arrow top→end */
+  40%  { left: 270px; top: 160px; } 44% { left: 278px; top: 90px; }
+  /* → pal2 (sheep-8) */
+  50%  { left: 173px; top: 252px; } 53% { left: 173px; top: 256px; } 54% { left: 173px; top: 252px; }
+  /* drag to arrow start→bot */
+  60%  { left: 125px; top: 200px; } 64% { left: 122px; top: 166px; }
+  /* → pal4 (sheep-16) */
+  70%  { left: 283px; top: 252px; } 73% { left: 283px; top: 256px; } 74% { left: 283px; top: 252px; }
+  /* drag to arrow bot→end */
+  80%  { left: 270px; top: 210px; } 84% { left: 278px; top: 175px; }
+  /* drift away */
+  88%  { left: 310px; top: 160px; opacity: 1; }
+  92%  { opacity: 0; }
+  100% { left: 200px; top: 150px; opacity: 0; }
+}
+
+/* Drag+place sheep-3 onto start→top */
+@keyframes db-drag1 {
+  0%,13% { left:110px;top:240px;opacity:0;transform:scale(1); }
+  15%    { left:110px;top:240px;opacity:1;transform:scale(1.1); }
+  20%    { left:118px;top:148px;transform:scale(1.1); }
+  24%    { left:113px;top:82px;opacity:1;transform:scale(1.05); }
+  26%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes db-placed1 {
+  0%,24% { opacity:0;transform:scale(.6); } 27% { opacity:1;transform:scale(1.15); }
+  30%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes db-rip1 {
+  0%,23% { opacity:0;transform:scale(.5); } 26% { opacity:1;transform:scale(1); }
+  32%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-13 onto top→end */
+@keyframes db-drag2 {
+  0%,33% { left:220px;top:240px;opacity:0;transform:scale(1); }
+  35%    { left:220px;top:240px;opacity:1;transform:scale(1.1); }
+  40%    { left:262px;top:148px;transform:scale(1.1); }
+  44%    { left:268px;top:72px;opacity:1;transform:scale(1.05); }
+  46%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes db-placed2 {
+  0%,44% { opacity:0;transform:scale(.6); } 47% { opacity:1;transform:scale(1.15); }
+  50%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes db-rip2 {
+  0%,43% { opacity:0;transform:scale(.5); } 46% { opacity:1;transform:scale(1); }
+  52%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-8 onto start→bot */
+@keyframes db-drag3 {
+  0%,53% { left:165px;top:240px;opacity:0;transform:scale(1); }
+  55%    { left:165px;top:240px;opacity:1;transform:scale(1.1); }
+  60%    { left:118px;top:188px;transform:scale(1.1); }
+  64%    { left:113px;top:150px;opacity:1;transform:scale(1.05); }
+  66%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes db-placed3 {
+  0%,64% { opacity:0;transform:scale(.6); } 67% { opacity:1;transform:scale(1.15); }
+  70%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes db-rip3 {
+  0%,63% { opacity:0;transform:scale(.5); } 66% { opacity:1;transform:scale(1); }
+  72%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-16 onto bot→end */
+@keyframes db-drag4 {
+  0%,73% { left:275px;top:240px;opacity:0;transform:scale(1); }
+  75%    { left:275px;top:240px;opacity:1;transform:scale(1.1); }
+  80%    { left:262px;top:200px;transform:scale(1.1); }
+  84%    { left:268px;top:156px;opacity:1;transform:scale(1.05); }
+  86%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes db-placed4 {
+  0%,84% { opacity:0;transform:scale(.6); } 86% { opacity:1;transform:scale(1.15); }
+  88%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes db-rip4 {
+  0%,83% { opacity:0;transform:scale(.5); } 85% { opacity:1;transform:scale(1); }
+  89%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+@keyframes db-match-tick {
+  0%, 86% { opacity: 0; transform: translateX(-50%) scale(0.4); }
+  88%     { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  90%     { transform: translateX(-50%) scale(1); }
+  94%     { opacity: 1; }
+  96%, 100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}
+
+/* ══════════════════════════════════════════════════
+   DRAG-LOOP DEMO
+   Self-loop: 3 fences, loop arrow, 3 sheep. 10s duration.
+   Shows how a loop lets the same sheep repeat.
+
+   Timeline (% of 10s):
+     0-3%   fade in
+     5-28%  place sheep-3 on A→B
+     30-54% place sheep-7 on loop (B→B)
+     54-58% "↻ Repeat!" callout
+     58-78% place sheep-8 on B→C
+     80-88% "Matched!"
+     92-100% fade out
+   ══════════════════════════════════════════════════ */
+
+/* ── Layout ── */
+
+.demo-drag-loop .demo-target-1 { left: 50px; top: 6px; animation: dl-persist 10s ease infinite; }
+.demo-drag-loop .demo-target-2 { left: 215px; top: 6px; animation: dl-persist 10s ease infinite; }
+
+.demo-drag-loop .demo-fence-a { left: 28px; top: 105px; animation: dl-persist 10s ease infinite; }
+.demo-drag-loop .demo-fence-b { left: 185px; top: 105px; animation: dl-persist 10s ease infinite; }
+.demo-drag-loop .demo-fence-c { left: 340px; top: 105px; animation: dl-persist 10s ease infinite; }
+
+.demo-drag-loop .demo-start-arrow { left: 10px; top: 122px; animation: dl-persist 10s ease infinite; }
+
+.demo-drag-loop .demo-arrow-1 {
+  left: 78px; top: 118px; width: 108px; height: 20px;
+  animation: dl-persist 10s ease infinite;
+}
+.demo-drag-loop .demo-loop-arrow {
+  left: 177px; top: 52px; width: 60px; height: 50px;
+  animation: dl-persist 10s ease infinite;
+}
+.demo-drag-loop .demo-arrow-2 {
+  left: 234px; top: 118px; width: 108px; height: 20px;
+  animation: dl-persist 10s ease infinite;
+}
+
+/* Palette */
+.demo-drag-loop .demo-pal-1 { left: 115px; top: 222px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dl-pal1 10s ease infinite; }
+.demo-drag-loop .demo-pal-2 { left: 185px; top: 222px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dl-pal2 10s ease infinite; }
+.demo-drag-loop .demo-pal-3 { left: 255px; top: 222px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dl-pal3 10s ease infinite; }
+
+/* Dragged & placed */
+.demo-drag-loop .demo-drag-1 { left: 125px; top: 227px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dl-drag1 10s ease infinite; }
+.demo-drag-loop .demo-placed-1 { left: 118px; top: 96px; opacity: 0; animation: dl-placed1 10s ease infinite; }
+
+.demo-drag-loop .demo-drag-2 { left: 195px; top: 227px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dl-drag2 10s ease infinite; }
+.demo-drag-loop .demo-placed-2 { left: 184px; top: 54px; opacity: 0; animation: dl-placed2 10s ease infinite; }
+
+.demo-drag-loop .demo-drag-3 { left: 265px; top: 227px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dl-drag3 10s ease infinite; }
+.demo-drag-loop .demo-placed-3 { left: 274px; top: 96px; opacity: 0; animation: dl-placed3 10s ease infinite; }
+
+/* Ripples */
+.demo-drag-loop .demo-glow-1 { left: 125px; top: 118px; }
+.demo-drag-loop .demo-glow-1 .demo-ripple { animation: dl-rip1 10s ease infinite; }
+.demo-drag-loop .demo-glow-2 { left: 194px; top: 62px; }
+.demo-drag-loop .demo-glow-2 .demo-ripple { animation: dl-rip2 10s ease infinite; }
+.demo-drag-loop .demo-glow-3 { left: 282px; top: 118px; }
+.demo-drag-loop .demo-glow-3 .demo-ripple { animation: dl-rip3 10s ease infinite; }
+
+/* Loop counter — cycles ×0 → ×1 → ×2 → ... */
+.demo-drag-loop .demo-loop-counter {
+  position: absolute; left: 244px; top: 46px;
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 28px;
+}
+.demo-drag-loop .demo-loop-counter .lc {
+  position: absolute;
+  font-weight: 800; font-size: 15px; font-family: 'Nunito', sans-serif;
+  color: #fff; background: #FF8F00;
+  padding: 2px 8px; border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  white-space: nowrap; opacity: 0;
+}
+.demo-drag-loop .lc-0 { animation: dl-lc0 10s ease infinite; }
+.demo-drag-loop .lc-1 { animation: dl-lc1 10s ease infinite; }
+.demo-drag-loop .lc-2 { animation: dl-lc2 10s ease infinite; }
+.demo-drag-loop .lc-dots { animation: dl-lc-dots 10s ease infinite; }
+
+/* Match label */
+.demo-drag-loop .demo-match-tick {
+  position: absolute; left: 50%; top: 170px; transform: translateX(-50%);
+  background: #43A047; color: #fff; font-weight: 700;
+  padding: 6px 18px; border-radius: 20px; font-size: 15px;
+  box-shadow: 0 2px 8px rgba(67,160,71,0.4); white-space: nowrap;
+  animation: dl-match-tick 10s ease infinite;
+}
+
+/* Cursor */
+.demo-drag-loop .demo-cursor {
+  left: 210px; top: 160px; z-index: 6; animation: dl-cursor 10s ease infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes dl-persist { 0% { opacity:0; } 3% { opacity:1; } 90% { opacity:1; } 96%,100% { opacity:0; } }
+@keyframes dl-pal1 { 0% { opacity:0; } 3% { opacity:1; } 14% { opacity:1; } 18% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+@keyframes dl-pal2 { 0% { opacity:0; } 3% { opacity:1; } 38% { opacity:1; } 42% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+@keyframes dl-pal3 { 0% { opacity:0; } 3% { opacity:1; } 64% { opacity:1; } 68% { opacity:.3; } 90% { opacity:.3; } 96%,100% { opacity:0; } }
+
+/* Cursor path: pal1→arrow1, pal2→loop, pal3→arrow2 */
+@keyframes dl-cursor {
+  0%   { left: 210px; top: 160px; opacity: 0; }
+  4%   { left: 210px; top: 160px; opacity: 1; }
+  /* → pal1 */
+  11%  { left: 133px; top: 238px; } 14% { left: 133px; top: 242px; } 15% { left: 133px; top: 238px; }
+  /* drag to arrow 1 */
+  22%  { left: 130px; top: 160px; } 27% { left: 128px; top: 110px; }
+  /* → pal2 */
+  34%  { left: 203px; top: 238px; } 37% { left: 203px; top: 242px; } 38% { left: 203px; top: 238px; }
+  /* drag to loop */
+  45%  { left: 194px; top: 140px; } 50% { left: 197px; top: 72px; }
+  /* → pal3 */
+  58%  { left: 273px; top: 238px; } 61% { left: 273px; top: 242px; } 62% { left: 273px; top: 238px; }
+  /* drag to arrow 2 */
+  70%  { left: 280px; top: 160px; } 76% { left: 286px; top: 110px; }
+  /* drift away */
+  82%  { left: 320px; top: 90px; opacity: 1; }
+  86%  { opacity: 0; }
+  100% { left: 210px; top: 160px; opacity: 0; }
+}
+
+/* Place sheep-3 on arrow A→B */
+@keyframes dl-drag1 {
+  0%,14% { left:125px;top:227px;opacity:0;transform:scale(1); }
+  16%    { left:125px;top:227px;opacity:1;transform:scale(1.1); }
+  22%    { left:123px;top:148px;transform:scale(1.1); }
+  27%    { left:118px;top:96px;opacity:1;transform:scale(1.05); }
+  29%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dl-placed1 {
+  0%,27% { opacity:0;transform:scale(.6); } 29% { opacity:1;transform:scale(1.15); }
+  32%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes dl-rip1 {
+  0%,26% { opacity:0;transform:scale(.5); } 29% { opacity:1;transform:scale(1); }
+  34%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Place sheep-7 on loop B→B */
+@keyframes dl-drag2 {
+  0%,37% { left:195px;top:227px;opacity:0;transform:scale(1); }
+  39%    { left:195px;top:227px;opacity:1;transform:scale(1.1); }
+  45%    { left:189px;top:128px;transform:scale(1.1); }
+  50%    { left:184px;top:54px;opacity:1;transform:scale(1.05); }
+  52%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dl-placed2 {
+  0%,50% { opacity:0;transform:scale(.6); } 52% { opacity:1;transform:scale(1.15); }
+  55%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes dl-rip2 {
+  0%,49% { opacity:0;transform:scale(.5); } 52% { opacity:1;transform:scale(1); }
+  57%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Counter cycling: ×0 → ×1 → ×2 → ... after loop sheep placed */
+@keyframes dl-lc0 {
+  0%,52% { opacity:0; transform:scale(0.6); }
+  54%    { opacity:1; transform:scale(1.1); }
+  56%    { transform:scale(1); }
+  58%    { opacity:1; }
+  59%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes dl-lc1 {
+  0%,59% { opacity:0; transform:scale(0.6); }
+  61%    { opacity:1; transform:scale(1.1); }
+  63%    { transform:scale(1); }
+  65%    { opacity:1; }
+  66%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes dl-lc2 {
+  0%,66% { opacity:0; transform:scale(0.6); }
+  68%    { opacity:1; transform:scale(1.1); }
+  70%    { transform:scale(1); }
+  72%    { opacity:1; }
+  73%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes dl-lc-dots {
+  0%,73% { opacity:0; transform:scale(0.6); }
+  75%    { opacity:1; transform:scale(1.1); }
+  77%    { transform:scale(1); }
+  86%    { opacity:1; }
+  90%    { opacity:0; }
+  100%   { opacity:0; }
+}
+
+/* Place sheep-8 on arrow B→C */
+@keyframes dl-drag3 {
+  0%,61% { left:265px;top:227px;opacity:0;transform:scale(1); }
+  63%    { left:265px;top:227px;opacity:1;transform:scale(1.1); }
+  70%    { left:276px;top:148px;transform:scale(1.1); }
+  76%    { left:274px;top:96px;opacity:1;transform:scale(1.05); }
+  78%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dl-placed3 {
+  0%,76% { opacity:0;transform:scale(.6); } 78% { opacity:1;transform:scale(1.15); }
+  80%    { transform:scale(1); } 90% { opacity:1; } 96%,100% { opacity:0; }
+}
+@keyframes dl-rip3 {
+  0%,75% { opacity:0;transform:scale(.5); } 78% { opacity:1;transform:scale(1); }
+  82%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+@keyframes dl-match-tick {
+  0%, 80% { opacity: 0; transform: translateX(-50%) scale(0.4); }
+  84%     { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  86%     { transform: translateX(-50%) scale(1); }
+  90%     { opacity: 1; }
+  96%, 100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}
+
+/* ══════════════════════════════════════════════════
+   ACCEPT/REJECT DEMOS — Shared styles
+   ══════════════════════════════════════════════════ */
+
+/* Test pattern ribbon at top */
+/* Top bar — test pattern ribbon (AR demos only) */
+.demo-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.55);
+  border-bottom: 1px solid rgba(165,214,167,0.5);
+  backdrop-filter: blur(6px);
+}
+
+.demo-test-ribbon {
+  display: flex; align-items: center; gap: 5px;
+  background: #fff; border-radius: 10px; padding: 7px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  font-size: 14px; white-space: nowrap;
+}
+.demo-test-label { color: #888; font-weight: 600; font-size: 13px; margin-right: 6px; }
+.demo-test-item { display: inline-flex; align-items: center; gap: 3px; }
+
+/* Result badges */
+.demo-result {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-weight: 700; padding: 6px 18px; border-radius: 20px;
+  font-size: 15px; white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.demo-result-accept { background: #43A047; color: #fff; }
+.demo-result-reject { background: #E53935; color: #fff; }
+
+
+/* ══════════════════════════════════════════════════
+   AR-BASICS DEMO
+   One sheep follows arrow to bed. 6.5s.
+   Timeline: 0-5% fade in, 15-50% hop, 55-70% result, 90-100% fade out
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-basics .demo-fence-a  { left: 70px; top: 100px; animation: abb-persist 6.5s ease infinite; }
+.demo-ar-basics .demo-fence-b  { left: 310px; top: 100px; animation: abb-persist 6.5s ease infinite; }
+.demo-ar-basics .demo-start-arrow { left: 48px; top: 116px; animation: abb-persist 6.5s ease infinite; }
+.demo-ar-basics .demo-arrow  { left: 122px; top: 108px; width: 180px; height: 24px; animation: abb-persist 6.5s ease infinite; }
+.demo-ar-basics .demo-sheep-label { left: 200px; top: 80px; animation: abb-persist 6.5s ease infinite; }
+
+.demo-ar-basics .demo-hop {
+  left: 82px; top: 105px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: abb-hop 6.5s ease infinite;
+}
+.demo-ar-basics .demo-glow { left: 320px; top: 116px; }
+.demo-ar-basics .demo-glow .demo-ripple { animation: abb-glow 6.5s ease infinite; }
+.demo-ar-basics .demo-result { top: 190px; animation: abb-result 6.5s ease infinite; }
+
+@keyframes abb-persist { 0% { opacity:0; } 5% { opacity:1; } 88% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes abb-hop {
+  0%,14% { left:82px; top:105px; opacity:0; transform:scale(1); }
+  18%    { left:82px; top:105px; opacity:1; transform:scale(1.1); }
+  30%    { left:180px; top:60px; transform:scale(1.1); }
+  42%    { left:280px; top:75px; transform:scale(1.1); }
+  48%    { left:318px; top:100px; opacity:1; transform:scale(1); }
+  54%    { left:318px; top:105px; opacity:0.4; transform:scale(0.9); }
+  60%,100% { opacity:0; }
+}
+@keyframes abb-glow {
+  0%,46% { opacity:0; transform:scale(.5); } 50% { opacity:1; transform:scale(1); }
+  58%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes abb-result {
+  0%,54% { opacity:0; transform:translateX(-50%) scale(.4); }
+  60%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  64%    { transform:translateX(-50%) scale(1); }
+  88%    { opacity:1; } 94%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   AR-REJECT DEMO
+   Wrong sheep can't match arrow. 6.5s.
+   Timeline: 0-5% fade in, 15-35% hop attempt, 36-44% bounce back + X, 55-70% result, 90-100% fade
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-reject .demo-fence-a  { left: 70px; top: 100px; animation: arr-persist 6.5s ease infinite; }
+.demo-ar-reject .demo-fence-b  { left: 310px; top: 100px; animation: arr-persist 6.5s ease infinite; }
+.demo-ar-reject .demo-start-arrow { left: 48px; top: 116px; animation: arr-persist 6.5s ease infinite; }
+.demo-ar-reject .demo-arrow  { left: 122px; top: 108px; width: 180px; height: 24px; animation: arr-persist 6.5s ease infinite; }
+.demo-ar-reject .demo-sheep-label { left: 200px; top: 80px; animation: arr-persist 6.5s ease infinite; }
+
+/* Wrong sheep bounces partway then back */
+.demo-ar-reject .demo-hop-fail {
+  left: 82px; top: 105px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: arr-hop 6.5s ease infinite;
+}
+/* Red X at the arrow */
+.demo-ar-reject .demo-no-match {
+  position: absolute; left: 195px; top: 95px;
+  font-size: 28px; font-weight: 900; color: #E53935;
+  opacity: 0; z-index: 6;
+  animation: arr-x 6.5s ease infinite;
+}
+/* Red flash on arrow */
+.demo-ar-reject .demo-arrow-flash {
+  position: absolute; left: 122px; top: 100px; width: 180px; height: 40px;
+  background: rgba(229,57,53,0.15); border-radius: 8px;
+  opacity: 0; animation: arr-flash 6.5s ease infinite;
+}
+.demo-ar-reject .demo-result { top: 190px; animation: arr-result 6.5s ease infinite; }
+
+@keyframes arr-persist { 0% { opacity:0; } 5% { opacity:1; } 88% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes arr-hop {
+  0%,14% { left:82px; top:105px; opacity:0; transform:scale(1); }
+  18%    { left:82px; top:105px; opacity:1; transform:scale(1.1); }
+  28%    { left:155px; top:70px; transform:scale(1.1); }
+  34%    { left:185px; top:82px; opacity:1; transform:scale(1.1); }
+  /* bounce back */
+  40%    { left:155px; top:72px; }
+  48%    { left:100px; top:105px; transform:scale(0.95); }
+  52%    { left:82px; top:105px; opacity:0.5; transform:scale(0.9); }
+  58%,100% { opacity:0; }
+}
+@keyframes arr-x {
+  0%,32% { opacity:0; transform:scale(0.3); }
+  36%    { opacity:1; transform:scale(1.3); }
+  40%    { transform:scale(1); }
+  60%    { opacity:1; }
+  66%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes arr-flash {
+  0%,32% { opacity:0; } 36% { opacity:1; } 50% { opacity:0; } 100% { opacity:0; }
+}
+@keyframes arr-result {
+  0%,58% { opacity:0; transform:translateX(-50%) scale(.4); }
+  64%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  68%    { transform:translateX(-50%) scale(1); }
+  88%    { opacity:1; } 94%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   AR-SEQUENCE DEMO
+   Two sheep hop in order. 8s.
+   Timeline: 0-4% fade, 8-36% hop1, 38-64% hop2, 68-78% result, 90-100% fade
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-sequence .demo-fence-a { left: 30px; top: 100px; animation: ars-persist 8s ease infinite; }
+.demo-ar-sequence .demo-fence-b { left: 185px; top: 100px; animation: ars-persist 8s ease infinite; }
+.demo-ar-sequence .demo-fence-c { left: 340px; top: 100px; animation: ars-persist 8s ease infinite; }
+.demo-ar-sequence .demo-start-arrow { left: 12px; top: 116px; animation: ars-persist 8s ease infinite; }
+
+.demo-ar-sequence .demo-arrow-1 { left: 80px; top: 108px; width: 97px; height: 20px; animation: ars-persist 8s ease infinite; }
+.demo-ar-sequence .demo-label-1 { left: 118px; top: 82px; animation: ars-persist 8s ease infinite; }
+.demo-ar-sequence .demo-arrow-2 { left: 235px; top: 108px; width: 97px; height: 20px; animation: ars-persist 8s ease infinite; }
+.demo-ar-sequence .demo-label-2 { left: 275px; top: 82px; animation: ars-persist 8s ease infinite; }
+
+.demo-ar-sequence .demo-hop-1 {
+  left: 40px; top: 100px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: ars-hop1 8s ease infinite;
+}
+.demo-ar-sequence .demo-glow-1 { left: 196px; top: 116px; }
+.demo-ar-sequence .demo-glow-1 .demo-ripple { animation: ars-glow1 8s ease infinite; }
+
+.demo-ar-sequence .demo-hop-2 {
+  left: 196px; top: 100px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: ars-hop2 8s ease infinite;
+}
+.demo-ar-sequence .demo-glow-2 { left: 352px; top: 116px; }
+.demo-ar-sequence .demo-glow-2 .demo-ripple { animation: ars-glow2 8s ease infinite; }
+
+.demo-ar-sequence .demo-result { top: 190px; animation: ars-result 8s ease infinite; }
+
+@keyframes ars-persist { 0% { opacity:0; } 4% { opacity:1; } 88% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes ars-hop1 {
+  0%,8% { left:40px; top:100px; opacity:0; }
+  12%   { left:40px; top:100px; opacity:1; transform:scale(1.1); }
+  22%   { left:110px; top:60px; }
+  32%   { left:186px; top:80px; }
+  36%   { left:196px; top:100px; opacity:0.4; transform:scale(0.9); }
+  40%,100% { opacity:0; }
+}
+@keyframes ars-glow1 {
+  0%,34% { opacity:0; transform:scale(.5); } 37% { opacity:1; transform:scale(1); }
+  44%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes ars-hop2 {
+  0%,38% { left:196px; top:100px; opacity:0; }
+  42%    { left:196px; top:100px; opacity:1; transform:scale(1.1); }
+  52%    { left:270px; top:58px; }
+  60%    { left:342px; top:80px; }
+  64%    { left:352px; top:100px; opacity:0.4; transform:scale(0.9); }
+  70%,100% { opacity:0; }
+}
+@keyframes ars-glow2 {
+  0%,62% { opacity:0; transform:scale(.5); } 65% { opacity:1; transform:scale(1); }
+  72%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes ars-result {
+  0%,68% { opacity:0; transform:translateX(-50%) scale(.4); }
+  74%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  78%    { transform:translateX(-50%) scale(1); }
+  88%    { opacity:1; } 94%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   AR-BRANCH DEMO
+   Two paths, sheep takes bottom route. 8.5s.
+   Timeline: 0-4% fade, 8-30% hop1 (start→bot), 32-56% hop2 (bot→end),
+             50-56% dim top path, 60-72% result, 90-100% fade
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-branch .demo-fence-start { left: 30px; top: 110px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-fence-top   { left: 182px; top: 38px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-fence-bot   { left: 182px; top: 185px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-fence-end   { left: 335px; top: 110px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-start-arrow { left: 14px; top: 126px; animation: abr-persist 8.5s ease infinite; }
+
+.demo-ar-branch .demo-arrow-st { left: 74px; top: 60px; width: 108px; height: 72px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-arrow-sb { left: 74px; top: 132px; width: 108px; height: 75px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-arrow-te { left: 226px; top: 60px; width: 109px; height: 68px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-arrow-be { left: 226px; top: 128px; width: 109px; height: 79px; animation: abr-persist 8.5s ease infinite; }
+
+.demo-ar-branch .demo-label-st { left: 98px; top: 64px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-label-sb { left: 98px; top: 186px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-label-te { left: 256px; top: 64px; animation: abr-persist 8.5s ease infinite; }
+.demo-ar-branch .demo-label-be { left: 256px; top: 186px; animation: abr-persist 8.5s ease infinite; }
+
+/* Dim top path */
+.demo-ar-branch .demo-dim-top {
+  position: absolute; left: 72px; top: 32px; width: 270px; height: 80px;
+  background: rgba(255,255,255,0.55); border-radius: 12px;
+  opacity: 0; animation: abr-dim 8.5s ease infinite;
+}
+
+.demo-ar-branch .demo-hop-1 {
+  left: 42px; top: 115px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: abr-hop1 8.5s ease infinite;
+}
+.demo-ar-branch .demo-glow-1 { left: 194px; top: 198px; }
+.demo-ar-branch .demo-glow-1 .demo-ripple { animation: abr-glow1 8.5s ease infinite; }
+
+.demo-ar-branch .demo-hop-2 {
+  left: 194px; top: 190px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: abr-hop2 8.5s ease infinite;
+}
+.demo-ar-branch .demo-glow-2 { left: 347px; top: 126px; }
+.demo-ar-branch .demo-glow-2 .demo-ripple { animation: abr-glow2 8.5s ease infinite; }
+
+.demo-ar-branch .demo-result { top: 240px; animation: abr-result 8.5s ease infinite; }
+
+@keyframes abr-persist { 0% { opacity:0; } 4% { opacity:1; } 88% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes abr-hop1 {
+  0%,8% { left:42px; top:115px; opacity:0; }
+  12%   { left:42px; top:115px; opacity:1; transform:scale(1.1); }
+  20%   { left:105px; top:150px; }
+  28%   { left:175px; top:185px; }
+  32%   { left:192px; top:192px; opacity:0.4; transform:scale(0.9); }
+  36%,100% { opacity:0; }
+}
+@keyframes abr-glow1 {
+  0%,30% { opacity:0; transform:scale(.5); } 33% { opacity:1; transform:scale(1); }
+  40%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes abr-hop2 {
+  0%,36% { left:194px; top:190px; opacity:0; }
+  40%    { left:194px; top:190px; opacity:1; transform:scale(1.1); }
+  48%    { left:270px; top:155px; }
+  54%    { left:338px; top:120px; }
+  58%    { left:348px; top:116px; opacity:0.4; transform:scale(0.9); }
+  62%,100% { opacity:0; }
+}
+@keyframes abr-glow2 {
+  0%,56% { opacity:0; transform:scale(.5); } 59% { opacity:1; transform:scale(1); }
+  66%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes abr-dim {
+  0%,44% { opacity:0; } 50% { opacity:1; } 86% { opacity:1; } 92%,100% { opacity:0; }
+}
+@keyframes abr-result {
+  0%,62% { opacity:0; transform:translateX(-50%) scale(.4); }
+  68%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  72%    { transform:translateX(-50%) scale(1); }
+  88%    { opacity:1; } 94%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   AR-LOOP DEMO
+   Self-loop, sheep goes around twice then exits. 10s.
+   Timeline: 0-3% fade, 6-22% hop1 (A→B), 24-38% loop1,
+             40-52% loop2, 52-56% badge, 56-72% hop3 (B→C), 76-84% result
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-loop .demo-fence-a { left: 28px; top: 108px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-fence-b { left: 185px; top: 108px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-fence-c { left: 340px; top: 108px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-start-arrow { left: 10px; top: 124px; animation: arl-persist 10s ease infinite; }
+
+.demo-ar-loop .demo-arrow-1 { left: 78px; top: 120px; width: 99px; height: 20px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-label-1 { left: 118px; top: 94px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-loop-arrow { left: 179px; top: 56px; width: 60px; height: 50px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-label-loop { left: 196px; top: 40px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-arrow-2 { left: 234px; top: 120px; width: 98px; height: 20px; animation: arl-persist 10s ease infinite; }
+.demo-ar-loop .demo-label-2 { left: 275px; top: 94px; animation: arl-persist 10s ease infinite; }
+
+/* Hop A→B */
+.demo-ar-loop .demo-hop-1 {
+  left: 38px; top: 112px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: arl-hop1 10s ease infinite;
+}
+.demo-ar-loop .demo-glow-1 { left: 198px; top: 124px; }
+.demo-ar-loop .demo-glow-1 .demo-ripple { animation: arl-glow1 10s ease infinite; }
+
+/* Loop 1: sheep arcs up from B and back */
+.demo-ar-loop .demo-hop-loop-1 {
+  left: 198px; top: 112px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+  animation: arl-loop1 10s ease infinite;
+}
+/* Loop 2: again */
+.demo-ar-loop .demo-hop-loop-2 {
+  left: 198px; top: 112px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+  animation: arl-loop2 10s ease infinite;
+}
+
+/* Loop counter — cycles ×0 → ×1 → ×2 → ... */
+.demo-ar-loop .demo-loop-counter {
+  position: absolute; left: 246px; top: 50px;
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 28px;
+}
+.demo-ar-loop .demo-loop-counter .lc {
+  position: absolute;
+  font-weight: 800; font-size: 15px; font-family: 'Nunito', sans-serif;
+  color: #fff; background: #FF8F00;
+  padding: 2px 8px; border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  white-space: nowrap; opacity: 0;
+}
+.demo-ar-loop .lc-0 { animation: arl-lc0 10s ease infinite; }
+.demo-ar-loop .lc-1 { animation: arl-lc1 10s ease infinite; }
+.demo-ar-loop .lc-2 { animation: arl-lc2 10s ease infinite; }
+.demo-ar-loop .lc-dots { animation: arl-lc-dots 10s ease infinite; }
+
+/* Hop B→C */
+.demo-ar-loop .demo-hop-3 {
+  left: 198px; top: 112px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: arl-hop3 10s ease infinite;
+}
+.demo-ar-loop .demo-glow-2 { left: 352px; top: 124px; }
+.demo-ar-loop .demo-glow-2 .demo-ripple { animation: arl-glow2 10s ease infinite; }
+
+.demo-ar-loop .demo-result { top: 200px; animation: arl-result 10s ease infinite; }
+
+@keyframes arl-persist { 0% { opacity:0; } 3% { opacity:1; } 90% { opacity:1; } 96%,100% { opacity:0; } }
+@keyframes arl-hop1 {
+  0%,6% { left:38px; top:112px; opacity:0; }
+  10%   { left:38px; top:112px; opacity:1; transform:scale(1.1); }
+  16%   { left:110px; top:72px; }
+  22%   { left:192px; top:112px; opacity:0.4; transform:scale(0.9); }
+  26%,100% { opacity:0; }
+}
+@keyframes arl-glow1 {
+  0%,20% { opacity:0; transform:scale(.5); } 23% { opacity:1; transform:scale(1); }
+  28%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+/* Loop 1: arc up from B */
+@keyframes arl-loop1 {
+  0%,26% { left:198px; top:112px; opacity:0; }
+  28%    { left:198px; top:112px; opacity:1; transform:scale(1); }
+  32%    { left:206px; top:55px; transform:scale(1.05); }
+  36%    { left:205px; top:112px; opacity:0.4; transform:scale(0.9); }
+  40%,100% { opacity:0; }
+}
+/* Loop 2: arc up from B again */
+@keyframes arl-loop2 {
+  0%,40% { left:198px; top:112px; opacity:0; }
+  42%    { left:198px; top:112px; opacity:1; transform:scale(1); }
+  46%    { left:206px; top:55px; transform:scale(1.05); }
+  50%    { left:205px; top:112px; opacity:0.4; transform:scale(0.9); }
+  54%,100% { opacity:0; }
+}
+/* Counter cycling: ×0 → ×1 → ×2 → ... as sheep loops */
+@keyframes arl-lc0 {
+  0%,22% { opacity:0; transform:scale(0.6); }
+  24%    { opacity:1; transform:scale(1.1); }
+  26%    { transform:scale(1); }
+  29%    { opacity:1; }
+  30%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes arl-lc1 {
+  0%,30% { opacity:0; transform:scale(0.6); }
+  32%    { opacity:1; transform:scale(1.1); }
+  34%    { transform:scale(1); }
+  43%    { opacity:1; }
+  44%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes arl-lc2 {
+  0%,44% { opacity:0; transform:scale(0.6); }
+  46%    { opacity:1; transform:scale(1.1); }
+  48%    { transform:scale(1); }
+  57%    { opacity:1; }
+  58%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes arl-lc-dots {
+  0%,58% { opacity:0; transform:scale(0.6); }
+  60%    { opacity:1; transform:scale(1.1); }
+  62%    { transform:scale(1); }
+  74%    { opacity:1; }
+  78%    { opacity:0; }
+  100%   { opacity:0; }
+}
+@keyframes arl-hop3 {
+  0%,58% { left:198px; top:112px; opacity:0; }
+  60%    { left:198px; top:112px; opacity:1; transform:scale(1.1); }
+  66%    { left:270px; top:72px; }
+  72%    { left:348px; top:112px; opacity:0.4; transform:scale(0.9); }
+  76%,100% { opacity:0; }
+}
+@keyframes arl-glow2 {
+  0%,70% { opacity:0; transform:scale(.5); } 73% { opacity:1; transform:scale(1); }
+  78%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes arl-result {
+  0%,76% { opacity:0; transform:translateX(-50%) scale(.4); }
+  80%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  83%    { transform:translateX(-50%) scale(1); }
+  90%    { opacity:1; } 96%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   AR-DEAD DEMO
+   Sheep goes to dead-end, gets stuck. 7.5s.
+   Timeline: 0-4% fade, 10-34% hop to trap, 38-50% stuck badge, 56-68% result, 90-100% fade
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-dead .demo-fence-start { left: 30px; top: 110px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-fence-good  { left: 182px; top: 38px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-fence-trap  { left: 182px; top: 185px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-fence-end   { left: 335px; top: 38px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-start-arrow { left: 14px; top: 126px; animation: ard-persist 7.5s ease infinite; }
+
+.demo-ar-dead .demo-arrow-sg { left: 74px; top: 60px; width: 108px; height: 72px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-arrow-st { left: 74px; top: 132px; width: 108px; height: 75px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-arrow-ge { left: 226px; top: 38px; width: 109px; height: 20px; animation: ard-persist 7.5s ease infinite; }
+
+.demo-ar-dead .demo-label-sg { left: 98px; top: 64px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-label-st { left: 98px; top: 186px; animation: ard-persist 7.5s ease infinite; }
+.demo-ar-dead .demo-label-ge { left: 256px; top: 38px; animation: ard-persist 7.5s ease infinite; }
+
+/* Hop to trap */
+.demo-ar-dead .demo-hop-1 {
+  left: 42px; top: 115px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: ard-hop1 7.5s ease infinite;
+}
+.demo-ar-dead .demo-glow-1 { left: 194px; top: 198px; }
+.demo-ar-dead .demo-glow-1 .demo-ripple { animation: ard-glow1 7.5s ease infinite; }
+
+/* Stuck badge — to the right of the trap fence */
+.demo-ar-dead .demo-stuck-badge {
+  position: absolute; left: 260px; top: 190px;
+  background: #E53935; color: #fff; font-weight: 700;
+  padding: 4px 12px; border-radius: 12px; font-size: 13px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2); white-space: nowrap;
+  animation: ard-stuck 7.5s ease infinite;
+}
+
+.demo-ar-dead .demo-result { top: 248px; animation: ard-result 7.5s ease infinite; }
+
+@keyframes ard-persist { 0% { opacity:0; } 4% { opacity:1; } 88% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes ard-hop1 {
+  0%,10% { left:42px; top:115px; opacity:0; }
+  14%    { left:42px; top:115px; opacity:1; transform:scale(1.1); }
+  22%    { left:105px; top:150px; }
+  30%    { left:175px; top:185px; }
+  34%    { left:192px; top:192px; opacity:0.5; transform:scale(0.95); }
+  38%    { opacity:0.5; } /* stays dimly visible, stuck */
+  82%    { opacity:0.4; }
+  88%,100% { opacity:0; }
+}
+@keyframes ard-glow1 {
+  0%,32% { opacity:0; transform:scale(.5); } 35% { opacity:1; transform:scale(1); }
+  42%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes ard-stuck {
+  0%,36% { opacity:0; transform:scale(0.6); }
+  40%    { opacity:1; transform:scale(1.1); }
+  44%    { transform:scale(1); }
+  80%    { opacity:1; }
+  86%,100% { opacity:0; }
+}
+@keyframes ard-result {
+  0%,56% { opacity:0; transform:translateX(-50%) scale(.4); }
+  62%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  66%    { transform:translateX(-50%) scale(1); }
+  88%    { opacity:1; } 94%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════
+   AR-MULTI DEMO
+   Two beds, sheep reaches bottom one. 8s.
+   Timeline: 0-4% fade, 6-8% beds badge, 12-34% hop1, 36-58% hop2, 62-72% result
+   ══════════════════════════════════════════════════ */
+
+.demo-ar-multi .demo-fence-start { left: 30px; top: 118px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-fence-mid   { left: 170px; top: 118px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-fence-bed1  { left: 320px; top: 42px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-fence-bed2  { left: 320px; top: 195px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-start-arrow { left: 14px; top: 134px; animation: arm-persist 8s ease infinite; }
+
+.demo-ar-multi .demo-arrow-sm { left: 74px; top: 126px; width: 88px; height: 20px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-arrow-m1 { left: 214px; top: 60px; width: 106px; height: 80px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-arrow-m2 { left: 214px; top: 140px; width: 106px; height: 73px; animation: arm-persist 8s ease infinite; }
+
+.demo-ar-multi .demo-label-sm { left: 108px; top: 100px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-label-m1 { left: 248px; top: 64px; animation: arm-persist 8s ease infinite; }
+.demo-ar-multi .demo-label-m2 { left: 248px; top: 186px; animation: arm-persist 8s ease infinite; }
+
+/* "Two Beds!" badge — positioned between the two beds */
+.demo-ar-multi .demo-beds-badge {
+  position: absolute; left: 310px; top: 128px;
+  background: #1565C0; color: #fff; font-weight: 700;
+  padding: 3px 10px; border-radius: 12px; font-size: 11px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2); white-space: nowrap;
+  animation: arm-beds 8s ease infinite;
+}
+
+.demo-ar-multi .demo-hop-1 {
+  left: 42px; top: 120px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: arm-hop1 8s ease infinite;
+}
+.demo-ar-multi .demo-glow-1 { left: 182px; top: 132px; }
+.demo-ar-multi .demo-glow-1 .demo-ripple { animation: arm-glow1 8s ease infinite; }
+
+.demo-ar-multi .demo-hop-2 {
+  left: 182px; top: 120px; opacity: 0; z-index: 5;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));
+  animation: arm-hop2 8s ease infinite;
+}
+.demo-ar-multi .demo-glow-2 { left: 332px; top: 208px; }
+.demo-ar-multi .demo-glow-2 .demo-ripple { animation: arm-glow2 8s ease infinite; }
+
+.demo-ar-multi .demo-result { top: 248px; animation: arm-result 8s ease infinite; }
+
+@keyframes arm-persist { 0% { opacity:0; } 4% { opacity:1; } 88% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes arm-beds {
+  0%,4% { opacity:0; transform:scale(0.6); }
+  8%    { opacity:1; transform:scale(1.1); }
+  12%   { transform:scale(1); }
+  68%   { opacity:1; }
+  74%   { opacity:0; }
+  100%  { opacity:0; }
+}
+@keyframes arm-hop1 {
+  0%,12% { left:42px; top:120px; opacity:0; }
+  16%    { left:42px; top:120px; opacity:1; transform:scale(1.1); }
+  24%    { left:105px; top:82px; }
+  32%    { left:178px; top:118px; }
+  34%    { left:182px; top:120px; opacity:0.4; transform:scale(0.9); }
+  38%,100% { opacity:0; }
+}
+@keyframes arm-glow1 {
+  0%,32% { opacity:0; transform:scale(.5); } 35% { opacity:1; transform:scale(1); }
+  42%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes arm-hop2 {
+  0%,38% { left:182px; top:120px; opacity:0; }
+  42%    { left:182px; top:120px; opacity:1; transform:scale(1.1); }
+  50%    { left:256px; top:160px; }
+  56%    { left:328px; top:198px; }
+  58%    { left:332px; top:200px; opacity:0.4; transform:scale(0.9); }
+  62%,100% { opacity:0; }
+}
+@keyframes arm-glow2 {
+  0%,56% { opacity:0; transform:scale(.5); } 59% { opacity:1; transform:scale(1); }
+  66%    { opacity:0; transform:scale(1.8); } 100% { opacity:0; }
+}
+@keyframes arm-result {
+  0%,62% { opacity:0; transform:translateX(-50%) scale(.4); }
+  68%    { opacity:1; transform:translateX(-50%) scale(1.15); }
+  72%    { transform:translateX(-50%) scale(1); }
+  88%    { opacity:1; } 94%,100% { opacity:0; transform:translateX(-50%) scale(1); }
+}

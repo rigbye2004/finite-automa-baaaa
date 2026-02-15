@@ -1,0 +1,391 @@
+/* Container for the animated sheep - positioned over the ReactFlow canvas */
+.sheep-animator-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* The animated sheep element */
+.animated-sheep {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 15;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.animated-sheep .sheep-sprite {
+  width: 64px;
+  height: 64px;
+  display: block;
+}
+
+/* Jump animation - sheep arcs up while moving */
+.animated-sheep.jumping {
+  animation: sheepJump 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes sheepJump {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translate(-50%, -100%) scale(1.1) rotate(-10deg);
+  }
+  50% {
+    transform: translate(-50%, -120%) scale(1.15) rotate(0deg);
+  }
+  75% {
+    transform: translate(-50%, -80%) scale(1.1) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+/* Self-loop animation - bounces in place */
+.animated-sheep.jumping.self-loop {
+  animation: sheepSelfLoop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes sheepSelfLoop {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  30% {
+    transform: translate(-50%, -150%) scale(1.15) rotate(-5deg);
+  }
+  50% {
+    transform: translate(-50%, -180%) scale(1.2) rotate(0deg);
+  }
+  70% {
+    transform: translate(-50%, -100%) scale(1.1) rotate(5deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+/* Going to bed animation - walks off to the right */
+.animated-sheep.going-to-bed {
+  animation: sheepWalk 0.3s steps(2) infinite;
+}
+
+@keyframes sheepWalk {
+  0% {
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(3deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+}
+
+/* Landed state - slight bounce */
+.animated-sheep.landed {
+  animation: sheepLand 0.3s ease-out;
+}
+
+@keyframes sheepLand {
+  0% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  50% {
+    transform: translate(-50%, -45%) scale(0.95, 1.05);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Stuck state - shake animation */
+.animated-sheep.stuck {
+  animation: sheepStuck 0.5s ease-in-out;
+}
+
+@keyframes sheepStuck {
+  0%, 100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  20% {
+    transform: translate(-45%, -50%) rotate(-5deg);
+  }
+  40% {
+    transform: translate(-55%, -50%) rotate(5deg);
+  }
+  60% {
+    transform: translate(-45%, -50%) rotate(-5deg);
+  }
+  80% {
+    transform: translate(-55%, -50%) rotate(5deg);
+  }
+}
+
+/* Done state */
+.animated-sheep.done {
+  transform: translate(-50%, -50%);
+}
+
+/* Jump trail effect */
+.jump-trail {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 15px;
+  background: radial-gradient(ellipse at center, rgba(139, 195, 74, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: trailFade 0.4s ease-out forwards;
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(2);
+  }
+}
+
+/* Animation progress indicator */
+.animation-progress {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Nunito', sans-serif;
+  pointer-events: none;
+  z-index: 20;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Node highlight when sheep visits */
+.node-highlight {
+  animation: nodeGlow 0.5s ease-in-out;
+}
+
+@keyframes nodeGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(76, 175, 80, 0.8));
+  }
+}
+
+/* Edge highlight when sheep travels along it */
+.edge-highlight {
+  stroke: #4CAF50 !important;
+  stroke-width: 4px !important;
+  animation: edgePulse 0.3s ease-out;
+}
+
+@keyframes edgePulse {
+  0% {
+    stroke-width: 2px;
+  }
+  50% {
+    stroke-width: 6px;
+  }
+  100% {
+    stroke-width: 4px;
+  }
+}
+
+/* Success/fail indicators */
+.animation-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 40px;
+  border-radius: 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  z-index: 25;
+  animation: resultPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.animation-result.success {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  box-shadow: 0 8px 30px rgba(76, 175, 80, 0.5);
+}
+
+.animation-result.fail {
+  background: linear-gradient(135deg, #f44336, #c62828);
+  color: white;
+  box-shadow: 0 8px 30px rgba(244, 67, 54, 0.5);
+}
+
+@keyframes resultPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .animated-sheep .sheep-sprite {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .animation-progress {
+    bottom: 50px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .animation-result {
+    font-size: 1.2rem;
+    padding: 16px 30px;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animated-sheep,
+  .animated-sheep.jumping,
+  .animated-sheep.landed,
+  .animated-sheep.stuck {
+    animation: none;
+    transition: left 0.5s ease, top 0.5s ease;
+  }
+  
+  .jump-trail {
+    display: none;
+  }
+}
+
+/* Current pattern preview - shows which sheep have been visited */
+.current-pattern-preview {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 16px;
+  border-radius: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.pattern-sheep-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.pattern-sheep-item img {
+  width: 32px;
+  height: 32px;
+}
+
+.pattern-sheep-item.completed {
+  opacity: 1;
+  background: #E8F5E9;
+  border-color: #4CAF50;
+}
+
+.pattern-sheep-item.current {
+  opacity: 1;
+  background: #FFF3E0;
+  border-color: #FF9800;
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.4);
+}
+
+/* Multi-pattern progress indicator */
+.multi-pattern-progress {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.pattern-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.pattern-dot.active {
+  background: #FF9800;
+  transform: scale(1.2);
+}
+
+.pattern-dot.success {
+  background: #4CAF50;
+}
+
+.pattern-dot.fail {
+  background: #f44336;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .current-pattern-preview {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+  
+  .pattern-sheep-item {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .pattern-sheep-item img {
+    width: 24px;
+    height: 24px;
+  }
+}

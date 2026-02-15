@@ -1,0 +1,611 @@
+/* ============================================
+   FINITE AUTOMA-BAAA - ACCESSIBILITY STYLES
+   ============================================ */
+
+/* Import OpenDyslexic font */
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ============================================ */
+
+:root {
+  /* Base colors */
+  --primary-color: #4CAF50;
+  --primary-dark: #388E3C;
+  --primary-light: #81C784;
+  
+  --success-color: #4CAF50;
+  --error-color: #f44336;
+  --warning-color: #FF9800;
+  --info-color: #2196F3;
+  
+  /* Text colors */
+  --text-color: #333333;
+  --text-muted: #666666;
+  --text-light: #999999;
+  --heading-color: #222222;
+  
+  /* Background colors */
+  --bg-color: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --panel-bg: #ffffff;
+  --card-bg: #ffffff;
+  
+  /* Border colors */
+  --border-color: #e0e0e0;
+  --border-focus: #4CAF50;
+  
+  /* Interactive elements */
+  --btn-bg: #f5f5f5;
+  --btn-hover-bg: #e8f5e9;
+  --input-bg: #ffffff;
+  
+  /* Focus states */
+  --focus-color: #4CAF50;
+  --focus-ring: rgba(76, 175, 80, 0.3);
+  
+  /* Toggle */
+  --toggle-on: #4CAF50;
+  --toggle-off: #cccccc;
+  
+  /* Sheep colors (default) */
+  --sheep-white: #f5f5f5;
+  --sheep-black: #333333;
+  --sheep-brown: #8B4513;
+  --sheep-spotted: #DEB887;
+  
+  /* Font sizes */
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Line height */
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+  
+  /* Letter spacing */
+  --letter-spacing-normal: normal;
+  --letter-spacing-wide: 0.05em;
+  --letter-spacing-wider: 0.1em;
+  
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}
+
+
+/* ============================================
+   FONT SIZE SETTINGS
+   ============================================ */
+
+[data-font-size="normal"] {
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+}
+
+[data-font-size="large"] {
+  --font-size-base: 18px;
+  --font-size-sm: 16px;
+  --font-size-lg: 20px;
+}
+
+[data-font-size="x-large"] {
+  --font-size-base: 20px;
+  --font-size-sm: 18px;
+  --font-size-lg: 24px;
+}
+
+
+/* ============================================
+   LINE SPACING SETTINGS
+   ============================================ */
+
+[data-line-spacing="normal"] {
+  --line-height: var(--line-height-normal);
+}
+
+[data-line-spacing="relaxed"] {
+  --line-height: var(--line-height-relaxed);
+}
+
+[data-line-spacing="loose"] {
+  --line-height: var(--line-height-loose);
+}
+
+
+/* ============================================
+   LETTER SPACING SETTINGS
+   ============================================ */
+
+[data-letter-spacing="normal"] {
+  --letter-spacing: var(--letter-spacing-normal);
+}
+
+[data-letter-spacing="wide"] {
+  --letter-spacing: var(--letter-spacing-wide);
+}
+
+[data-letter-spacing="wider"] {
+  --letter-spacing: var(--letter-spacing-wider);
+}
+
+
+/* ============================================
+   COLOR MODES
+   ============================================ */
+
+/* Deuteranopia (Red-Green color blindness - most common) */
+[data-color-mode="deuteranopia"] {
+  --success-color: #0077BB;  /* Blue instead of green */
+  --error-color: #EE7733;    /* Orange instead of red */
+  --primary-color: #0077BB;
+  --primary-dark: #005588;
+  --primary-light: #33AADD;
+  --toggle-on: #0077BB;
+  --focus-color: #0077BB;
+  --focus-ring: rgba(0, 119, 187, 0.3);
+  --btn-hover-bg: #E5F2FF;
+}
+
+/* Protanopia (Red-Green color blindness - red weakness) */
+[data-color-mode="protanopia"] {
+  --success-color: #009988;  /* Teal instead of green */
+  --error-color: #CC6600;    /* Dark orange instead of red */
+  --primary-color: #009988;
+  --primary-dark: #007766;
+  --primary-light: #33BBAA;
+  --toggle-on: #009988;
+  --focus-color: #009988;
+  --focus-ring: rgba(0, 153, 136, 0.3);
+  --btn-hover-bg: #E5FFF9;
+}
+
+/* Tritanopia (Blue-Yellow color blindness) */
+[data-color-mode="tritanopia"] {
+  --success-color: #009E73;  /* Teal-green */
+  --error-color: #D55E00;    /* Vermillion */
+  --info-color: #CC79A7;     /* Pink instead of blue */
+  --warning-color: #E69F00;  /* Orange-yellow */
+  --primary-color: #009E73;
+  --primary-dark: #007A5A;
+  --primary-light: #33C49A;
+  --toggle-on: #009E73;
+  --focus-color: #009E73;
+  --focus-ring: rgba(0, 158, 115, 0.3);
+  --btn-hover-bg: #E5FFF5;
+}
+
+/* High Contrast Mode */
+[data-color-mode="high-contrast"] {
+  --text-color: #000000;
+  --text-muted: #333333;
+  --heading-color: #000000;
+  --bg-color: #ffffff;
+  --bg-secondary: #f0f0f0;
+  --border-color: #000000;
+  --success-color: #006600;
+  --error-color: #CC0000;
+  --primary-color: #000099;
+  --primary-dark: #000066;
+  --toggle-on: #006600;
+  --focus-color: #000099;
+  --focus-ring: rgba(0, 0, 153, 0.5);
+}
+
+/* Dark Mode */
+[data-color-mode="dark"] {
+  --text-color: #E0E0E0;
+  --text-muted: #AAAAAA;
+  --text-light: #888888;
+  --heading-color: #FFFFFF;
+  --bg-color: #1E1E1E;
+  --bg-secondary: #2D2D2D;
+  --panel-bg: #252525;
+  --card-bg: #2D2D2D;
+  --border-color: #444444;
+  --btn-bg: #3D3D3D;
+  --btn-hover-bg: #4D4D4D;
+  --input-bg: #2D2D2D;
+  --toggle-off: #555555;
+}
+
+
+/* ============================================
+   DYSLEXIA-FRIENDLY FONT
+   ============================================ */
+
+.dyslexia-font,
+.dyslexia-font * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
+}
+
+/* OpenDyslexic renders ~12% larger than standard fonts at the same px size */
+.dyslexia-font {
+  font-size: calc(var(--font-size-base) * 0.80);
+}
+
+
+/* ============================================
+   APPLY SETTINGS TO BODY
+   ============================================ */
+
+body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height, var(--line-height-normal));
+  letter-spacing: var(--letter-spacing, normal);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  line-height: 1.3;
+}
+
+p {
+  line-height: var(--line-height, var(--line-height-normal));
+  letter-spacing: var(--letter-spacing, normal);
+}
+
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Respect system preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ============================================
+   LARGER CLICK TARGETS
+   ============================================ */
+
+.larger-targets button,
+.larger-targets .btn,
+.larger-targets [role="button"],
+.larger-targets a,
+.larger-targets input,
+.larger-targets select {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 12px 20px;
+}
+
+/* Scale utility buttons with larger-targets */
+.larger-targets .accessibility-btn,
+.larger-targets .devtools-trigger {
+  min-height: 3.5rem;
+  min-width: 3.5rem;
+  padding: 1em;
+}
+
+.larger-targets .fit-view-btn,
+.larger-targets .home-btn,
+.larger-targets .hint-button,
+.larger-targets .sheep-badge,
+.larger-targets .a11y-close,
+.larger-targets .devtools-close,
+.larger-targets .react-flow__controls-button {
+  min-height: initial;
+  min-width: initial;
+  padding: initial;
+}
+
+.larger-targets .level-btn {
+  padding: 24px 28px;
+}
+
+.larger-targets .answer-btn {
+  padding: 20px 24px;
+  font-size: 1.2rem;
+}
+
+
+/* ============================================
+   REDUCED COLORS MODE
+   Adds patterns/shapes to not rely on color alone
+   ============================================ */
+
+.reduced-colors .result-card.correct::before {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+}
+
+.reduced-colors .result-card.incorrect::before {
+  content: '✗';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+}
+
+.reduced-colors .accept-btn::before {
+  content: '✓ ';
+}
+
+.reduced-colors .reject-btn::before {
+  content: '✗ ';
+}
+
+
+/* ============================================
+   FOCUS STYLES
+   ============================================ */
+
+/* Remove default focus outlines */
+*:focus {
+  outline: none;
+}
+
+/* Add visible focus for keyboard users */
+*:focus-visible {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  background: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  z-index: 10001;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 10px;
+}
+
+
+/* ============================================
+   SCREEN READER ONLY (Visually Hidden)
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Screen reader mode - adds more descriptive text */
+.sr-mode .pattern-sheep::after {
+  content: ' sheep ';
+}
+
+.sr-mode .arrow::after {
+  content: ' then ';
+}
+
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Mobile Small: < 360px */
+@media (max-width: 359px) {
+  :root {
+    --font-size-base: 14px;
+    --spacing-md: 12px;
+  }
+  
+  .menu-header h1 {
+    font-size: 1.2rem;
+  }
+  
+  .level-btn-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile: 360px - 639px */
+@media (min-width: 360px) and (max-width: 639px) {
+  .game-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+  
+  .graph-area {
+    height: 50vh;
+    min-height: 300px;
+  }
+  
+  .footer {
+    padding: 8px 12px;
+  }
+  
+  .sheep-palette {
+    gap: 4px;
+  }
+  
+  .sheep-item {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Tablet: 640px - 1023px */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .game-container {
+    flex-direction: row;
+  }
+  
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+  
+  .graph-area {
+    flex: 1;
+  }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 320px;
+    min-width: 320px;
+  }
+  
+  .menu-screen {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+/* Tall screens (phones in portrait) */
+@media (max-height: 700px) and (max-width: 639px) {
+  .header {
+    padding: 8px;
+  }
+  
+  .header-top {
+    gap: 8px;
+  }
+  
+  .header-top img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .header-top h1 {
+    font-size: 1.1rem;
+  }
+  
+  .level-instruction {
+    font-size: 0.85rem;
+    margin: 4px 0;
+  }
+}
+
+
+/* ============================================
+   TOUCH-FRIENDLY ADJUSTMENTS
+   ============================================ */
+
+@media (pointer: coarse) {
+  /* Larger touch targets on touch devices */
+  button,
+  .btn,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Exclude fixed utility buttons — they have their own sizing */
+  .accessibility-btn,
+  .devtools-trigger,
+  .fit-view-btn,
+  .home-btn,
+  .hint-button,
+  .sheep-badge,
+  .a11y-close,
+  .devtools-close {
+    min-height: unset;
+    min-width: unset;
+  }
+  
+  /* More space between interactive elements */
+  .answer-buttons {
+    gap: 16px;
+  }
+  
+  .controls {
+    gap: 12px;
+  }
+  
+  /* Disable hover effects that can be confusing on touch */
+  .level-btn:hover {
+    transform: none;
+  }
+}
+
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .devtools-trigger,
+  .accessibility-settings,
+  .controls,
+  .hint-box {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+
+/* ============================================
+   OVERLAY (Applied via JS)
+   ============================================ */
+
+.color-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: multiply;
+}

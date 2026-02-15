@@ -1,0 +1,28 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" class="sheep">
+  <g class="sheep-body">
+    <!-- Legs -->
+    <rect class="legs" x="18" y="44" width="6" height="12" rx="2" fill="#333"/>
+    <rect class="legs" x="40" y="44" width="6" height="12" rx="2" fill="#333"/>
+    
+    <!-- Body (fluffy cloud shape) -->
+    <ellipse cx="32" cy="38" rx="20" ry="14" fill="#333" stroke="#222" stroke-width="1"/>
+    <circle cx="16" cy="36" r="8" fill="#333"/>
+    <circle cx="48" cy="36" r="8" fill="#333"/>
+    <circle cx="24" cy="28" r="7" fill="#333"/>
+    <circle cx="40" cy="28" r="7" fill="#333"/>
+    <circle cx="32" cy="26" r="6" fill="#333"/>
+    
+    <!-- Head -->
+    <ellipse cx="52" cy="28" rx="10" ry="9" fill="#f5f5f5" stroke="#999" stroke-width="1.5"/>
+    
+    <!-- Ear -->
+    <ellipse cx="44" cy="20" rx="4" ry="3" fill="#f5f5f5" stroke="#999" stroke-width="1.5"/>
+    
+    <!-- Eyes -->
+    <circle cx="49" cy="26" r="2" fill="#333"/>
+    <circle cx="49" cy="25.5" r="0.8" fill="#fff"/>
+    
+    <!-- Smile -->
+    <path d="M 52 32 Q 55 35, 58 32" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

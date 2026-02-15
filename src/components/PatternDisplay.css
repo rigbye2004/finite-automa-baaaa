@@ -1,0 +1,69 @@
+.pattern-display {
+  background: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pattern-display h3 {
+  font-size: 0.95rem;
+  margin: 0 0 6px 0;
+  color: #333;
+  font-weight: 600;
+}
+
+.pattern-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pattern-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: #E3F2FD;
+  border-radius: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+
+/* Responsive sheep images */
+.pattern-item img {
+  width: var(--sheep-img-sm, 56px);
+  height: var(--sheep-img-sm, 56px);
+}
+
+/* Responsive farmer icon */
+.pattern-item .farmer-icon {
+  width: var(--sheep-img-md, 60px);
+  height: var(--sheep-img-md, 60px);
+}
+
+.pattern-end {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.pattern-arrow {
+  font-size: clamp(14px, 2vw, 20px);
+  color: #666;
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .pattern-display {
+    padding: 8px 10px;
+  }
+}

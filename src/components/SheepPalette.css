@@ -1,0 +1,68 @@
+.sheep-palette {
+  display: flex;
+  gap: clamp(6px, 1.5vw, 10px);
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-left: clamp(45px, 8vw, 60px);
+}
+
+/* Larger sheep buttons */
+.sheep-btn {
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  padding: 8px;
+  cursor: grab;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.sheep-btn:hover {
+  transform: scale(1.08);
+  border-color: #4CAF50;
+}
+
+.sheep-btn.selected {
+  border-color: #4CAF50;
+  background: #E8F5E9;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+  transform: scale(1.05);
+}
+
+.sheep-btn:active {
+  cursor: grabbing;
+}
+
+/* Responsive sheep images */
+.sheep-img {
+  display: block;
+  width: var(--sheep-img-lg, 80px);
+  height: var(--sheep-img-lg, 80px);
+}
+
+/* Animations */
+@keyframes sheep-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.sheep-idle {
+  animation: sheep-idle 1.5s ease-in-out infinite;
+}
+
+@keyframes sheep-jump {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  15% { transform: translateY(0) scaleY(0.85); }
+  50% { transform: translateY(-16px) scaleY(1.05); }
+  85% { transform: translateY(0) scaleY(0.9); }
+}
+
+.sheep-jumping {
+  animation: sheep-jump 0.6s ease-in-out infinite;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sheep-btn {
+    padding: 6px;
+  }
+}

@@ -1,0 +1,650 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+  min-height: 100dvh;
+}
+
+.menu-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Progress display at top of menu */
+.menu-progress {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.progress-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.progress-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.progress-sheep-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2E7D32;
+}
+
+.progress-badges {
+  font-size: 1rem;
+  color: #666;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.menu-header h1 {
+  font-size: 2.5rem;
+  color: #2E7D32;
+  margin: 0;
+  text-shadow: 2px 2px 0 white;
+}
+
+.menu-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0 0 24px 0;
+}
+
+.menu-farmer {
+  margin-bottom: 32px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.level-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  min-width: 320px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.level-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.level-btn-text {
+  flex: 1;
+  text-align: left;
+}
+
+
+
+.color-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.accessibility-settings {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.settings-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.settings-btn:hover {
+  background: #f5f5f5;
+}
+
+.overlay-options {
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  min-width: 200px;
+}
+
+.overlay-options p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.overlay-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  text-align: left;
+}
+
+.overlay-btn:last-child {
+  margin-bottom: 0;
+}
+
+.overlay-btn:hover {
+  border-color: #2E7D32;
+}
+
+.overlay-btn.active {
+  border-color: #2E7D32;
+  background-color: #E8F5E9 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .menu-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .level-btn {
+    min-width: unset;
+    width: 100%;
+    font-size: 1rem;
+  }
+  
+  .menu-progress {
+    position: static;
+    margin-bottom: 20px;
+  }
+}
+
+/* Add this to your App.css */
+
+.menu-hint {
+  margin-top: 24px;
+  font-size: 0.95rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Update level buttons for three levels */
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.level-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.level-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+/* Different colors for each level type */
+.level-btn:nth-child(1) {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.level-btn:nth-child(2) {
+  background: linear-gradient(135deg, #2196F3, #1565C0);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.level-btn:nth-child(2):hover {
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+.level-btn:nth-child(3) {
+  background: linear-gradient(135deg, #FF9800, #E65100);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.level-btn:nth-child(3):hover {
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+}
+/* Additional styles for the three-level menu */
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.level-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 24px;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* Level 1: Green theme */
+.level-btn.level-1 {
+  background: linear-gradient(135deg, #66BB6A, #43A047);
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.level-btn.level-1:hover {
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+}
+
+/* Level 2: Blue theme */
+.level-btn.level-2 {
+  background: linear-gradient(135deg, #42A5F5, #1E88E5);
+  color: white;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.level-btn.level-2:hover {
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5);
+}
+
+/* Level 3: Orange theme */
+.level-btn.level-3 {
+  background: linear-gradient(135deg, #FFA726, #FB8C00);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+}
+
+.level-btn.level-3:hover {
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.5);
+}
+
+.level-btn-icon {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.level-btn-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+.level-btn-desc {
+  font-size: 1rem;
+  opacity: 1;
+  font-weight: 600;
+}
+
+.level-btn-sheep {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.star-earned {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.star-unearned {
+  font-size: 1.3rem;
+  line-height: 1;
+  opacity: 0.35;
+}
+
+.menu-hint {
+  text-align: center;
+  color: #666;
+  font-size: 0.95rem;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .level-btn {
+    padding: 16px 20px;
+  }
+  
+  .level-btn-icon {
+    font-size: 1.6rem;
+  }
+  
+  .level-btn-text {
+    font-size: 1rem;
+  }
+  
+  .level-btn-desc {
+    font-size: 0.8rem;
+  }
+}
+
+/* Locked level button styles */
+.level-btn.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+  position: relative;
+}
+
+.level-btn.locked:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.level-lock-icon {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  background: rgba(0,0,0,0.2);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* Locked toast message */
+.locked-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #424242, #212121);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: toastSlideIn 0.3s ease-out, toastFadeOut 0.3s ease-in 2.7s forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(-50%) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Accessibility button */
+.accessibility-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0.8em;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+  font-size: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+  z-index: 9999;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  line-height: 1;
+}
+
+.accessibility-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5);
+}
+
+.accessibility-btn:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 2px;
+}
+
+.accessibility-btn .accessibility-icon {
+  font-weight: 700;
+  font-size: 1em;
+  line-height: 1;
+}
+
+/* Menu screen responsive */
+.menu-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.menu-header h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  text-align: center;
+  margin: 0;
+}
+
+.menu-subtitle {
+  text-align: center;
+  color: var(--text-muted, #666);
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
+  margin: 0 0 16px 0;
+}
+
+.menu-farmer {
+  margin: 16px 0;
+}
+
+.menu-progress {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.progress-btn {
+  display: flex;
+  gap: 12px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  background: var(--card-bg, #fff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform 0.2s;
+}
+
+.progress-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Mobile menu adjustments */
+@media (max-width: 500px) {
+  .menu-screen {
+    padding: 60px 16px 100px;
+    justify-content: flex-start;
+  }
+  
+  .menu-header img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .menu-farmer img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .menu-buttons {
+    width: 100%;
+  }
+  
+  .level-btn {
+    padding: 16px 20px;
+  }
+  
+  .accessibility-btn {
+    bottom: 80px;
+    left: 16px;
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: 0.45em;
+    font-size: 14px;
+  }
+  
+  .devtools-trigger {
+    bottom: 80px;
+    right: 16px;
+  }
+  
+  .menu-progress {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 16px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 501px) and (max-width: 900px) {
+  .menu-buttons {
+    max-width: 450px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .menu-screen {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+}
+
+/* Very small phone */
+@media (max-width: 360px) {
+  .accessibility-btn {
+    min-width: 1.8rem;
+    min-height: 1.8rem;
+    padding: 0.35em;
+    font-size: 12px;
+  }
+  
+  .level-btn {
+    padding: 12px 16px;
+  }
+  
+  .level-btn-text {
+    font-size: 0.9rem;
+  }
+  
+  .level-btn-desc {
+    font-size: 0.75rem;
+  }
+}
+

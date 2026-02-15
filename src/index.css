@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+:root {
+  --green-dark: #2E7D32;
+  --green-main: #4CAF50;
+  --green-light: #81C784;
+  --green-bg: #E8F5E9;
+  --brown-dark: #5D4037;
+  --brown-main: #8B4513;
+  --brown-light: #A0522D;
+
+  /* Responsive sizing tokens */
+  --node-size: clamp(80px, 12vw, 120px);
+  --sheep-img-sm: clamp(36px, 6vw, 56px);
+  --sheep-img-md: clamp(44px, 8vw, 64px);
+  --sheep-img-lg: clamp(50px, 10vw, 80px);
+  --sidebar-width: clamp(240px, 30vw, 400px);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
