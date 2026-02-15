@@ -94,6 +94,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const [mode, setMode] = useState<'select' | 'connect' | 'delete'>('select')
 
   const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null)
+  const dragConnectRef = useRef<{ startPos: { x: number; y: number }; nodeId: string } | null>(null)
   const graphRef = useRef<HTMLDivElement>(null)
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -152,14 +153,26 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   }, [message])
 
   // Fit view handler - with smart adjustment for self-loop labels
+  // Cap zoom more aggressively when there are fewer nodes so the canvas
+  // doesn't appear zoomed in on a single huge fence.
+  // On sparse levels, shift the viewport so the fence sits to the left,
+  // leaving visible empty space for the player to build into.
   const handleFitView = useCallback(() => {
     if (reactFlowInstance.current) {
+      const nodeCount = reactFlowInstance.current.getNodes().length
+      const maxZoom = nodeCount <= 1 ? 0.85 : nodeCount <= 4 ? 1.0 : 1.5
       reactFlowInstance.current.fitView({
         padding: 0.4,
         duration: 0,
         minZoom: 0.3,
-        maxZoom: 1.5
+        maxZoom,
       })
+      // Nudge single-node levels to the left so there's obvious room to build
+      if (nodeCount <= 1 && graphRef.current) {
+        const { x, y, zoom } = reactFlowInstance.current.getViewport()
+        const graphWidth = graphRef.current.getBoundingClientRect().width
+        reactFlowInstance.current.setViewport({ x: x - graphWidth * 0.2, y, zoom })
+      }
     }
   }, [])
 
@@ -923,10 +936,49 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             className={`graph-area ${mode === 'connect' ? 'mode-connect' : mode === 'delete' ? 'mode-delete' : 'mode-select'}${showNudge === 'graph' ? ' nudge-pulse' : ''}`}
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDropOnGraph}
+            onMouseDown={(e) => {
+              if (mode === 'connect' && !connectingFrom && reactFlowInstance.current && graphRef.current) {
+                const point = reactFlowInstance.current.screenToFlowPosition({
+                  x: e.clientX,
+                  y: e.clientY,
+                })
+                const nearestId = findNearestNode(point)
+                if (nearestId) {
+                  // Don't set connectingFrom yet — just record the drag candidate.
+                  // onNodeClick handles the click-click workflow.
+                  // This only kicks in if the user actually drags (see onMouseMove/onMouseUp).
+                  dragConnectRef.current = { startPos: { x: e.clientX, y: e.clientY }, nodeId: nearestId }
+                  e.preventDefault()
+                }
+              }
+            }}
             onMouseMove={(e) => {
+              // Promote drag candidate to active connection once user drags far enough
+              if (dragConnectRef.current && !connectingFrom) {
+                const { startPos, nodeId } = dragConnectRef.current
+                const dragDist = Math.hypot(e.clientX - startPos.x, e.clientY - startPos.y)
+                if (dragDist > 15) {
+                  setConnectingFrom(nodeId)
+                }
+              }
               if (connectingFrom && graphRef.current) {
                 const rect = graphRef.current.getBoundingClientRect()
                 setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+              }
+            }}
+            onMouseUp={(e) => {
+              const wasDragging = dragConnectRef.current !== null
+              dragConnectRef.current = null
+              // Complete connection on drag release (only if drag actually activated connectingFrom)
+              if (mode === 'connect' && connectingFrom && wasDragging && reactFlowInstance.current) {
+                const point = reactFlowInstance.current.screenToFlowPosition({
+                  x: e.clientX,
+                  y: e.clientY,
+                })
+                const nearestId = findNearestNode(point)
+                if (nearestId) {
+                  completeConnection(connectingFrom, nearestId)
+                }
               }
             }}
             onMouseLeave={() => setMousePos(null)}
@@ -943,14 +995,14 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             onInit={(instance) => {
               reactFlowInstance.current = instance
             }}
-            panOnDrag={true}
-            panOnScroll={true}
+            panOnDrag={mode === 'select'}
+            panOnScroll={mode === 'select'}
             zoomOnScroll={true}
             zoomOnPinch={true}
             zoomOnDoubleClick={false}
             minZoom={0.2}
             maxZoom={2}
-            nodesDraggable={true}
+            nodesDraggable={mode === 'select'}
             nodesConnectable={false}
             elementsSelectable={true}
           >

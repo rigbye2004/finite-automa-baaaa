@@ -140,14 +140,14 @@
 
 /* Hint button - circle ? */
 .build-level .hint-button {
-  height: 38px;
-  width: 38px;
+  height: 2.4em;
+  width: 2.4em;
   padding: 0;
   border-radius: 50%;
   border: none;
   background: #E65100;
   color: white;
-  font-size: 18px;
+  font-size: var(--font-size-lg, 18px);
   font-weight: 700;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
   cursor: pointer;
@@ -1087,9 +1087,9 @@
   }
   
   .build-level .hint-button {
-    width: 34px;
-    height: 34px;
-    font-size: 16px;
+    width: 2.2em;
+    height: 2.2em;
+    font-size: var(--font-size-base, 16px);
   }
   
   .build-level .result-icon {

@@ -98,18 +98,31 @@
   --font-size-base: 16px;
   --font-size-sm: 14px;
   --font-size-lg: 18px;
+  --font-scale: 1;
 }
 
 [data-font-size="large"] {
   --font-size-base: 18px;
   --font-size-sm: 16px;
   --font-size-lg: 20px;
+  --font-scale: 1.125;
 }
 
 [data-font-size="x-large"] {
   --font-size-base: 20px;
   --font-size-sm: 18px;
   --font-size-lg: 24px;
+  --font-scale: 1.25;
+}
+
+/* Use zoom to scale the entire UI proportionally,
+   so hardcoded px/rem/em font sizes also respond. */
+[data-font-size="large"] #root {
+  zoom: 1.125;
+}
+
+[data-font-size="x-large"] #root {
+  zoom: 1.25;
 }
 
 
@@ -129,6 +142,15 @@
   --line-height: var(--line-height-loose);
 }
 
+/* Force line-height globally so hardcoded values also respond */
+[data-line-spacing="relaxed"] * {
+  line-height: var(--line-height-relaxed) !important;
+}
+
+[data-line-spacing="loose"] * {
+  line-height: var(--line-height-loose) !important;
+}
+
 
 /* ============================================
    LETTER SPACING SETTINGS
@@ -144,6 +166,15 @@
 
 [data-letter-spacing="wider"] {
   --letter-spacing: var(--letter-spacing-wider);
+}
+
+/* Force letter-spacing globally so hardcoded values also respond */
+[data-letter-spacing="wide"] * {
+  letter-spacing: var(--letter-spacing-wide) !important;
+}
+
+[data-letter-spacing="wider"] * {
+  letter-spacing: var(--letter-spacing-wider) !important;
 }
 
 
@@ -316,7 +347,6 @@ p {
 
 .larger-targets .fit-view-btn,
 .larger-targets .home-btn,
-.larger-targets .hint-button,
 .larger-targets .sheep-badge,
 .larger-targets .a11y-close,
 .larger-targets .devtools-close,
@@ -552,7 +582,6 @@ p {
   .devtools-trigger,
   .fit-view-btn,
   .home-btn,
-  .hint-button,
   .sheep-badge,
   .a11y-close,
   .devtools-close {
