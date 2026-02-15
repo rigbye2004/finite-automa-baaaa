@@ -6,6 +6,7 @@ import ReactFlow, {
 } from 'reactflow'
 import type { Node, Edge, ReactFlowInstance } from 'reactflow'
 import 'reactflow/dist/style.css'
+import { withBase } from './withBase'
 import './DragLevel.css'
 import StateNode from './components/StateNode'
 import SheepPalette from './components/SheepPalette'
@@ -635,7 +636,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
               return (
                 <div key={i} className={`sheep-slot status-${status}`}>
                   <img
-                    src={`/sheep-assets/sheep-${(i % 16) + 1}.svg`}
+                    src={withBase(`sheep-assets/sheep-${(i % 16) + 1}.svg`)}
                     width={32}
                     height={32}
                     alt=""

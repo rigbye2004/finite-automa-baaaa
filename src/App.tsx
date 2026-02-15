@@ -8,6 +8,7 @@ import BadgeCollection from './components/BadgeCollection'
 
 import AccessibilityPanel from './components/AccessibilityPanel'
 import DevTools from './components/DevTools'
+import { withBase } from './withBase'
 import './App.css'
 import './accessibility.css'
 import './components/AccessibilityPanel.css'
@@ -90,7 +91,7 @@ function AppContent() {
 
             <header className="menu-header">
               <img 
-                src="/sheep-assets/sheep-3.svg" 
+                src={withBase("sheep-assets/sheep-3.svg")}
                 width={60} 
                 height={60} 
                 alt="" 
@@ -98,7 +99,7 @@ function AppContent() {
               />
               <h1>Finite Automa-baaa</h1>
               <img 
-                src="/sheep-assets/sheep-8.svg" 
+                src={withBase("sheep-assets/sheep-8.svg")}
                 width={60} 
                 height={60} 
                 alt="" 
@@ -110,7 +111,7 @@ function AppContent() {
             
             <div className="menu-farmer" aria-hidden="true">
               <img 
-                src="/sheep-assets/asleep-farmer.svg" 
+                src={withBase("sheep-assets/asleep-farmer.svg")}
                 width={100} 
                 height={100} 
                 alt="Sleeping farmer" 

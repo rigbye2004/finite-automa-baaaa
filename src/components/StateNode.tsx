@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Handle, Position } from 'reactflow'
 import type { NodeProps } from 'reactflow'
+import { withBase } from '../withBase'
 import './StateNode.css'
 
 interface StateNodeData {
@@ -34,9 +35,9 @@ const friendlyName = (id: string, label?: string): string => {
 
 const getFarmerImage = (animationResult?: 'success' | 'fail' | null): string => {
   switch (animationResult) {
-    case 'success': return '/sheep-assets/asleep-farmer.svg'
-    case 'fail': return '/sheep-assets/grumpy-farmer.svg'
-    default: return '/sheep-assets/awake-farmer.svg'
+    case 'success': return withBase('sheep-assets/asleep-farmer.svg')
+    case 'fail': return withBase('sheep-assets/grumpy-farmer.svg')
+    default: return withBase('sheep-assets/awake-farmer.svg')
   }
 }
 

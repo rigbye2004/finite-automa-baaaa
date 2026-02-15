@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { withBase } from '../withBase'
 import './DetailedFeedback.css'
 
 export interface FeedbackData {
@@ -110,7 +111,7 @@ export function PatternMatchFeedback({ matchedPatterns, unmatchedPatterns, onCon
             {pattern.map((sheep, j) => (
               <img 
                 key={j}
-                src={`/sheep-assets/${sheep}.svg`} 
+                src={withBase(`sheep-assets/${sheep}.svg`)}
                 width={44} 
                 height={44} 
                 alt={sheep}

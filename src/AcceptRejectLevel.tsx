@@ -6,6 +6,7 @@ import ReactFlow, {
 } from 'reactflow'
 import type { Node, Edge, EdgeProps, ReactFlowInstance } from 'reactflow'
 import 'reactflow/dist/style.css'
+import { withBase } from './withBase'
 import './AcceptRejectLevel.css'
 import StateNode from './components/StateNode'
 import { useGameProgress } from './contexts/GameProgressContext'
@@ -34,7 +35,7 @@ function renderExplanationWithSheep(explanation: string): React.ReactNode {
       return (
         <img
           key={index}
-          src={`/sheep-assets/sheep-${match[1]}.svg`}
+          src={withBase(`sheep-assets/sheep-${match[1]}.svg`)}
           alt="sheep"
           className="inline-sheep"
         />
@@ -147,7 +148,7 @@ function SheepEdge({
         >
           {data?.sheep ? (
             <img 
-              src={`/sheep-assets/${data.sheep}.svg`} 
+              src={withBase(`sheep-assets/${data.sheep}.svg`)}
               width={48}
               height={48}
               alt={data.sheep}
@@ -477,7 +478,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
             return (
               <div key={i} className={`sheep-slot status-${status}`}>
                 <img
-                  src={`/sheep-assets/sheep-${(i % 16) + 1}.svg`}
+                  src={withBase(`sheep-assets/sheep-${(i % 16) + 1}.svg`)}
                   width={32}
                   height={32}
                   alt=""
@@ -551,7 +552,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
               {question.testPattern.map((sheep, i) => (
                 <span key={i} className="pattern-sheep">
                   <img 
-                    src={`/sheep-assets/${sheep}.svg`}
+                    src={withBase(`sheep-assets/${sheep}.svg`)}
                     width={64}
                     height={64}
                     alt={sheep}

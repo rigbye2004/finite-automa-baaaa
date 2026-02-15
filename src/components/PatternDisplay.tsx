@@ -1,3 +1,4 @@
+import { withBase } from '../withBase'
 import './PatternDisplay.css'
 
 interface PatternDisplayProps {
@@ -14,14 +15,14 @@ export default function PatternDisplay({ patterns }: PatternDisplayProps) {
             {pattern.map((sheep, j) => (
               <img 
                 key={j}
-                src={`/sheep-assets/${sheep}.svg`}
+                src={withBase(`sheep-assets/${sheep}.svg`)}
                 alt={sheep}
               />
             ))}
             <span className="pattern-end">
               <span className="pattern-arrow">&rarr;</span>
               <img
-                src="/sheep-assets/awake-farmer.svg"
+                src={withBase("sheep-assets/awake-farmer.svg")}
                 alt="farmer sleeping"
                 className="farmer-icon"
               />

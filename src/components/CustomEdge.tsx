@@ -1,4 +1,5 @@
 import { type EdgeProps, getBezierPath, EdgeLabelRenderer } from 'reactflow'
+import { withBase } from '../withBase'
 
 export default function CustomEdge({
   id,
@@ -117,7 +118,7 @@ export default function CustomEdge({
           {data?.sheep ? (
             <>
               <img 
-                src={`/sheep-assets/${data.sheep}.svg`} 
+                src={withBase(`sheep-assets/${data.sheep}.svg`)}
                 width={72} 
                 height={72} 
                 alt={data.sheep}

@@ -7,6 +7,7 @@ import ReactFlow, {
 } from 'reactflow'
 import type { Node, Edge, ReactFlowInstance } from 'reactflow'
 import 'reactflow/dist/style.css'
+import { withBase } from './withBase'
 import './BuildLevel.css'
 import StateNode from './components/StateNode'
 import PatternDisplay from './components/PatternDisplay'
@@ -774,7 +775,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             return (
               <div key={i} className={`sheep-slot status-${status}`}>
                 <img
-                  src={`/sheep-assets/sheep-${(i % 16) + 1}.svg`}
+                  src={withBase(`sheep-assets/sheep-${(i % 16) + 1}.svg`)}
                   width={32}
                   height={32}
                   alt=""
@@ -879,7 +880,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                 onDragStart={(e) => { e.dataTransfer.setData('text/tool', 'bed') }}
                 title="Drag onto the field"
               >
-                <img src="/sheep-assets/awake-farmer.svg" width={56} height={44} alt="Bed" className="tool-bed-icon" />
+                <img src={withBase("sheep-assets/awake-farmer.svg")} width={56} height={44} alt="Bed" className="tool-bed-icon" />
               </div>
             )}
 
@@ -910,7 +911,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                 }}
                 title="Click or drag onto an arrow"
               >
-                <img src={`/sheep-assets/${sheepId}.svg`} alt={sheepId} />
+                <img src={withBase(`sheep-assets/${sheepId}.svg`)} alt={sheepId} />
               </div>
             ))}
           </div>

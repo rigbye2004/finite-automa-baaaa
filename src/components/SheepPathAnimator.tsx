@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Node, Edge, ReactFlowInstance } from 'reactflow'
+import { withBase } from '../withBase'
 import './SheepPathAnimator.css'
 
 interface AnimationStep {
@@ -297,7 +298,7 @@ export function SheepPathAnimator({
         }}
       >
         <img 
-          src={`/sheep-assets/${currentSheepType}.svg`} 
+          src={withBase(`sheep-assets/${currentSheepType}.svg`)}
           alt="Animated sheep"
           className="sheep-sprite"
         />
@@ -320,7 +321,7 @@ export function SheepPathAnimator({
               key={idx} 
               className={`pattern-sheep-item ${idx <= currentStep ? 'completed' : ''} ${idx === currentStep ? 'current' : ''}`}
             >
-              <img src={`/sheep-assets/${sheep}.svg`} alt="" width={32} height={32} />
+              <img src={withBase(`sheep-assets/${sheep}.svg`)} alt="" width={32} height={32} />
             </div>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
+import { withBase } from '../withBase'
 import './TutorialDemo.css'
 
 // each demo auto-shows once; after that it's hint-button only
@@ -144,11 +145,11 @@ function SetAcceptingDemo() {
     <div className="demo-scene-inner demo-set-accepting">
       <div className="demo-el demo-sidebar-panel" />
       <div className="demo-el demo-drop-zone" />
-      <img className="demo-el demo-bed-icon" src="/sheep-assets/awake-farmer.svg" width={52} height={40} alt="" />
-      <img className="demo-el demo-bed-dragging" src="/sheep-assets/awake-farmer.svg" width={52} height={40} alt="" />
+      <img className="demo-el demo-bed-icon" src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={40} alt="" />
+      <img className="demo-el demo-bed-dragging" src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={40} alt="" />
       <div className="demo-el demo-new-fence"><FenceIcon size={60} /></div>
       <div className="demo-el demo-accepting-ring" />
-      <img className="demo-el demo-bed-placed" src="/sheep-assets/awake-farmer.svg" width={40} height={32} alt="" />
+      <img className="demo-el demo-bed-placed" src={withBase("sheep-assets/awake-farmer.svg")} width={40} height={32} alt="" />
       <div className="demo-el demo-check">✓</div>
       <div className="demo-el demo-cursor"><CursorIcon /></div>
     </div>
@@ -177,9 +178,9 @@ function PlaceSheepDemo() {
       <div className="demo-el demo-fence-b"><FenceIcon size={56} /></div>
       <div className="demo-el demo-arrow"><HArrow w={167} /></div>
       <div className="demo-el demo-toolbar-sheep">
-        <img src="/sheep-assets/sheep-7.svg" width={44} height={44} alt="" draggable={false} />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={44} height={44} alt="" draggable={false} />
       </div>
-      <img className="demo-el demo-sheep-placed" src="/sheep-assets/sheep-7.svg" width={44} height={44} alt="" />
+      <img className="demo-el demo-sheep-placed" src={withBase("sheep-assets/sheep-7.svg")} width={44} height={44} alt="" />
       <div className="demo-el demo-glow-sheep"><ClickRipple /></div>
       <div className="demo-el demo-glow-arrow"><ClickRipple /></div>
       <div className="demo-el demo-check">✓</div>
@@ -225,29 +226,29 @@ function TracePathDemo() {
     <div className="demo-scene-inner demo-trace-path">
       <div className="demo-el demo-pattern-accept">
         <span className="demo-pattern-label">Pattern to match:</span>
-        <img src="/sheep-assets/sheep-7.svg" width={28} height={28} alt="" />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={28} height={28} alt="" />
         <span className="demo-pattern-arrow">→</span>
-        <img src="/sheep-assets/sheep-8.svg" width={28} height={28} alt="" />
+        <img src={withBase("sheep-assets/sheep-8.svg")} width={28} height={28} alt="" />
       </div>
       <div className="demo-el demo-pattern-reject">
         <span className="demo-pattern-label">Pattern to match:</span>
-        <img src="/sheep-assets/sheep-13.svg" width={28} height={28} alt="" />
+        <img src={withBase("sheep-assets/sheep-13.svg")} width={28} height={28} alt="" />
       </div>
       <div className="demo-el demo-fence-a"><FenceIcon size={46} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={46} /></div>
       <div className="demo-el demo-fence-c">
-        <img src="/sheep-assets/awake-farmer.svg" width={46} height={36} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={46} height={36} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark /></div>
       <div className="demo-el demo-arrow-1"><HArrow w={80} /></div>
       <div className="demo-el demo-arrow-2"><HArrow w={80} /></div>
-      <img className="demo-el demo-sheep-label-1" src="/sheep-assets/sheep-7.svg" width={28} height={28} alt="" />
-      <img className="demo-el demo-sheep-label-2" src="/sheep-assets/sheep-8.svg" width={28} height={28} alt="" />
-      <img className="demo-el demo-trace-accept" src="/sheep-assets/sheep-7.svg" width={32} height={32} alt="" />
+      <img className="demo-el demo-sheep-label-1" src={withBase("sheep-assets/sheep-7.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-sheep-label-2" src={withBase("sheep-assets/sheep-8.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-trace-accept" src={withBase("sheep-assets/sheep-7.svg")} width={32} height={32} alt="" />
       <div className="demo-el demo-glow-a1"><ClickRipple /></div>
       <div className="demo-el demo-glow-b1"><ClickRipple /></div>
       <div className="demo-el demo-glow-c1"><ClickRipple /></div>
-      <img className="demo-el demo-trace-reject" src="/sheep-assets/sheep-13.svg" width={32} height={32} alt="" />
+      <img className="demo-el demo-trace-reject" src={withBase("sheep-assets/sheep-13.svg")} width={32} height={32} alt="" />
       <div className="demo-el demo-stuck-x">✗</div>
       <div className="demo-el demo-accept-btn">😴 Falls Asleep</div>
       <div className="demo-el demo-reject-btn">👀 Stays Awake</div>
@@ -263,18 +264,18 @@ function DragSingleDemo() {
     <div className="demo-scene-inner demo-drag-single">
       <div className="demo-el demo-target-pattern">
         <span className="demo-target-label">Pattern to match:</span>
-        <img src="/sheep-assets/sheep-7.svg" width={28} height={28} alt="" />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={28} height={28} alt="" />
       </div>
       <div className="demo-el demo-fence-a"><FenceIcon size={52} /></div>
       <div className="demo-el demo-fence-b">
-        <img src="/sheep-assets/awake-farmer.svg" width={52} height={42} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={42} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={18} /></div>
       <div className="demo-el demo-arrow"><HArrow w={140} /></div>
-      <img className="demo-el demo-pal-1" src="/sheep-assets/sheep-7.svg" width={42} height={42} alt="" />
-      <img className="demo-el demo-pal-2" src="/sheep-assets/sheep-8.svg" width={42} height={42} alt="" />
-      <img className="demo-el demo-drag-1" src="/sheep-assets/sheep-7.svg" width={42} height={42} alt="" />
-      <img className="demo-el demo-placed-1" src="/sheep-assets/sheep-7.svg" width={38} height={38} alt="" />
+      <img className="demo-el demo-pal-1" src={withBase("sheep-assets/sheep-7.svg")} width={42} height={42} alt="" />
+      <img className="demo-el demo-pal-2" src={withBase("sheep-assets/sheep-8.svg")} width={42} height={42} alt="" />
+      <img className="demo-el demo-drag-1" src={withBase("sheep-assets/sheep-7.svg")} width={42} height={42} alt="" />
+      <img className="demo-el demo-placed-1" src={withBase("sheep-assets/sheep-7.svg")} width={38} height={38} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
       <div className="demo-el demo-match-tick">✓ Matched!</div>
       <div className="demo-el demo-cursor"><CursorIcon /></div>
@@ -287,24 +288,24 @@ function DragMatchDemo() {
     <div className="demo-scene-inner demo-drag-match">
       <div className="demo-el demo-target-pattern">
         <span className="demo-target-label">Pattern to match:</span>
-        <img src="/sheep-assets/sheep-7.svg" width={26} height={26} alt="" />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={26} height={26} alt="" />
         <span className="demo-target-arrow">→</span>
-        <img src="/sheep-assets/sheep-8.svg" width={26} height={26} alt="" />
+        <img src={withBase("sheep-assets/sheep-8.svg")} width={26} height={26} alt="" />
       </div>
       <div className="demo-el demo-fence-a"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-c">
-        <img src="/sheep-assets/awake-farmer.svg" width={48} height={38} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={48} height={38} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark /></div>
       <div className="demo-el demo-arrow-1"><HArrow w={90} /></div>
       <div className="demo-el demo-arrow-2"><HArrow w={89} /></div>
-      <img className="demo-el demo-pal-1" src="/sheep-assets/sheep-7.svg" width={38} height={38} alt="" />
-      <img className="demo-el demo-pal-2" src="/sheep-assets/sheep-8.svg" width={38} height={38} alt="" />
-      <img className="demo-el demo-drag-1" src="/sheep-assets/sheep-7.svg" width={38} height={38} alt="" />
-      <img className="demo-el demo-placed-1" src="/sheep-assets/sheep-7.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-drag-2" src="/sheep-assets/sheep-8.svg" width={38} height={38} alt="" />
-      <img className="demo-el demo-placed-2" src="/sheep-assets/sheep-8.svg" width={34} height={34} alt="" />
+      <img className="demo-el demo-pal-1" src={withBase("sheep-assets/sheep-7.svg")} width={38} height={38} alt="" />
+      <img className="demo-el demo-pal-2" src={withBase("sheep-assets/sheep-8.svg")} width={38} height={38} alt="" />
+      <img className="demo-el demo-drag-1" src={withBase("sheep-assets/sheep-7.svg")} width={38} height={38} alt="" />
+      <img className="demo-el demo-placed-1" src={withBase("sheep-assets/sheep-7.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-drag-2" src={withBase("sheep-assets/sheep-8.svg")} width={38} height={38} alt="" />
+      <img className="demo-el demo-placed-2" src={withBase("sheep-assets/sheep-8.svg")} width={34} height={34} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-match-tick">✓ Matched!</div>
@@ -317,38 +318,38 @@ function DragBranchDemo() {
   return (
     <div className="demo-scene-inner demo-drag-branch">
       <div className="demo-el demo-target-pattern demo-target-1">
-        <img src="/sheep-assets/sheep-7.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={22} height={22} alt="" />
         <span className="demo-target-arrow">→</span>
-        <img src="/sheep-assets/sheep-13.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-13.svg")} width={22} height={22} alt="" />
       </div>
       <div className="demo-el demo-target-pattern demo-target-2">
-        <img src="/sheep-assets/sheep-8.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-8.svg")} width={22} height={22} alt="" />
         <span className="demo-target-arrow">→</span>
-        <img src="/sheep-assets/sheep-16.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-16.svg")} width={22} height={22} alt="" />
       </div>
       <div className="demo-el demo-fence-start"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-top"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-bot"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-end">
-        <img src="/sheep-assets/awake-farmer.svg" width={44} height={36} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={44} height={36} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={14} /></div>
       <div className="demo-el demo-arrow-st"><DiagArrow w={108} h={72} dir="up" /></div>
       <div className="demo-el demo-arrow-sb"><DiagArrow w={108} h={72} dir="down" /></div>
       <div className="demo-el demo-arrow-te"><DiagArrow w={109} h={68} dir="down" /></div>
       <div className="demo-el demo-arrow-be"><DiagArrow w={109} h={76} dir="up" /></div>
-      <img className="demo-el demo-pal-1" src="/sheep-assets/sheep-7.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-pal-2" src="/sheep-assets/sheep-8.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-pal-3" src="/sheep-assets/sheep-13.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-pal-4" src="/sheep-assets/sheep-16.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-drag-1" src="/sheep-assets/sheep-7.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-placed-1" src="/sheep-assets/sheep-7.svg" width={30} height={30} alt="" />
-      <img className="demo-el demo-drag-2" src="/sheep-assets/sheep-13.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-placed-2" src="/sheep-assets/sheep-13.svg" width={30} height={30} alt="" />
-      <img className="demo-el demo-drag-3" src="/sheep-assets/sheep-8.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-placed-3" src="/sheep-assets/sheep-8.svg" width={30} height={30} alt="" />
-      <img className="demo-el demo-drag-4" src="/sheep-assets/sheep-16.svg" width={34} height={34} alt="" />
-      <img className="demo-el demo-placed-4" src="/sheep-assets/sheep-16.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-pal-1" src={withBase("sheep-assets/sheep-7.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-pal-2" src={withBase("sheep-assets/sheep-8.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-pal-3" src={withBase("sheep-assets/sheep-13.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-pal-4" src={withBase("sheep-assets/sheep-16.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-drag-1" src={withBase("sheep-assets/sheep-7.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-placed-1" src={withBase("sheep-assets/sheep-7.svg")} width={30} height={30} alt="" />
+      <img className="demo-el demo-drag-2" src={withBase("sheep-assets/sheep-13.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-placed-2" src={withBase("sheep-assets/sheep-13.svg")} width={30} height={30} alt="" />
+      <img className="demo-el demo-drag-3" src={withBase("sheep-assets/sheep-8.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-placed-3" src={withBase("sheep-assets/sheep-8.svg")} width={30} height={30} alt="" />
+      <img className="demo-el demo-drag-4" src={withBase("sheep-assets/sheep-16.svg")} width={34} height={34} alt="" />
+      <img className="demo-el demo-placed-4" src={withBase("sheep-assets/sheep-16.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-glow-3"><ClickRipple /></div>
@@ -363,35 +364,35 @@ function DragLoopDemo() {
   return (
     <div className="demo-scene-inner demo-drag-loop">
       <div className="demo-el demo-target-pattern demo-target-1">
-        <img src="/sheep-assets/sheep-7.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={22} height={22} alt="" />
         <span className="demo-target-arrow">→</span>
-        <img src="/sheep-assets/sheep-8.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-8.svg")} width={22} height={22} alt="" />
       </div>
       <div className="demo-el demo-target-pattern demo-target-2">
-        <img src="/sheep-assets/sheep-7.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={22} height={22} alt="" />
         <span className="demo-target-arrow">→</span>
-        <img src="/sheep-assets/sheep-13.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-13.svg")} width={22} height={22} alt="" />
         <span className="demo-target-arrow">→</span>
-        <img src="/sheep-assets/sheep-8.svg" width={22} height={22} alt="" />
+        <img src={withBase("sheep-assets/sheep-8.svg")} width={22} height={22} alt="" />
       </div>
       <div className="demo-el demo-fence-a"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-c">
-        <img src="/sheep-assets/awake-farmer.svg" width={48} height={38} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={48} height={38} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark /></div>
       <div className="demo-el demo-arrow-1"><HArrow w={90} /></div>
       <div className="demo-el demo-loop-arrow"><LoopArrow w={60} h={48} /></div>
       <div className="demo-el demo-arrow-2"><HArrow w={90} /></div>
-      <img className="demo-el demo-pal-1" src="/sheep-assets/sheep-7.svg" width={36} height={36} alt="" />
-      <img className="demo-el demo-pal-2" src="/sheep-assets/sheep-13.svg" width={36} height={36} alt="" />
-      <img className="demo-el demo-pal-3" src="/sheep-assets/sheep-8.svg" width={36} height={36} alt="" />
-      <img className="demo-el demo-drag-1" src="/sheep-assets/sheep-7.svg" width={36} height={36} alt="" />
-      <img className="demo-el demo-placed-1" src="/sheep-assets/sheep-7.svg" width={30} height={30} alt="" />
-      <img className="demo-el demo-drag-2" src="/sheep-assets/sheep-13.svg" width={36} height={36} alt="" />
-      <img className="demo-el demo-placed-2" src="/sheep-assets/sheep-13.svg" width={30} height={30} alt="" />
-      <img className="demo-el demo-drag-3" src="/sheep-assets/sheep-8.svg" width={36} height={36} alt="" />
-      <img className="demo-el demo-placed-3" src="/sheep-assets/sheep-8.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-pal-1" src={withBase("sheep-assets/sheep-7.svg")} width={36} height={36} alt="" />
+      <img className="demo-el demo-pal-2" src={withBase("sheep-assets/sheep-13.svg")} width={36} height={36} alt="" />
+      <img className="demo-el demo-pal-3" src={withBase("sheep-assets/sheep-8.svg")} width={36} height={36} alt="" />
+      <img className="demo-el demo-drag-1" src={withBase("sheep-assets/sheep-7.svg")} width={36} height={36} alt="" />
+      <img className="demo-el demo-placed-1" src={withBase("sheep-assets/sheep-7.svg")} width={30} height={30} alt="" />
+      <img className="demo-el demo-drag-2" src={withBase("sheep-assets/sheep-13.svg")} width={36} height={36} alt="" />
+      <img className="demo-el demo-placed-2" src={withBase("sheep-assets/sheep-13.svg")} width={30} height={30} alt="" />
+      <img className="demo-el demo-drag-3" src={withBase("sheep-assets/sheep-8.svg")} width={36} height={36} alt="" />
+      <img className="demo-el demo-placed-3" src={withBase("sheep-assets/sheep-8.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-glow-3"><ClickRipple /></div>
@@ -413,10 +414,10 @@ function ClickEdgeDemo() {
       <div className="demo-el demo-fence-a"><FenceIcon size={52} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={52} /></div>
       <div className="demo-el demo-arrow"><HArrow w={160} /></div>
-      <img className="demo-el demo-palette-1" src="/sheep-assets/sheep-7.svg" width={40} height={40} alt="" />
-      <img className="demo-el demo-palette-2" src="/sheep-assets/sheep-8.svg" width={40} height={40} alt="" />
-      <img className="demo-el demo-sheep-dragging" src="/sheep-assets/sheep-7.svg" width={40} height={40} alt="" />
-      <img className="demo-el demo-sheep-placed" src="/sheep-assets/sheep-7.svg" width={40} height={40} alt="" />
+      <img className="demo-el demo-palette-1" src={withBase("sheep-assets/sheep-7.svg")} width={40} height={40} alt="" />
+      <img className="demo-el demo-palette-2" src={withBase("sheep-assets/sheep-8.svg")} width={40} height={40} alt="" />
+      <img className="demo-el demo-sheep-dragging" src={withBase("sheep-assets/sheep-7.svg")} width={40} height={40} alt="" />
+      <img className="demo-el demo-sheep-placed" src={withBase("sheep-assets/sheep-7.svg")} width={40} height={40} alt="" />
       <div className="demo-el demo-glow-arrow"><ClickRipple /></div>
       <div className="demo-el demo-cursor"><CursorIcon /></div>
       <div className="demo-el demo-check">✓</div>
@@ -460,7 +461,7 @@ function TestPatternRibbon({ sheep, className }: { sheep: string[]; className?: 
       {sheep.map((s, i) => (
         <span key={i} className="demo-test-item">
           {i > 0 && <span className="demo-target-arrow">→</span>}
-          <img src={`/sheep-assets/${s}.svg`} width={30} height={30} alt="" />
+          <img src={withBase(`sheep-assets/${s}.svg`)} width={30} height={30} alt="" />
         </span>
       ))}
     </div>
@@ -472,12 +473,12 @@ function ARBasicsDemo() {
     <div className="demo-scene-inner demo-ar-basics">
       <div className="demo-el demo-fence-a"><FenceIcon size={52} /></div>
       <div className="demo-el demo-fence-b">
-        <img src="/sheep-assets/awake-farmer.svg" width={52} height={42} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={42} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={18} /></div>
       <div className="demo-el demo-arrow"><HArrow w={180} /></div>
-      <img className="demo-el demo-sheep-label" src="/sheep-assets/sheep-7.svg" width={32} height={32} alt="" />
-      <img className="demo-el demo-hop" src="/sheep-assets/sheep-7.svg" width={36} height={36} alt="" />
+      <img className="demo-el demo-sheep-label" src={withBase("sheep-assets/sheep-7.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-hop" src={withBase("sheep-assets/sheep-7.svg")} width={36} height={36} alt="" />
       <div className="demo-el demo-glow"><ClickRipple /></div>
       <div className="demo-el demo-result demo-result-accept">😴 Falls Asleep</div>
     </div>
@@ -489,12 +490,12 @@ function ARRejectDemo() {
     <div className="demo-scene-inner demo-ar-reject">
       <div className="demo-el demo-fence-a"><FenceIcon size={52} /></div>
       <div className="demo-el demo-fence-b">
-        <img src="/sheep-assets/awake-farmer.svg" width={52} height={42} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={42} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={18} /></div>
       <div className="demo-el demo-arrow"><HArrow w={180} /></div>
-      <img className="demo-el demo-sheep-label" src="/sheep-assets/sheep-7.svg" width={32} height={32} alt="" />
-      <img className="demo-el demo-hop-fail" src="/sheep-assets/sheep-8.svg" width={36} height={36} alt="" />
+      <img className="demo-el demo-sheep-label" src={withBase("sheep-assets/sheep-7.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-hop-fail" src={withBase("sheep-assets/sheep-8.svg")} width={36} height={36} alt="" />
       <div className="demo-el demo-no-match">✗</div>
       <div className="demo-el demo-arrow-flash" />
       <div className="demo-el demo-result demo-result-reject">👀 Stays Awake</div>
@@ -508,16 +509,16 @@ function ARSequenceDemo() {
       <div className="demo-el demo-fence-a"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-c">
-        <img src="/sheep-assets/awake-farmer.svg" width={48} height={38} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={48} height={38} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark /></div>
       <div className="demo-el demo-arrow-1"><HArrow w={97} /></div>
-      <img className="demo-el demo-label-1" src="/sheep-assets/sheep-7.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-label-1" src={withBase("sheep-assets/sheep-7.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-arrow-2"><HArrow w={97} /></div>
-      <img className="demo-el demo-label-2" src="/sheep-assets/sheep-8.svg" width={30} height={30} alt="" />
-      <img className="demo-el demo-hop-1" src="/sheep-assets/sheep-7.svg" width={32} height={32} alt="" />
+      <img className="demo-el demo-label-2" src={withBase("sheep-assets/sheep-8.svg")} width={30} height={30} alt="" />
+      <img className="demo-el demo-hop-1" src={withBase("sheep-assets/sheep-7.svg")} width={32} height={32} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
-      <img className="demo-el demo-hop-2" src="/sheep-assets/sheep-8.svg" width={32} height={32} alt="" />
+      <img className="demo-el demo-hop-2" src={withBase("sheep-assets/sheep-8.svg")} width={32} height={32} alt="" />
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-result demo-result-accept">😴 Falls Asleep</div>
     </div>
@@ -531,20 +532,20 @@ function ARBranchDemo() {
       <div className="demo-el demo-fence-top"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-bot"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-end">
-        <img src="/sheep-assets/awake-farmer.svg" width={44} height={36} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={44} height={36} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={14} /></div>
       <div className="demo-el demo-arrow-st"><DiagArrow w={108} h={72} dir="up" /></div>
       <div className="demo-el demo-arrow-sb"><DiagArrow w={108} h={75} dir="down" /></div>
       <div className="demo-el demo-arrow-te"><DiagArrow w={109} h={68} dir="down" /></div>
       <div className="demo-el demo-arrow-be"><DiagArrow w={109} h={79} dir="up" /></div>
-      <img className="demo-el demo-label-st" src="/sheep-assets/sheep-7.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-sb" src="/sheep-assets/sheep-8.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-te" src="/sheep-assets/sheep-13.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-be" src="/sheep-assets/sheep-16.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-hop-1" src="/sheep-assets/sheep-8.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-label-st" src={withBase("sheep-assets/sheep-7.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-sb" src={withBase("sheep-assets/sheep-8.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-te" src={withBase("sheep-assets/sheep-13.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-be" src={withBase("sheep-assets/sheep-16.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-hop-1" src={withBase("sheep-assets/sheep-8.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
-      <img className="demo-el demo-hop-2" src="/sheep-assets/sheep-16.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-hop-2" src={withBase("sheep-assets/sheep-16.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-dim-top" />
       <div className="demo-el demo-result demo-result-accept">😴 Falls Asleep</div>
@@ -558,26 +559,26 @@ function ARLoopDemo() {
       <div className="demo-el demo-fence-a"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={48} /></div>
       <div className="demo-el demo-fence-c">
-        <img src="/sheep-assets/awake-farmer.svg" width={48} height={38} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={48} height={38} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark /></div>
       <div className="demo-el demo-arrow-1"><HArrow w={99} /></div>
-      <img className="demo-el demo-label-1" src="/sheep-assets/sheep-7.svg" width={28} height={28} alt="" />
+      <img className="demo-el demo-label-1" src={withBase("sheep-assets/sheep-7.svg")} width={28} height={28} alt="" />
       <div className="demo-el demo-loop-arrow"><LoopArrow w={60} h={48} /></div>
-      <img className="demo-el demo-label-loop" src="/sheep-assets/sheep-8.svg" width={26} height={26} alt="" />
+      <img className="demo-el demo-label-loop" src={withBase("sheep-assets/sheep-8.svg")} width={26} height={26} alt="" />
       <div className="demo-el demo-arrow-2"><HArrow w={98} /></div>
-      <img className="demo-el demo-label-2" src="/sheep-assets/sheep-13.svg" width={28} height={28} alt="" />
-      <img className="demo-el demo-hop-1" src="/sheep-assets/sheep-7.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-label-2" src={withBase("sheep-assets/sheep-13.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-hop-1" src={withBase("sheep-assets/sheep-7.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
-      <img className="demo-el demo-hop-loop-1" src="/sheep-assets/sheep-8.svg" width={28} height={28} alt="" />
-      <img className="demo-el demo-hop-loop-2" src="/sheep-assets/sheep-8.svg" width={28} height={28} alt="" />
+      <img className="demo-el demo-hop-loop-1" src={withBase("sheep-assets/sheep-8.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-hop-loop-2" src={withBase("sheep-assets/sheep-8.svg")} width={28} height={28} alt="" />
       <div className="demo-el demo-loop-counter">
         <span className="lc lc-0">×0</span>
         <span className="lc lc-1">×1</span>
         <span className="lc lc-2">×2</span>
         <span className="lc lc-dots">...</span>
       </div>
-      <img className="demo-el demo-hop-3" src="/sheep-assets/sheep-13.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-hop-3" src={withBase("sheep-assets/sheep-13.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-result demo-result-accept">😴 Falls Asleep</div>
     </div>
@@ -591,16 +592,16 @@ function ARDeadDemo() {
       <div className="demo-el demo-fence-good"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-trap"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-end">
-        <img src="/sheep-assets/awake-farmer.svg" width={44} height={36} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={44} height={36} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={14} /></div>
       <div className="demo-el demo-arrow-sg"><DiagArrow w={108} h={72} dir="up" /></div>
       <div className="demo-el demo-arrow-st"><DiagArrow w={108} h={75} dir="down" /></div>
       <div className="demo-el demo-arrow-ge"><DiagArrow w={109} h={20} dir="up" /></div>
-      <img className="demo-el demo-label-sg" src="/sheep-assets/sheep-7.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-st" src="/sheep-assets/sheep-8.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-ge" src="/sheep-assets/sheep-13.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-hop-1" src="/sheep-assets/sheep-8.svg" width={30} height={30} alt="" />
+      <img className="demo-el demo-label-sg" src={withBase("sheep-assets/sheep-7.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-st" src={withBase("sheep-assets/sheep-8.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-ge" src={withBase("sheep-assets/sheep-13.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-hop-1" src={withBase("sheep-assets/sheep-8.svg")} width={30} height={30} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
       <div className="demo-el demo-stuck-badge">🚫 Trapped! No way out!</div>
       <div className="demo-el demo-result demo-result-reject">👀 Stays Awake</div>
@@ -614,22 +615,22 @@ function ARMultiDemo() {
       <div className="demo-el demo-fence-start"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-mid"><FenceIcon size={44} /></div>
       <div className="demo-el demo-fence-bed1">
-        <img src="/sheep-assets/awake-farmer.svg" width={44} height={36} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={44} height={36} alt="" />
       </div>
       <div className="demo-el demo-fence-bed2">
-        <img src="/sheep-assets/awake-farmer.svg" width={44} height={36} alt="" />
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={44} height={36} alt="" />
       </div>
       <div className="demo-el demo-start-arrow"><StartMark size={14} /></div>
       <div className="demo-el demo-arrow-sm"><HArrow w={88} /></div>
       <div className="demo-el demo-arrow-m1"><DiagArrow w={106} h={80} dir="up" /></div>
       <div className="demo-el demo-arrow-m2"><DiagArrow w={106} h={73} dir="down" /></div>
-      <img className="demo-el demo-label-sm" src="/sheep-assets/sheep-7.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-m1" src="/sheep-assets/sheep-13.svg" width={26} height={26} alt="" />
-      <img className="demo-el demo-label-m2" src="/sheep-assets/sheep-8.svg" width={26} height={26} alt="" />
+      <img className="demo-el demo-label-sm" src={withBase("sheep-assets/sheep-7.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-m1" src={withBase("sheep-assets/sheep-13.svg")} width={26} height={26} alt="" />
+      <img className="demo-el demo-label-m2" src={withBase("sheep-assets/sheep-8.svg")} width={26} height={26} alt="" />
       <div className="demo-el demo-beds-badge">🛏️ Two Beds!</div>
-      <img className="demo-el demo-hop-1" src="/sheep-assets/sheep-7.svg" width={28} height={28} alt="" />
+      <img className="demo-el demo-hop-1" src={withBase("sheep-assets/sheep-7.svg")} width={28} height={28} alt="" />
       <div className="demo-el demo-glow-1"><ClickRipple /></div>
-      <img className="demo-el demo-hop-2" src="/sheep-assets/sheep-8.svg" width={28} height={28} alt="" />
+      <img className="demo-el demo-hop-2" src={withBase("sheep-assets/sheep-8.svg")} width={28} height={28} alt="" />
       <div className="demo-el demo-glow-2"><ClickRipple /></div>
       <div className="demo-el demo-result demo-result-accept">😴 Falls Asleep</div>
     </div>
@@ -826,7 +827,7 @@ export function TutorialDemo({ concept, onDismiss }: TutorialDemoProps) {
               {RIBBON_SHEEP[concept].map((s, i) => (
                 <span key={i} className="demo-test-item">
                   {i > 0 && <span className="demo-target-arrow">→</span>}
-                  <img src={`/sheep-assets/${s}.svg`} width={36} height={36} alt="" />
+                  <img src={withBase(`sheep-assets/${s}.svg`)} width={36} height={36} alt="" />
                 </span>
               ))}
             </div>
