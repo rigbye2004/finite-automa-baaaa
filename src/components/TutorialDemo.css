@@ -354,7 +354,7 @@
 
 .demo-connecting .demo-connect-btn {
   left: 6px; top: 8px;
-  animation: c-connect-btn-fade 5.5s ease infinite;
+  animation: c-connect-btn-fade 8.5s ease infinite;
 }
 
 .demo-connecting .demo-c-from,
@@ -377,43 +377,64 @@
   align-self: stretch;
 }
 
-/* From half: lights up when cursor clicks, dims to "done" after fence A */
+/* From half: lights up when cursor clicks */
 .demo-connecting .demo-c-from {
-  animation: c-from-half 5.5s ease infinite;
+  animation: c-from-half 8.5s ease infinite;
 }
 
-/* To half: grayed out until fence A is clicked, then turns green */
+/* To half: grayed out until source fence is clicked */
 .demo-connecting .demo-c-to {
   opacity: 0.35;
-  animation: c-to-half 5.5s ease infinite;
+  animation: c-to-half 8.5s ease infinite;
 }
 
-.demo-connecting .demo-fence-a { left: 60px; top: 95px; }
-.demo-connecting .demo-fence-b { left: 290px; top: 95px; }
-.demo-connecting .demo-start-arrow { left: 40px; top: 112px; }
-.demo-connecting .demo-start-arrow { animation: c-persist 5.5s ease infinite; }
+.demo-connecting .demo-fence-a { left: 15px; top: 95px; }
+.demo-connecting .demo-fence-b { left: 175px; top: 95px; }
+.demo-connecting .demo-fence-c { left: 330px; top: 95px; }
+.demo-connecting .demo-start-arrow { left: -2px; top: 112px; }
+.demo-connecting .demo-start-arrow { animation: c-persist 8.5s ease infinite; }
 
-.demo-connecting .demo-glow-a { left: 70px; top: 105px; }
-.demo-connecting .demo-glow-b { left: 300px; top: 105px; }
+.demo-connecting .demo-glow-a { left: 25px; top: 105px; }
+.demo-connecting .demo-glow-b { left: 185px; top: 105px; }
+.demo-connecting .demo-glow-c { left: 340px; top: 105px; }
 
-.demo-connecting .demo-dotted-line {
-  left: 122px; top: 122px;
+/* Dotted line 1: A→B */
+.demo-connecting .demo-dotted-line-1 {
+  left: 77px; top: 122px;
   height: 3px;
   background: repeating-linear-gradient(90deg, #4CAF50 0px, #4CAF50 6px, transparent 6px, transparent 12px);
   width: 0;
-  animation: c-dotted 5.5s ease infinite;
+  animation: c-dotted-1 8.5s ease infinite;
 }
 
-.demo-connecting .demo-arrow {
-  left: 118px; top: 110px;
-  width: 164px; height: 28px;
+/* Dotted line 2: B→C */
+.demo-connecting .demo-dotted-line-2 {
+  left: 237px; top: 122px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #4CAF50 0px, #4CAF50 6px, transparent 6px, transparent 12px);
+  width: 0;
+  animation: c-dotted-2 8.5s ease infinite;
+}
+
+/* Arrow 1: A→B */
+.demo-connecting .demo-arrow-1 {
+  left: 73px; top: 110px;
+  width: 104px; height: 28px;
   opacity: 0;
-  animation: c-arrow 5.5s ease infinite;
+  animation: c-arrow-1 8.5s ease infinite;
 }
 
-/* ? slot appears on the arrow after connection */
-.demo-connecting .demo-q-label {
-  left: 193px; top: 76px;
+/* Arrow 2: B→C */
+.demo-connecting .demo-arrow-2 {
+  left: 233px; top: 110px;
+  width: 100px; height: 28px;
+  opacity: 0;
+  animation: c-arrow-2 8.5s ease infinite;
+}
+
+/* ? slot on arrow 1 */
+.demo-connecting .demo-q-label-1 {
+  left: 105px; top: 76px;
   width: 38px; height: 38px;
   border-radius: 8px;
   background: white;
@@ -425,135 +446,220 @@
   font-weight: 700;
   color: #888;
   opacity: 0;
-  animation: c-q-label 5.5s ease infinite;
+  animation: c-q-label-1 8.5s ease infinite;
+}
+
+/* ? slot on arrow 2 */
+.demo-connecting .demo-q-label-2 {
+  left: 265px; top: 76px;
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: white;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #888;
+  opacity: 0;
+  animation: c-q-label-2 8.5s ease infinite;
 }
 
 .demo-connecting .demo-check {
   left: 190px; top: 170px;
-  animation: c-check 5.5s ease infinite;
+  animation: c-check 8.5s ease infinite;
 }
 
 .demo-connecting .demo-cursor {
   left: 18px; top: 28px;
-  animation: c-cursor 5.5s ease infinite;
+  animation: c-cursor 8.5s ease infinite;
 }
 
 .demo-connecting .demo-glow-a .demo-ripple {
-  animation: c-ripple-a 5.5s ease infinite;
+  animation: c-ripple-a 8.5s ease infinite;
 }
 
 .demo-connecting .demo-glow-b .demo-ripple {
-  animation: c-ripple-b 5.5s ease infinite;
+  animation: c-ripple-b 8.5s ease infinite;
 }
+
+.demo-connecting .demo-glow-c .demo-ripple {
+  animation: c-ripple-c 8.5s ease infinite;
+}
+
+/* ── Keyframes for 8.5s connecting demo ──
+   Phase 1 (0-38%): Click From → Click A → Click B → Arrow 1
+   Phase 2 (38-66%): Click B → Click C → Arrow 2
+   Finish  (66-100%): Check → fade out
+*/
 
 /* Whole button fades in/out */
 @keyframes c-connect-btn-fade {
   0%        { opacity: 0; }
-  4%        { opacity: 1; }
-  88%       { opacity: 1; }
-  94%, 100% { opacity: 0; }
+  3%        { opacity: 1; }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; }
 }
 
-/* From half: normal → active green when cursor clicks → dim "done" after fence A */
+/* From half: green when active, dims after source chosen */
 @keyframes c-from-half {
   0%        { background: white; color: #555; }
-  4%        { background: white; color: #555; }
-  /* Cursor clicks at ~9% */
-  11%       { background: #4CAF50; color: white; }
-  32%       { background: #4CAF50; color: white; }
-  /* Dims to "done" after fence A */
-  36%       { background: #C8E6C9; color: #2E7D32; opacity: 1; }
-  100%      { background: #C8E6C9; color: #2E7D32; opacity: 1; }
+  3%        { background: white; color: #555; }
+  /* Cursor clicks From at ~7% */
+  9%        { background: #4CAF50; color: white; }
+  19%       { background: #4CAF50; color: white; }
+  /* Dims after fence A clicked */
+  22%       { background: #C8E6C9; color: #2E7D32; }
+  /* Stays dim through first arrow, then re-activates for 2nd connection */
+  40%       { background: #C8E6C9; color: #2E7D32; }
+  43%       { background: #4CAF50; color: white; }
+  48%       { background: #4CAF50; color: white; }
+  /* Dims after fence B clicked as source */
+  51%       { background: #C8E6C9; color: #2E7D32; }
+  100%      { background: #C8E6C9; color: #2E7D32; }
 }
 
-/* To half: grayed out → full green after fence A is clicked */
+/* To half: gray → green when source fence clicked */
 @keyframes c-to-half {
   0%        { opacity: 0.35; background: white; color: #555; }
-  32%       { opacity: 0.35; background: white; color: #555; }
-  /* Activates when fence A is clicked */
-  36%       { opacity: 1; background: #4CAF50; color: white; }
+  19%       { opacity: 0.35; background: white; color: #555; }
+  /* Activates when fence A clicked */
+  22%       { opacity: 1; background: #4CAF50; color: white; }
+  35%       { opacity: 1; background: #4CAF50; color: white; }
+  /* Resets between connections */
+  38%       { opacity: 0.35; background: white; color: #555; }
+  48%       { opacity: 0.35; background: white; color: #555; }
+  /* Activates when fence B clicked as source */
+  51%       { opacity: 1; background: #4CAF50; color: white; }
   100%      { opacity: 1; background: #4CAF50; color: white; }
 }
 
-/* Cursor path: From button → fence A → fence B */
+/* Cursor path: From → A → B → (pause) → B → C */
 @keyframes c-cursor {
   0%        { left: 18px; top: 22px; opacity: 0; }
-  4%        { left: 18px; top: 22px; opacity: 1; }
+  3%        { left: 18px; top: 22px; opacity: 1; }
   /* Click From button */
-  8%        { left: 18px; top: 26px; }
-  11%       { left: 18px; top: 22px; }
+  7%        { left: 18px; top: 26px; }
+  9%        { left: 18px; top: 22px; }
   /* Move to fence A */
-  26%       { left: 78px; top: 118px; }
+  17%       { left: 33px; top: 118px; }
   /* Click fence A */
-  29%       { left: 78px; top: 124px; }
-  32%       { left: 78px; top: 118px; }
+  18%       { left: 33px; top: 124px; }
+  19%       { left: 33px; top: 118px; }
   /* Move to fence B */
-  52%       { left: 308px; top: 118px; }
-  /* Click fence B */
-  55%       { left: 308px; top: 124px; }
-  58%       { left: 308px; top: 118px; }
-  84%       { left: 308px; top: 118px; opacity: 1; }
-  90%       { opacity: 0; }
+  32%       { left: 193px; top: 118px; }
+  /* Click fence B (target for arrow 1) */
+  33%       { left: 193px; top: 124px; }
+  35%       { left: 193px; top: 118px; }
+  /* Pause at B, then click B again (source for arrow 2) */
+  43%       { left: 193px; top: 118px; }
+  45%       { left: 193px; top: 124px; }
+  48%       { left: 193px; top: 118px; }
+  /* Move to fence C */
+  58%       { left: 348px; top: 118px; }
+  /* Click fence C (target for arrow 2) */
+  59%       { left: 348px; top: 124px; }
+  61%       { left: 348px; top: 118px; }
+  82%       { left: 348px; top: 118px; opacity: 1; }
+  88%       { opacity: 0; }
   100%      { left: 18px; top: 22px; opacity: 0; }
 }
 
 /* Ripple on fence A */
 @keyframes c-ripple-a {
-  0%, 29%   { opacity: 0; transform: scale(0.5); }
-  32%       { opacity: 1; transform: scale(1); }
-  44%       { opacity: 0; transform: scale(1.8); }
+  0%, 18%   { opacity: 0; transform: scale(0.5); }
+  19%       { opacity: 1; transform: scale(1); }
+  28%       { opacity: 0; transform: scale(1.8); }
   100%      { opacity: 0; }
 }
 
-/* Ripple on fence B */
+/* Ripple on fence B — fires twice (as target, then as source) */
 @keyframes c-ripple-b {
-  0%, 55%   { opacity: 0; transform: scale(0.5); }
-  58%       { opacity: 1; transform: scale(1); }
+  0%, 33%   { opacity: 0; transform: scale(0.5); }
+  35%       { opacity: 1; transform: scale(1); }
+  42%       { opacity: 0; transform: scale(1.8); }
+  43%       { opacity: 0; transform: scale(0.5); }
+  45%       { opacity: 1; transform: scale(1); }
+  53%       { opacity: 0; transform: scale(1.8); }
+  100%      { opacity: 0; }
+}
+
+/* Ripple on fence C */
+@keyframes c-ripple-c {
+  0%, 59%   { opacity: 0; transform: scale(0.5); }
+  61%       { opacity: 1; transform: scale(1); }
   70%       { opacity: 0; transform: scale(1.8); }
   100%      { opacity: 0; }
 }
 
-/* Dotted line extends A→B while cursor drags */
-@keyframes c-dotted {
-  0%, 30%   { width: 0; opacity: 0; }
-  33%       { width: 0; opacity: 1; }
-  53%       { width: 160px; opacity: 1; }
-  58%       { width: 160px; opacity: 0; }
+/* Dotted line 1: A→B */
+@keyframes c-dotted-1 {
+  0%, 19%   { width: 0; opacity: 0; }
+  21%       { width: 0; opacity: 1; }
+  32%       { width: 96px; opacity: 1; }
+  35%       { width: 96px; opacity: 0; }
   100%      { opacity: 0; }
 }
 
-/* Solid arrow appears after click on fence B */
-@keyframes c-arrow {
-  0%, 57%   { opacity: 0; }
-  61%       { opacity: 1; }
-  88%       { opacity: 1; }
-  94%, 100% { opacity: 0; }
+/* Dotted line 2: B→C */
+@keyframes c-dotted-2 {
+  0%, 48%   { width: 0; opacity: 0; }
+  50%       { width: 0; opacity: 1; }
+  58%       { width: 92px; opacity: 1; }
+  61%       { width: 92px; opacity: 0; }
+  100%      { opacity: 0; }
 }
 
-/* ? slot pops in on the arrow */
-@keyframes c-q-label {
-  0%, 60%   { opacity: 0; transform: scale(0.5); }
+/* Arrow 1 appears after clicking fence B */
+@keyframes c-arrow-1 {
+  0%, 34%   { opacity: 0; }
+  37%       { opacity: 1; }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* Arrow 2 appears after clicking fence C */
+@keyframes c-arrow-2 {
+  0%, 60%   { opacity: 0; }
+  63%       { opacity: 1; }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* ? label 1 pops in on arrow 1 */
+@keyframes c-q-label-1 {
+  0%, 35%   { opacity: 0; transform: scale(0.5); }
+  39%       { opacity: 1; transform: scale(1.1); }
+  42%       { transform: scale(1); }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+
+/* ? label 2 pops in on arrow 2 */
+@keyframes c-q-label-2 {
+  0%, 61%   { opacity: 0; transform: scale(0.5); }
   65%       { opacity: 1; transform: scale(1.1); }
   68%       { transform: scale(1); }
-  88%       { opacity: 1; }
-  94%, 100% { opacity: 0; }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; }
 }
 
 /* Check mark */
 @keyframes c-check {
-  0%, 70%   { opacity: 0; transform: scale(0.3); }
-  76%       { opacity: 1; transform: scale(1.1); }
-  80%       { transform: scale(1); }
-  88%       { opacity: 1; }
-  94%, 100% { opacity: 0; transform: scale(1); }
+  0%, 68%   { opacity: 0; transform: scale(0.3); }
+  73%       { opacity: 1; transform: scale(1.1); }
+  76%       { transform: scale(1); }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; transform: scale(1); }
 }
 
-/* Start arrow stays visible */
+/* Elements that stay visible throughout */
 @keyframes c-persist {
   0%        { opacity: 0; }
-  4%        { opacity: 1; }
-  88%       { opacity: 1; }
-  94%, 100% { opacity: 0; }
+  3%        { opacity: 1; }
+  86%       { opacity: 1; }
+  92%, 100% { opacity: 0; }
 }
 
 

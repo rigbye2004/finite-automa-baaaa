@@ -128,12 +128,17 @@ function ConnectingDemo() {
       </div>
       <div className="demo-el demo-fence-a"><FenceIcon size={60} /></div>
       <div className="demo-el demo-fence-b"><FenceIcon size={60} /></div>
+      <div className="demo-el demo-fence-c"><FenceIcon size={60} /></div>
       <div className="demo-el demo-start-arrow"><StartMark size={24} /></div>
       <div className="demo-el demo-glow-a"><ClickRipple /></div>
       <div className="demo-el demo-glow-b"><ClickRipple /></div>
-      <div className="demo-el demo-dotted-line" />
-      <div className="demo-el demo-arrow"><HArrow w={164} /></div>
-      <div className="demo-el demo-q-label">?</div>
+      <div className="demo-el demo-glow-c"><ClickRipple /></div>
+      <div className="demo-el demo-dotted-line-1" />
+      <div className="demo-el demo-dotted-line-2" />
+      <div className="demo-el demo-arrow-1"><HArrow w={104} /></div>
+      <div className="demo-el demo-arrow-2"><HArrow w={100} /></div>
+      <div className="demo-el demo-q-label-1">?</div>
+      <div className="demo-el demo-q-label-2">?</div>
       <div className="demo-el demo-check">✓</div>
       <div className="demo-el demo-cursor"><CursorIcon /></div>
     </div>
@@ -689,7 +694,7 @@ export function pickDemoForState(
 
 
 const DEMO_DURATIONS: Record<string, number> = {
-  'connecting': 5500,
+  'connecting': 8500,
   'set-accepting': 4500,
   'add-state': 4500,
   'place-sheep': 4500,
@@ -714,7 +719,7 @@ const DEMO_DURATIONS: Record<string, number> = {
 // The dots light up sequentially as the animation progresses.
 const DEMO_STEPS: Record<string, number[]> = {
   // Build demos
-  'connecting':     [0, 14, 50],         // Click A → Click B → Sheep placed
+  'connecting':     [0, 9, 32, 45, 61],  // From → Click A → Arrow 1 → Click B → Arrow 2
   'set-accepting':  [0, 55],             // Pick up bed → Drop on fence
   'add-state':      [0, 55],             // Pick up fence → Drop on canvas
   'place-sheep':    [0, 50],             // Pick up sheep → Drop on arrow

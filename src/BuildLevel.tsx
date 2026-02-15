@@ -75,8 +75,16 @@ function clearProgress() {
 
 function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const savedProgress = useRef(loadProgress())
-  
-  const [currentLevelId, setCurrentLevelId] = useState(savedProgress.current?.currentLevelId ?? initialLevel)
+
+  const [currentLevelId, setCurrentLevelId] = useState(() => {
+    const saved = savedProgress.current
+    if (!saved) return initialLevel
+    // Find the first uncompleted level
+    for (let i = 1; i <= BUILD_LEVEL_COUNT; i++) {
+      if (!saved.completedLevels.includes(i)) return i
+    }
+    return BUILD_LEVEL_COUNT // all done
+  })
   const [levelConfig, setLevelConfig] = useState<BuildLevelConfig | null>(() => getBuildLevelConfig(savedProgress.current?.currentLevelId ?? initialLevel) ?? null)
 
   const [nodes, setNodes, onNodesChange] = useNodesState([])
@@ -656,8 +664,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       // Only increment score if this level hasn't been completed before
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
-        setScore(prev => prev + 1)
-        setCompletedLevels(prev => [...prev, currentLevelId])
+        const newScore = score + 1
+        const newCompleted = [...completedLevels, currentLevelId]
+        setScore(newScore)
+        setCompletedLevels(newCompleted)
+        // Save immediately so progress persists even if user leaves before effect fires
+        saveProgress({ currentLevelId, score: newScore, completedLevels: newCompleted })
       }
       
       setLevelComplete(true)
@@ -696,8 +708,13 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const handleContinueFromFeedback = () => {
     resetAnimation()
     if (levelComplete) {
-      if (currentLevelId < BUILD_LEVEL_COUNT) {
-        setCurrentLevelId(currentLevelId + 1)
+      // Find next uncompleted level
+      let nextLevel: number | null = null
+      for (let i = 1; i <= BUILD_LEVEL_COUNT; i++) {
+        if (!completedLevels.includes(i)) { nextLevel = i; break }
+      }
+      if (nextLevel !== null) {
+        setCurrentLevelId(nextLevel)
         setHintUsedThisLevel(false)
         setAttempts(0)
         setLevelComplete(false)
@@ -786,7 +803,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             if (completed) status = 'correct'
             else if (isCurrent) status = 'current'
             return (
-              <div key={i} className={`sheep-slot status-${status}`}>
+              <div
+                key={i}
+                className={`sheep-slot status-${status}`}
+                onClick={() => { if (status !== 'future') setCurrentLevelId(levelNum) }}
+                style={{ cursor: status !== 'future' ? 'pointer' : 'default' }}
+              >
                 <img
                   src={withBase(`sheep-assets/sheep-${(i % 16) + 1}.svg`)}
                   width={32}

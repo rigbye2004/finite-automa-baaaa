@@ -209,8 +209,16 @@ function clearProgress() {
 
 export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   const savedProgress = useRef(loadProgress())
-  
-  const [currentQuestion, setCurrentQuestion] = useState(savedProgress.current?.currentQuestion ?? 0)
+
+  const [currentQuestion, setCurrentQuestion] = useState(() => {
+    const saved = savedProgress.current
+    if (!saved) return 0
+    // Find the first uncompleted question
+    for (let i = 0; i < ACCEPT_REJECT_QUESTION_COUNT; i++) {
+      if (!saved.completedQuestions.includes(i)) return i
+    }
+    return ACCEPT_REJECT_QUESTION_COUNT - 1 // all done
+  })
   const [answer, setAnswer] = useState<'accept' | 'reject' | null>(null)
   const [showResult, setShowResult] = useState(false)
   const [score, setScore] = useState(savedProgress.current?.score ?? 0)
@@ -219,6 +227,9 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   const [anyHintUsed, setAnyHintUsed] = useState(false)
   const [wrongAttemptThisQuestion, setWrongAttemptThisQuestion] = useState(false)
   const [incorrectAnswers, setIncorrectAnswers] = useState(0)
+  // Tracks the furthest question reached (for sidebar navigation back to frontier)
+  const furthestReached = useRef(currentQuestion)
+  const returnToQuestion = useRef<number | null>(null)
   
   const [sessionBadges, setSessionBadges] = useState<Badge[]>([])
   const [levelFinished, setLevelFinished] = useState(false)
@@ -299,7 +310,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   useEffect(() => {
     if (currentQuestion < ACCEPT_REJECT_QUESTION_COUNT) {
       saveProgress({
-        currentQuestion,
+        currentQuestion: Math.max(currentQuestion, furthestReached.current),
         score,
         completedQuestions
       })
@@ -386,11 +397,19 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
       if (answerBadges.length > 0) {
         setSessionBadges(prev => [...prev, ...answerBadges])
       }
-      // only score if first-time correct with no hints or wrong attempts
       const isFirstCorrect = !completedQuestions.includes(currentQuestion)
-      if (!wrongAttemptThisQuestion && !hintUsedThisQuestion && isFirstCorrect) {
-        setScore(prev => prev + 1)
-        setCompletedQuestions(prev => [...prev, currentQuestion])
+      if (isFirstCorrect) {
+        const newCompleted = [...completedQuestions, currentQuestion]
+        setCompletedQuestions(newCompleted)
+        // only score if no hints or wrong attempts
+        const newScore = (!wrongAttemptThisQuestion && !hintUsedThisQuestion) ? score + 1 : score
+        if (newScore !== score) setScore(newScore)
+        // Save immediately so progress persists even if user leaves before effect fires
+        saveProgress({
+          currentQuestion: Math.max(currentQuestion, furthestReached.current),
+          score: newScore,
+          completedQuestions: newCompleted
+        })
       }
     } else {
       setWrongAttemptThisQuestion(true)
@@ -404,7 +423,15 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
 
   const handleNext = () => {
     resetAnimation()
-    setCurrentQuestion(prev => prev + 1)
+    // If revisiting a past question, return to the frontier
+    if (returnToQuestion.current !== null) {
+      setCurrentQuestion(returnToQuestion.current)
+      returnToQuestion.current = null
+    } else {
+      const next = currentQuestion + 1
+      setCurrentQuestion(next)
+      furthestReached.current = Math.max(furthestReached.current, next)
+    }
     setAnswer(null)
     setShowResult(false)
     setHintUsedThisQuestion(false)
@@ -467,16 +494,36 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
           {Array.from({ length: ACCEPT_REJECT_QUESTION_COUNT }, (_, raw) => {
             const i = ACCEPT_REJECT_QUESTION_COUNT - 1 - raw  // reverse: bottom-up
             const isCurrent = i === currentQuestion
-            const isPast = i < currentQuestion
+            const isPast = i < furthestReached.current && i !== currentQuestion
             const gotRight = completedQuestions.includes(i)
+            const isFrontier = i === furthestReached.current && i !== currentQuestion
             const currentAnswered = isCurrent && showResult && answer !== null
             const currentCorrect = currentAnswered && answer === question.correctAnswer
+            const isClickable = (isPast || isFrontier || isCurrent) && i !== currentQuestion
             let status: 'correct' | 'wrong' | 'current' | 'future' = 'future'
             if (isPast) status = gotRight ? 'correct' : 'wrong'
             else if (currentAnswered) status = currentCorrect ? 'correct' : 'wrong'
             else if (isCurrent) status = 'current'
             return (
-              <div key={i} className={`sheep-slot status-${status}`}>
+              <div
+                key={i}
+                className={`sheep-slot status-${status}`}
+                onClick={() => {
+                  if (isClickable) {
+                    resetAnimation()
+                    // Remember where to return after revisiting
+                    if (returnToQuestion.current === null) {
+                      returnToQuestion.current = currentQuestion
+                    }
+                    setCurrentQuestion(i)
+                    setAnswer(null)
+                    setShowResult(false)
+                    setHintUsedThisQuestion(false)
+                    setWrongAttemptThisQuestion(false)
+                  }
+                }}
+                style={{ cursor: isClickable ? 'pointer' : 'default' }}
+              >
                 <img
                   src={withBase(`sheep-assets/sheep-${(i % 16) + 1}.svg`)}
                   width={32}
@@ -601,19 +648,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
                     <button className="watch-again-btn" onClick={startAnimation}>
                       🔁 Watch the path again
                     </button>
-                  )}
-                  {isLastQuestion && !isAnimating && (
-                    <div className="final-score">
-                      <p>Final Score: {score}/{ACCEPT_REJECT_QUESTION_COUNT}</p>
-                      <div className="final-buttons">
-                        <button className="next-btn" onClick={handleLevelComplete}>
-                          See Results
-                        </button>
-                        <button className="next-btn secondary" onClick={handleRestart}>
-                          Play Again
-                        </button>
-                      </div>
-                    </div>
                   )}
                 </>
               ) : (
