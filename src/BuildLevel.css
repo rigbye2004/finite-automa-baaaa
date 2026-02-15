@@ -289,31 +289,38 @@
   flex-shrink: 0;
 }
 
-/* From side lit when picking source */
+/* From side bold when picking source, To side stays dim */
 .build-level .arrow-capsule.state-from .arrow-cap-from {
-  background: #E8F5E9;
-  color: #2E7D32;
+  background: #4CAF50;
+  color: white;
 }
 
-/* Both sides lit once source is chosen, To side brighter */
+.build-level .arrow-capsule.state-from .arrow-cap-to {
+  background: #fafafa;
+  color: #ccc;
+}
+
+/* Once source is chosen, From side fades, To side bold */
 .build-level .arrow-capsule.state-to .arrow-cap-from {
   background: #C8E6C9;
   color: #2E7D32;
 }
 
 .build-level .arrow-capsule.state-to .arrow-cap-to {
-  background: #E8F5E9;
-  color: #2E7D32;
+  background: #4CAF50;
+  color: white;
 }
 
 .build-level .arrow-capsule:hover .arrow-cap {
   background: #f0f0f0;
 }
 
-.build-level .arrow-capsule.state-from:hover .arrow-cap-from,
-.build-level .arrow-capsule.state-to:hover .arrow-cap-from,
+.build-level .arrow-capsule.state-from:hover .arrow-cap-from {
+  background: #43A047;
+}
+
 .build-level .arrow-capsule.state-to:hover .arrow-cap-to {
-  background: #C8E6C9;
+  background: #43A047;
 }
 
 /* ── Top row: Select + Delete ── */
