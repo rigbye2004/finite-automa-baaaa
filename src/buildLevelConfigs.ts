@@ -26,14 +26,11 @@ const friendlyName = (id: string): string => {
     'b': 'B',
   }
   if (names[id]) return names[id]
-  // Handle state1, state2, etc.
   const stateMatch = id.match(/^state(\d+)$/)
   if (stateMatch) return `Fence ${stateMatch[1]}`
-  // Capitalize first letter as fallback
   return id.charAt(0).toUpperCase() + id.slice(1)
 }
 
-// Helper to create node
 const createNode = (
   id: string,
   x: number,
@@ -47,7 +44,6 @@ const createNode = (
   data: { label: friendlyName(id), isStart, isAccepting, sheep: null },
 })
 
-// Helper to create edge
 const createEdge = (id: string, source: string, target: string): Edge => ({
   id,
   source,
@@ -57,7 +53,6 @@ const createEdge = (id: string, source: string, target: string): Edge => ({
 })
 
 export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
-  // Level 1: just connect
   {
     id: 1,
     title: 'Level 1: Your First Connection',
@@ -77,7 +72,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 2: two connections
   {
     id: 2,
     title: 'Level 2: A Longer Path',
@@ -98,7 +92,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 3: two paths
   {
     id: 3,
     title: 'Level 3: Two Ways Home',
@@ -121,7 +114,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 4: set the accepting state
   {
     id: 4,
     title: 'Level 4: Choose the Bed',
@@ -141,7 +133,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 5: add your own state
   {
     id: 5,
     title: 'Level 5: Build a Fence',
@@ -161,7 +152,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 6: build a diamond
   {
     id: 6,
     title: 'Level 6: The Diamond',
@@ -182,7 +172,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 7: add a loop
   {
     id: 7,
     title: 'Level 7: Going in Circles',
@@ -204,7 +193,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 8: free build
   {
     id: 8,
     title: 'Level 8: Your Design',
@@ -223,7 +211,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 9: free build - two patterns
   {
     id: 9,
     title: 'Level 9: Double Trouble',
@@ -243,7 +230,6 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     canSelfLoop: true,
   },
 
-  // Level 10: the ultimate challenge
   {
     id: 10,
     title: 'Level 10: Master Builder',
@@ -271,11 +257,10 @@ export function getBuildLevelConfig(levelId: number): BuildLevelConfig | undefin
 
 export const BUILD_LEVEL_COUNT = BUILD_LEVEL_CONFIGS.length
 
-// Export concept groupings for reference
 export const BUILD_CONCEPT_PHASES = {
   connecting: { levels: [1, 2], concepts: ['connecting'] },
   setAccepting: { levels: [3, 4], concepts: ['set-accepting'] },
   addStates: { levels: [5, 6], concepts: ['add-state'] },
-  loops: { levels: [7], concepts: [] },  // Already learned
+  loops: { levels: [7], concepts: [] },
   freeBuild: { levels: [8, 9, 10], concepts: [] },
 }

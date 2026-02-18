@@ -15,7 +15,6 @@ export default function CustomEdge({
   markerEnd,
   data,
 }: EdgeProps) {
-  // Detect self-loop by checking if source and target are the same node
   const isSelfLoop = source === target
 
   let edgePath: string
@@ -56,7 +55,6 @@ export default function CustomEdge({
     labelX = nodeCenter
     labelY = peakY - 30
   } else {
-    // Normal edge - use default bezier path
     const [path, lx, ly] = getBezierPath({
       sourceX,
       sourceY,
@@ -78,7 +76,6 @@ export default function CustomEdge({
   }
 
   const handleClick = (e: React.MouseEvent) => {
-    // Call the unified click handler if available
     if (data?.onLabelClick) {
       e.stopPropagation()
       data.onLabelClick()

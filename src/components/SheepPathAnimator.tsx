@@ -110,7 +110,7 @@ export function SheepPathAnimator({
   onPatternComplete,
   onAllPatternsComplete,
   onStepChange,
-  speed = 700,
+  speed = 1300,
   bedPosition,
   reactFlowInstance,
 }: SheepPathAnimatorProps) {
@@ -190,7 +190,7 @@ export function SheepPathAnimator({
         setShowSheep(true)
         setAnimationPhase('landed')
         
-        if (!await delay(400)) return
+        if (!await delay(750)) return
 
         for (let i = 0; i < pathData.steps.length; i++) {
           if (cancelledRef.current) return
@@ -204,7 +204,7 @@ export function SheepPathAnimator({
           if (!await delay(speed)) return
           setAnimationPhase('landed')
           setIsSelfLoop(false)
-          if (!await delay(300)) return
+          if (!await delay(600)) return
           if (pathData.stuckAtStep === i) {
             setAnimationPhase('done')
             break
@@ -265,7 +265,6 @@ export function SheepPathAnimator({
   }, [isPlaying, nodes, edges, bedPosition, allPatterns.length, speed])
   
   if (!isPlaying || !showSheep) {
-    // Still show message if we have one
     if (isPlaying && displayMessage) {
       return (
         <div className="sheep-animator-container">
@@ -280,7 +279,6 @@ export function SheepPathAnimator({
   
   const currentPattern = allPatterns[currentPatternIndex]
   
-  // Convert flow coordinates to screen coordinates for rendering
   const screenPosition = flowToScreenPosition(sheepPosition.x, sheepPosition.y)
   
   return (
@@ -290,10 +288,10 @@ export function SheepPathAnimator({
         style={{
           left: screenPosition.x,
           top: screenPosition.y,
-          transition: animationPhase === 'jumping' && !isSelfLoop 
-            ? `all ${speed}ms cubic-bezier(0.34, 1.56, 0.64, 1)` 
+          transition: animationPhase === 'jumping' && !isSelfLoop
+            ? `all ${speed}ms cubic-bezier(0.22, 0.61, 0.36, 1)`
             : animationPhase === 'going-to-bed'
-            ? 'all 1200ms ease-in-out'
+            ? 'all 1800ms ease-in-out'
             : 'none',
         }}
       >
@@ -338,15 +336,13 @@ export function useSheepAnimation() {
     patternResults?: PatternResult[]
   } | null>(null)
   const [highlightedNode, setHighlightedNode] = useState<string | null>(null)
-  const [highlightedEdge, setHighlightedEdge] = useState<string | null>(null)
   
   const startAnimation = useCallback(() => {
     setIsAnimating(true)
     setAnimationResult(null)
     setHighlightedNode(null)
-    setHighlightedEdge(null)
   }, [])
-  
+
   const handleAnimationComplete = useCallback((success: boolean, stuckAt?: string) => {
     setAnimationResult({ success, stuckAt })
     setTimeout(() => {
@@ -373,14 +369,12 @@ export function useSheepAnimation() {
     setIsAnimating(false)
     setAnimationResult(null)
     setHighlightedNode(null)
-    setHighlightedEdge(null)
   }, [])
-  
+
   return {
     isAnimating,
     animationResult,
     highlightedNode,
-    highlightedEdge,
     startAnimation,
     handleAnimationComplete,
     handleAllPatternsComplete,

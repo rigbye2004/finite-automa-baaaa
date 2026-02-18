@@ -79,7 +79,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   const [currentLevelId, setCurrentLevelId] = useState(() => {
     const saved = savedProgress.current
     if (!saved) return initialLevel
-    // Find the first uncompleted level
     for (let i = 1; i <= DRAG_LEVEL_COUNT; i++) {
       if (!saved.completedLevels.includes(i)) return i
     }
@@ -135,23 +134,18 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     }
   }, [currentLevelId, score, completedLevels])
 
-  // Auto-dismiss feedback when user modifies the graph
   useEffect(() => {
     if (showDetailedFeedback && !levelComplete) {
       setShowDetailedFeedback(false)
     }
   }, [edges]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-dismiss toast messages
   useEffect(() => {
     if (!message) return
     const t = setTimeout(() => setMessage(''), 3000)
     return () => clearTimeout(t)
   }, [message])
 
-  // Fit view with extra shift if a self-loop label would be clipped at the top
-  // Use a ref so the resize listener and level-load effect always call the latest
-  // version without re-triggering effects when nodes/edges change.
   const handleFitView = useCallback(() => {
     if (reactFlowInstance.current) {
       reactFlowInstance.current.fitView({
@@ -175,7 +169,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         )
 
         const { x, y, zoom } = reactFlowInstance.current.getViewport()
-        const labelScreenY = (topNode.position.y - 120) * zoom + y // approximate label position
+        const labelScreenY = (topNode.position.y - 120) * zoom + y
 
         if (labelScreenY < 10) {
           const shiftAmount = Math.min(80, 40 - labelScreenY)
@@ -188,7 +182,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   const fitViewRef = useRef(handleFitView)
   fitViewRef.current = handleFitView
 
-  // Auto-fit on level change only — not on every edge/node update
   useEffect(() => {
     const attempts = [50, 200]
     const timeouts = attempts.map(delay =>
@@ -216,7 +209,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     const config = getDragLevelConfig(currentLevelId)
     if (config) {
       setLevelConfig(config)
-      // Deep clone nodes and edges to avoid mutating config
       const newNodes = config.nodes.map(n => ({ 
         ...n, 
         data: { ...n.data, sheep: null } 
@@ -235,7 +227,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       setShowDemo(false)
       setShowDetailedFeedback(false)
       
-      // Auto-show a targeted demo the first time a level introduces new concepts
       const concepts = config.conceptsIntroduced || []
       if (concepts.length > 0) {
         const demo = pickDragDemo(currentLevelId, concepts)
@@ -271,10 +262,8 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     const traverse = (currentNode: string, path: string[], visited: Set<string>) => {
       if (acceptingNodes.includes(currentNode) && path.length > 0) {
         allPaths.push([...path])
-        // Don't return - allow continuing through accepting states
       }
 
-      // Limit path length to prevent infinite loops
       if (path.length >= 10) return
 
       edges.forEach((edge) => {
@@ -327,12 +316,10 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       
       let d: number
       
-      // Special handling for self-loops
       if (edge.source === edge.target) {
-        // Self-loop label is at the top of the balloon loop
-        const loopCenter = { 
-          x: sourceCenter.x, 
-          y: sourceCenter.y - 170 // Top of the balloon loop (nodeTop - loopHeight - 45)
+        const loopCenter = {
+          x: sourceCenter.x,
+          y: sourceCenter.y - 170
         }
         d = Math.hypot(point.x - loopCenter.x, point.y - loopCenter.y)
       } else {
@@ -404,7 +391,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   }, [selectedSheep, setEdges])
 
   const onSelectSheep = useCallback((sheepType: string) => {
-    // Toggle selection if clicking the same sheep
     if (selectedSheep === sheepType) {
       setSelectedSheep(null)
     } else {
@@ -452,7 +438,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     }
   })
 
-  // Add animation result to accepting nodes for farmer image change
   const styledNodes = useMemo(() => {
     return nodes.map(node => ({
       ...node,
@@ -496,7 +481,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       return
     }
 
-    // Start the path animation first
     startAnimation()
     
     setAttempts(prev => prev + 1)
@@ -517,14 +501,12 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     const allPatternsMatched = unmatched.length === 0
 
     if (allPatternsMatched) {
-      // Only increment score if this level hasn't been completed before
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
         const newScore = score + 1
         const newCompleted = [...completedLevels, currentLevelId]
         setScore(newScore)
         setCompletedLevels(newCompleted)
-        // Save immediately so progress persists even if user leaves before effect fires
         saveProgress({ currentLevelId, score: newScore, completedLevels: newCompleted })
       }
       
@@ -537,7 +519,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       const starBadges = awardStars(`drag-level-${currentLevelId}`, starsForUnlock, hintUsedThisLevel)
       const answerBadges = recordCorrectAnswer(`drag-level-${currentLevelId}`, 0)
       
-      // Stage stars are based on total completed levels, so the menu and stage unlock reflect overall progress
       const finalScore = isFirstCompletion ? score + 1 : score
       const percentage = finalScore / DRAG_LEVEL_COUNT
       let stageStars = 1
@@ -547,7 +528,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       const stageBadges = awardStars('drag', stageStars, false)
       starBadges.push(...stageBadges)
       
-      // Deduplicate by ID before queuing - awardStars and recordCorrectAnswer can both return the same badge
       const allBadges = [...starBadges, ...answerBadges]
       const uniqueBadges = allBadges.filter((badge, index, self) => 
         index === self.findIndex(b => b.id === badge.id)
@@ -563,7 +543,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   const handleContinueFromFeedback = () => {
     resetAnimation()
     if (levelComplete) {
-      // Find next uncompleted level
       let nextLevel: number | null = null
       for (let i = 1; i <= DRAG_LEVEL_COUNT; i++) {
         if (!completedLevels.includes(i)) { nextLevel = i; break }
@@ -574,10 +553,10 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         setAttempts(0)
         setLevelComplete(false)
       } else {
-        clearProgress() // all levels done
+        clearProgress()
       }
     } else {
-      setShowDetailedFeedback(false) // let them keep trying
+      setShowDetailedFeedback(false)
     }
   }
 
@@ -585,10 +564,8 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     setHintUsedThisLevel(true)
     const emptyEdges = edges.filter((e) => !e.data?.sheep)
     if (emptyEdges.length > 0 && emptyEdges.length < edges.length) {
-      // Some placed, some empty → show simple single-sheep placement
       setDemoConcept('click-edge')
     } else {
-      // Not started or all placed but wrong → show level-targeted demo
       setDemoConcept(pickDragDemo(currentLevelId, levelConfig?.conceptsIntroduced))
     }
     setShowDemo(true)
@@ -769,7 +746,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
           </div>
 
           <aside className="sidebar">
-            {/* Hide patterns when level is complete - the completion card needs the space */}
             {!levelComplete && (
               <div className="patterns-with-score">
                 <PatternDisplay patterns={levelConfig.targetPatterns} />

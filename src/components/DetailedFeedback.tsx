@@ -19,7 +19,6 @@ interface DetailedFeedbackProps {
   onContinue: () => void
   autoAdvance?: boolean
   autoAdvanceDelay?: number
-  sheepAssets?: Record<string, string>
 }
 
 export function DetailedFeedback({ feedback, onContinue, autoAdvance = false, autoAdvanceDelay = 1400 }: DetailedFeedbackProps) {

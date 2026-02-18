@@ -12,7 +12,6 @@ export interface DragLevelConfig {
   conceptsIntroduced: string[]
 }
 
-// Convert node ID to a friendly display name
 const friendlyName = (id: string): string => {
   const names: Record<string, string> = {
     'start': 'Start',
@@ -25,10 +24,8 @@ const friendlyName = (id: string): string => {
     'b': 'B',
   }
   if (names[id]) return names[id]
-  // Handle state1, state2, etc.
   const stateMatch = id.match(/^state(\d+)$/)
   if (stateMatch) return `Fence ${stateMatch[1]}`
-  // Capitalize first letter as fallback
   return id.charAt(0).toUpperCase() + id.slice(1)
 }
 
@@ -45,7 +42,6 @@ const createNode = (
   data: { label: friendlyName(id), isStart, isAccepting, sheep: null },
 })
 
-// Helper to create edge
 const createEdge = (id: string, source: string, target: string): Edge => ({
   id,
   source,
@@ -55,7 +51,6 @@ const createEdge = (id: string, source: string, target: string): Edge => ({
 })
 
 export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
-  // Level 1: single transition
   {
     id: 1,
     title: 'Level 1: One Sheep',
@@ -75,7 +70,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-8'],
   },
 
-  // Level 2: Two sheep in sequence
   {
     id: 2,
     title: 'Level 2: Two in a Row',
@@ -97,7 +91,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8'],
   },
 
-  // Level 3: three in a row
   {
     id: 3,
     title: 'Level 3: The Longer Path',
@@ -121,7 +114,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13'],
   },
 
-  // Level 4: two paths
   {
     id: 4,
     title: 'Level 4: Two Paths',
@@ -147,7 +139,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-8', 'sheep-13', 'sheep-16'],
   },
 
-  // Level 5: diamond
   {
     id: 5,
     title: 'Level 5: The Diamond',
@@ -173,7 +164,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
   },
 
-  // Level 6: crossing paths
   {
     id: 6,
     title: 'Level 6: Crossing Paths',
@@ -201,7 +191,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
   },
 
-  // Level 7: self-loop
   {
     id: 7,
     title: 'Level 7: Round and Round',
@@ -225,7 +214,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13'],
   },
 
-  // Level 8: loop with branching
   {
     id: 8,
     title: 'Level 8: Loop the Loop',
@@ -253,7 +241,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
   },
 
-  // Level 9: multiple accepting states
   {
     id: 9,
     title: 'Level 9: Two Farmers',
@@ -278,7 +265,6 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-13', 'sheep-16'],
   },
 
-  // Level 10: grand challenge
   {
     id: 10,
     title: 'Level 10: The Grand Flock',
@@ -315,7 +301,6 @@ export function getDragLevelConfig(levelId: number): DragLevelConfig | undefined
 
 export const DRAG_LEVEL_COUNT = DRAG_LEVEL_CONFIGS.length
 
-// Export concept groupings for reference
 export const CONCEPT_PHASES = {
   basics: { levels: [1, 2, 3], concepts: ['start-state', 'accepting-state', 'transition', 'sequence'] },
   branching: { levels: [4, 5, 6], concepts: ['branching'] },

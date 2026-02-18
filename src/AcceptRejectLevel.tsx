@@ -26,7 +26,6 @@ import './components/BadgeNotch.css'
 const DEV_MODE_KEY = 'sheep-automata-dev-mode'
 const isDevMode = () => localStorage.getItem(DEV_MODE_KEY) === 'true'
 
-// converts [sheep-3] tokens to inline <img> elements
 function renderExplanationWithSheep(explanation: string): React.ReactNode {
   const parts = explanation.split(/(\[sheep-\d+\])/)
   return parts.map((part, index) => {
@@ -176,7 +175,6 @@ interface SavedProgress {
   currentQuestion: number
   score: number
   completedQuestions: number[]
-  correctlyAnswered: number[]
 }
 
 function loadProgress(): SavedProgress | null {
@@ -213,7 +211,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   const [currentQuestion, setCurrentQuestion] = useState(() => {
     const saved = savedProgress.current
     if (!saved) return 0
-    // Find the first uncompleted question
     for (let i = 0; i < ACCEPT_REJECT_QUESTION_COUNT; i++) {
       if (!saved.completedQuestions.includes(i)) return i
     }
@@ -227,7 +224,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   const [anyHintUsed, setAnyHintUsed] = useState(false)
   const [wrongAttemptThisQuestion, setWrongAttemptThisQuestion] = useState(false)
   const [incorrectAnswers, setIncorrectAnswers] = useState(0)
-  // Tracks the furthest question reached (for sidebar navigation back to frontier)
   const furthestReached = useRef(currentQuestion)
   const returnToQuestion = useRef<number | null>(null)
   
@@ -249,7 +245,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
         minZoom: 0.3,
         maxZoom: 1.5
       })
-      // nudge down if a self-loop label would get cut off at the top
       setTimeout(() => {
         if (!reactFlowInstance.current) return
         const question = ACCEPT_REJECT_QUESTIONS[currentQuestion]
@@ -317,7 +312,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
     }
   }, [currentQuestion, score, completedQuestions])
 
-  // auto-show demo for new concepts; reinforcement questions skip this
   useEffect(() => {
     const question = ACCEPT_REJECT_QUESTIONS[currentQuestion]
     if (!question) return
@@ -387,7 +381,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
     
     const isCorrect = selectedAnswer === question.correctAnswer
     
-    // Start animation to show the path
     startAnimation()
     
     if (isCorrect) {
@@ -401,10 +394,8 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
       if (isFirstCorrect) {
         const newCompleted = [...completedQuestions, currentQuestion]
         setCompletedQuestions(newCompleted)
-        // only score if no hints or wrong attempts
         const newScore = (!wrongAttemptThisQuestion && !hintUsedThisQuestion) ? score + 1 : score
         if (newScore !== score) setScore(newScore)
-        // Save immediately so progress persists even if user leaves before effect fires
         saveProgress({
           currentQuestion: Math.max(currentQuestion, furthestReached.current),
           score: newScore,
@@ -423,7 +414,6 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
 
   const handleNext = () => {
     resetAnimation()
-    // If revisiting a past question, return to the frontier
     if (returnToQuestion.current !== null) {
       setCurrentQuestion(returnToQuestion.current)
       returnToQuestion.current = null

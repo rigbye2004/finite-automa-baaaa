@@ -12,7 +12,6 @@ export interface AcceptRejectQuestion {
 }
 
 export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
-  // Q1: simplest case - one sheep, accept
   {
     id: 1,
     conceptsIntroduced: ['start-state', 'accepting-state', 'transition'],
@@ -28,7 +27,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The [sheep-3] follows the path straight to the bed. The farmer falls asleep.',
   },
   
-  // Q2: same automaton, wrong sheep
   {
     id: 2,
     conceptsIntroduced: ['rejection'],
@@ -45,7 +43,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The path needs a [sheep-3], but we have a [sheep-8]. They don\'t match, so the farmer stays awake.',
   },
 
-  // Q3: two-step sequence
   {
     id: 3,
     conceptsIntroduced: ['sequence'],
@@ -63,7 +60,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The [sheep-3] takes us to the middle, then the [sheep-8] takes us to the bed. Sweet dreams.',
   },
   
-  // Q4: incomplete sequence
   {
     id: 4,
     conceptsIntroduced: [],
@@ -82,7 +78,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The [sheep-3] gets us to the middle fence, but the path does not end there. We need one more sheep to reach the bed.',
   },
 
-  // Q5: branching - accept via bottom path
   {
     id: 5,
     conceptsIntroduced: ['branching'],
@@ -103,7 +98,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The [sheep-8] takes the bottom path, then the [sheep-13] jumps to the bed. Zzzzz...',
   },
   
-  // Q6: branching - wrong combination
   {
     id: 6,
     conceptsIntroduced: [],
@@ -125,7 +119,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The [sheep-3] takes us to the top, but there\'s no [sheep-13] path from there. We need the [sheep-7] instead.',
   },
 
-  // Q7: self-loop
   {
     id: 7,
     conceptsIntroduced: ['loop'],
@@ -144,7 +137,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'First, [sheep-3] gets us to the loop fence. Then [sheep-8] can go round and round as many times as needed! After looping twice, [sheep-7] finally reaches the bed.',
   },
 
-  // Q8: dead end / trap state
   {
     id: 8,
     conceptsIntroduced: ['dead-state'],
@@ -165,7 +157,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'The [sheep-8] takes us to a dead end - there are no arrows leading out. The [sheep-7] has nowhere to go, so the farmer stays awake.',
   },
 
-  // Q9: multiple accepting states
   {
     id: 9,
     conceptsIntroduced: ['multiple-accepting'],
@@ -185,7 +176,6 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     explanation: 'There are two beds. The [sheep-3] then [sheep-8] path leads to the bottom bed. Sweet dreams.',
   },
 
-  // Q10: challenge - branching + loops + dead ends combined
   {
     id: 10,
     conceptsIntroduced: [],
@@ -214,7 +204,6 @@ export function getAcceptRejectQuestion(questionId: number): AcceptRejectQuestio
 
 export const ACCEPT_REJECT_QUESTION_COUNT = ACCEPT_REJECT_QUESTIONS.length
 
-// Export concept groupings for reference
 export const ACCEPT_REJECT_CONCEPT_PHASES = {
   basics: { questions: [1, 2], concepts: ['start-state', 'accepting-state', 'transition', 'rejection'] },
   sequences: { questions: [3, 4], concepts: ['sequence'] },

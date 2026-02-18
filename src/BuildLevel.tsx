@@ -79,7 +79,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const [currentLevelId, setCurrentLevelId] = useState(() => {
     const saved = savedProgress.current
     if (!saved) return initialLevel
-    // Find the first uncompleted level
     for (let i = 1; i <= BUILD_LEVEL_COUNT; i++) {
       if (!saved.completedLevels.includes(i)) return i
     }
@@ -153,18 +152,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     }
   }, [edges, nodes]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-dismiss toast messages
   useEffect(() => {
     if (!message) return
     const t = setTimeout(() => setMessage(''), 3000)
     return () => clearTimeout(t)
   }, [message])
 
-  // Fit view handler - with smart adjustment for self-loop labels
-  // Cap zoom more aggressively when there are fewer nodes so the canvas
-  // doesn't appear zoomed in on a single huge fence.
-  // On sparse levels, shift the viewport so the fence sits to the left,
-  // leaving visible empty space for the player to build into.
   const handleFitView = useCallback(() => {
     if (reactFlowInstance.current) {
       const nodeCount = reactFlowInstance.current.getNodes().length
@@ -175,7 +168,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         minZoom: 0.3,
         maxZoom,
       })
-      // Nudge single-node levels to the left so there's obvious room to build
       if (nodeCount <= 1 && graphRef.current) {
         const { x, y, zoom } = reactFlowInstance.current.getViewport()
         const graphWidth = graphRef.current.getBoundingClientRect().width
@@ -184,7 +176,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     }
   }, [])
 
-  // Auto-fit on level change only
   useEffect(() => {
     const timeouts = [50, 200].map(delay =>
       setTimeout(handleFitView, delay)
@@ -234,8 +225,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       nodeIdCounter.current = config.initialNodes.length + 1
       edgeIdCounter.current = config.initialEdges.length + 1
 
-      // Auto-show demo when level introduces new concepts
-      // and this specific demo hasn't been auto-shown before
       const concepts = config.conceptsIntroduced || []
       if (concepts.length > 0) {
         const demo = concepts[0] as DemoConcept
@@ -250,7 +239,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     }
   }, [currentLevelId])
 
-  // Helper: find nearest node to a canvas point (for drag-to-node)
   const findNearestNode = useCallback((flowPoint: { x: number; y: number }) => {
     let best = { id: null as string | null, dist: Infinity }
     nodes.forEach((node) => {
@@ -290,7 +278,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     setMousePos(null)
   }, [levelConfig, edges, setEdges])
 
-  // Helper: distance from point to segment
   function pointToSegmentDistance(
     p: { x: number; y: number },
     v: { x: number; y: number },
@@ -365,7 +352,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         
         let d: number
         
-        // Special handling for self-loops
         if (edge.source === edge.target) {
           const loopCenter = { 
             x: sourceCenter.x, 
@@ -487,7 +473,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     
     if (pendingDelete.type === 'node') {
       setNodes((nds) => nds.filter((n) => n.id !== pendingDelete.id))
-      // Also remove connected edges
       setEdges((eds) => eds.filter((e) => e.source !== pendingDelete.id && e.target !== pendingDelete.id))
     } else if (pendingDelete.type === 'edge') {
       setEdges((eds) => eds.filter((e) => e.id !== pendingDelete.id))
@@ -512,10 +497,8 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     const traverse = (currentNode: string, path: string[], visited: Set<string>) => {
       if (acceptingNodes.includes(currentNode) && path.length > 0) {
         allPaths.push([...path])
-        // Don't return - allow continuing through accepting states
       }
 
-      // Limit path length to prevent infinite loops
       if (path.length >= 10) return
 
       edges.forEach((edge) => {
@@ -583,7 +566,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     }
   })
 
-  // Add animation result to accepting nodes for farmer image change
   const styledNodes = useMemo(() => {
     return nodes.map(node => ({
       ...node,
@@ -618,7 +600,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     setMode('select')
     setShowDetailedFeedback(false)
     setSessionBadges([])
-    setSessionBadges([])
     nodeIdCounter.current = levelConfig.initialNodes.length + 1
     edgeIdCounter.current = levelConfig.initialEdges.length + 1
   }
@@ -640,7 +621,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       return
     }
 
-    // Start the path animation first
     startAnimation()
 
     setAttempts(prev => prev + 1)
@@ -661,14 +641,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     const allPatternsMatched = unmatched.length === 0
 
     if (allPatternsMatched) {
-      // Only increment score if this level hasn't been completed before
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
         const newScore = score + 1
         const newCompleted = [...completedLevels, currentLevelId]
         setScore(newScore)
         setCompletedLevels(newCompleted)
-        // Save immediately so progress persists even if user leaves before effect fires
         saveProgress({ currentLevelId, score: newScore, completedLevels: newCompleted })
       }
       
@@ -681,8 +659,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       const starBadges = awardStars(`build-level-${currentLevelId}`, starsForUnlock, hintUsedThisLevel)
       const answerBadges = recordCorrectAnswer(`build-level-${currentLevelId}`, 0)
       
-      // Award overall stage stars based on total completed levels
-      // This allows stars to show on menu and unlocks next stage
       const finalScore = isFirstCompletion ? score + 1 : score
       const percentage = finalScore / BUILD_LEVEL_COUNT
       let stageStars = 1
@@ -692,7 +668,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       const stageBadges = awardStars('build', stageStars, false)
       starBadges.push(...stageBadges)
       
-      // Combine and deduplicate badges by ID, then queue them for after animation
       const allBadges = [...starBadges, ...answerBadges]
       const uniqueBadges = allBadges.filter((badge, index, self) => 
         index === self.findIndex(b => b.id === badge.id)
@@ -708,7 +683,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const handleContinueFromFeedback = () => {
     resetAnimation()
     if (levelComplete) {
-      // Find next uncompleted level
       let nextLevel: number | null = null
       for (let i = 1; i <= BUILD_LEVEL_COUNT; i++) {
         if (!completedLevels.includes(i)) { nextLevel = i; break }
@@ -966,16 +940,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                 })
                 const nearestId = findNearestNode(point)
                 if (nearestId) {
-                  // Don't set connectingFrom yet — just record the drag candidate.
-                  // onNodeClick handles the click-click workflow.
-                  // This only kicks in if the user actually drags (see onMouseMove/onMouseUp).
                   dragConnectRef.current = { startPos: { x: e.clientX, y: e.clientY }, nodeId: nearestId }
                   e.preventDefault()
                 }
               }
             }}
             onMouseMove={(e) => {
-              // Promote drag candidate to active connection once user drags far enough
               if (dragConnectRef.current && !connectingFrom) {
                 const { startPos, nodeId } = dragConnectRef.current
                 const dragDist = Math.hypot(e.clientX - startPos.x, e.clientY - startPos.y)
@@ -991,7 +961,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             onMouseUp={(e) => {
               const wasDragging = dragConnectRef.current !== null
               dragConnectRef.current = null
-              // Complete connection on drag release (only if drag actually activated connectingFrom)
               if (mode === 'connect' && connectingFrom && wasDragging && reactFlowInstance.current) {
                 const point = reactFlowInstance.current.screenToFlowPosition({
                   x: e.clientX,
@@ -1046,13 +1015,10 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             const dy = mousePos.y - screenY
             const dist = Math.hypot(dx, dy)
             
-            // Node radius in screen space (approx)
             const nodeRadius = 60 * viewport.zoom
             const loopThreshold = nodeRadius + 30
             
-            // Near the source node and self-loops allowed → show loop preview
             if (dist < loopThreshold && levelConfig?.canSelfLoop) {
-              // Match the CustomEdge self-loop shape (scaled to screen coords)
               const z = viewport.zoom
               const loopHeight = 50 * z
               const loopWidth = 30 * z
@@ -1060,16 +1026,13 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
               
               const nodeTopY = screenY - nodeRadius * 0.7
 
-              // Entry point (left of gap) and exit point (right of gap)
               const startX = screenX - gap
               const startY = nodeTopY
               const endX = screenX + gap
               const endY = nodeTopY
               
-              // Peak of the loop
               const peakY = nodeTopY - loopHeight
               
-              // Bezier curve matching CustomEdge shape
               const pathD = `
                 M ${startX} ${startY}
                 C ${startX - loopWidth} ${startY - loopHeight * 0.4},
@@ -1080,7 +1043,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                   ${endX} ${endY}
               `
               
-              // Arrowhead pointing down into the node
               const headLen = 10
               const ax = endX + 4
               const ay = endY - headLen
@@ -1120,7 +1082,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             const normDx = dx / dist
             const normDy = dy / dist
             
-            // Shorten arrow tip slightly so it doesn't overlap cursor
             const tipX = mousePos.x - normDx * 8
             const tipY = mousePos.y - normDy * 8
             
@@ -1204,7 +1165,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         </div>
 
         <aside className="sidebar">
-          {/* Hide patterns when level is complete to make room for completion card */}
           {!levelComplete && (
             <div className="patterns-with-score">
               <PatternDisplay patterns={levelConfig.targetPatterns} />
@@ -1278,13 +1238,11 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       )}
       </div>
 
-      {/* Animated demo — auto-shown for new concepts + triggered by ? */}
       {showDemo && !isAnimating && (
         <TutorialDemo
           concept={demoConcept}
           onDismiss={() => {
             setShowDemo(false)
-            // Nudge the relevant area based on what was demonstrated
             const target = demoConcept === 'connecting' ? 'graph' : 'toolbar'
             setShowNudge(target)
             setTimeout(() => setShowNudge(null), 4500)
