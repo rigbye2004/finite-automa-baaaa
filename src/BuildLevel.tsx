@@ -123,6 +123,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const [showNudge, setShowNudge] = useState<'toolbar' | 'graph' | null>(null)
 
   const [showDetailedFeedback, setShowDetailedFeedback] = useState(false)
+  const feedbackRef = useRef<HTMLDivElement>(null)
   const [feedbackData, setFeedbackData] = useState<{
     matchedPatterns: string[][]
     unmatchedPatterns: string[][]
@@ -168,6 +169,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     const t = setTimeout(() => setMessage(''), 3000)
     return () => clearTimeout(t)
   }, [message])
+
+  useEffect(() => {
+    if (showDetailedFeedback && feedbackRef.current) {
+      setTimeout(() => feedbackRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100)
+    }
+  }, [showDetailedFeedback])
 
   const handleFitView = useCallback(() => {
     if (reactFlowInstance.current) {
@@ -1269,7 +1276,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           )}
 
           {showDetailedFeedback && (
-            <div style={{ position: 'relative', zIndex: 100 }}>
+            <div ref={feedbackRef} style={{ position: 'relative', zIndex: 100 }}>
               {levelComplete ? (
                 <div className="result-card correct">
                   <h3>{isLastLevel ? 'Stage Complete' : 'Level Complete'}</h3>

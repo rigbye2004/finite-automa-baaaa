@@ -875,6 +875,11 @@
 
 /* Medium: stack toolbar horizontally above graph */
 @media (max-width: 1000px) {
+  /* Hide zoom controls — pinch-to-zoom works on all touch devices */
+  .build-level .react-flow__controls {
+    display: none;
+  }
+
   /* Allow scrolling instead of clipping on tablet */
   .build-level {
     height: auto;
