@@ -755,12 +755,13 @@
 
   .accept-reject-level .main-content {
     overflow-y: visible;
-    flex: none;
+    /* keep flex: 1 so it always fills the width after the sheep panel */
   }
 
   .accept-reject-level .game-container {
     flex-direction: column;
     flex: none;
+    width: 100%;
   }
 
   .accept-reject-level .sidebar {

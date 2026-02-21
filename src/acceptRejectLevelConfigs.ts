@@ -26,7 +26,7 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     correctAnswer: 'accept',
     explanation: 'The [sheep-3] follows the path straight to the bed. The farmer falls asleep.',
   },
-  
+
   {
     id: 2,
     conceptsIntroduced: ['rejection'],
@@ -59,7 +59,7 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     correctAnswer: 'accept',
     explanation: 'The [sheep-3] takes us to the middle, then the [sheep-8] takes us to the bed. Sweet dreams.',
   },
-  
+
   {
     id: 4,
     conceptsIntroduced: [],
@@ -97,7 +97,7 @@ export const ACCEPT_REJECT_QUESTIONS: AcceptRejectQuestion[] = [
     correctAnswer: 'accept',
     explanation: 'The [sheep-8] takes the bottom path, then the [sheep-13] jumps to the bed. Zzzzz...',
   },
-  
+
   {
     id: 6,
     conceptsIntroduced: [],
