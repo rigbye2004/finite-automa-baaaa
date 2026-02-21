@@ -30,6 +30,16 @@ import './components/BadgeNotch.css'
 const DEV_MODE_KEY = 'sheep-automata-dev-mode'
 const isDevMode = () => localStorage.getItem(DEV_MODE_KEY) === 'true'
 
+const FENCE_GHOST_SRC = 'data:image/svg+xml,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 38" width="56" height="48">' +
+  '<rect x="2" y="2" width="7" height="36" rx="1.5" fill="#8B4513"/>' +
+  '<rect x="35" y="2" width="7" height="36" rx="1.5" fill="#8B4513"/>' +
+  '<rect x="8" y="6" width="28" height="5" rx="1" fill="#A0522D"/>' +
+  '<rect x="8" y="16" width="28" height="5" rx="1" fill="#A0522D"/>' +
+  '<rect x="8" y="26" width="28" height="5" rx="1" fill="#A0522D"/>' +
+  '</svg>'
+)
+
 const edgeTypes = { custom: CustomEdge }
 const nodeTypes = { stateNode: StateNode }
 
@@ -876,6 +886,22 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                 onDragStart={(e) => {
                   e.dataTransfer.setData('application/reactflow', 'stateNode')
                 }}
+                onTouchStart={(e) => startTouchDrag(
+                  e.touches[0],
+                  'fence',
+                  FENCE_GHOST_SRC,
+                  (_id, x, y) => {
+                    if (!reactFlowInstance.current) return
+                    const position = reactFlowInstance.current.screenToFlowPosition({ x, y })
+                    const newNode: Node = {
+                      id: `state-${nodeIdCounter.current++}`,
+                      type: 'stateNode',
+                      position,
+                      data: { label: `Fence ${nodeIdCounter.current - 1}`, isStart: false, isAccepting: false, sheep: null, showLabel: false },
+                    }
+                    setNodes((nds) => [...nds, newNode])
+                  },
+                )}
                 title="Drag onto the field"
               >
                 <svg width={56} height={48} viewBox="0 0 44 38" fill="none">
@@ -893,6 +919,22 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                 className="tool-cell tool-bed"
                 draggable
                 onDragStart={(e) => { e.dataTransfer.setData('text/tool', 'bed') }}
+                onTouchStart={(e) => startTouchDrag(
+                  e.touches[0],
+                  'bed',
+                  withBase('sheep-assets/awake-farmer.svg'),
+                  (_id, x, y) => {
+                    if (!reactFlowInstance.current) return
+                    const position = reactFlowInstance.current.screenToFlowPosition({ x, y })
+                    const newNode: Node = {
+                      id: `state-${nodeIdCounter.current++}`,
+                      type: 'stateNode',
+                      position,
+                      data: { label: `Fence ${nodeIdCounter.current - 1}`, isStart: false, isAccepting: true, sheep: null, showLabel: false },
+                    }
+                    setNodes((nds) => [...nds, newNode])
+                  },
+                )}
                 title="Drag onto the field"
               >
                 <img src={withBase("sheep-assets/awake-farmer.svg")} width={56} height={44} alt="Bed" className="tool-bed-icon" />
