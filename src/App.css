@@ -469,7 +469,7 @@ body {
 .accessibility-btn {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   min-width: 3rem;
   min-height: 3rem;
   padding: 0.8em;
@@ -614,7 +614,7 @@ body {
 
   .accessibility-btn {
     bottom: 16px;
-    left: 16px;
+    right: 16px;
     min-width: 2rem;
     min-height: 2rem;
     padding: 0.45em;
@@ -623,7 +623,7 @@ body {
 
   .devtools-trigger {
     bottom: 16px;
-    right: 16px;
+    left: 16px;
   }
 
   .menu-progress {

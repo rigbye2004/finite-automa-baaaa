@@ -23,7 +23,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 12px 4px;
+  padding: 12px 4px 18px;
   background: #f0faf0;
   border-right: 2px solid #C8E6C9;
   width: 62px;
@@ -102,11 +102,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   flex: 1 1 0;
   min-height: 0;
-  max-height: 48px;
+  max-height: 56px;
   border-radius: 10px;
   position: relative;
 }
@@ -707,17 +707,17 @@ body {
   .sheep-panel {
     width: 62px;
     min-width: 62px;
-    padding: 10px 4px;
+    padding: 10px 4px 16px;
   }
 
   .sheep-slot {
-    width: 42px;
-    height: 42px;
+    width: 48px;
+    height: 48px;
   }
 
   .sheep-slot img {
-    width: 32px !important;
-    height: 32px !important;
+    width: 100% !important;
+    height: auto !important;
   }
 
   .sheep-panel-label {
@@ -776,17 +776,17 @@ body {
   .sheep-panel {
     width: 48px;
     min-width: 48px;
-    padding: 8px 3px;
+    padding: 8px 3px 14px;
   }
 
   .sheep-slot {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
   }
 
   .sheep-slot img {
-    width: 24px !important;
-    height: 24px !important;
+    width: 100% !important;
+    height: auto !important;
   }
   
   .sheep-badge {
@@ -867,17 +867,17 @@ body {
   .sheep-panel {
     width: 42px;
     min-width: 42px;
-    padding: 6px 2px;
+    padding: 6px 2px 12px;
   }
   
   .sheep-slot {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
-  
+
   .sheep-slot img {
-    width: 22px !important;
-    height: 22px !important;
+    width: 100% !important;
+    height: auto !important;
   }
   
   .sheep-panel-label {
@@ -961,8 +961,8 @@ body {
   }
 
   .sheep-slot img {
-    width: 20px !important;
-    height: 20px !important;
+    width: 100% !important;
+    height: auto !important;
   }
 
   .footer {

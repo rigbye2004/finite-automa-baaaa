@@ -12,7 +12,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 12px 6px;
+  padding: 12px 6px 18px;
   background: #f0faf0;
   border-right: 2px solid #C8E6C9;
   width: 76px;
@@ -837,7 +837,7 @@
   .accept-reject-level .sheep-panel {
     width: 62px;
     min-width: 62px;
-    padding: 10px 4px;
+    padding: 10px 4px 16px;
   }
 
   .accept-reject-level .sheep-slot {
@@ -890,7 +890,7 @@
   .accept-reject-level .sheep-panel {
     width: 48px;
     min-width: 48px;
-    padding: 8px 3px;
+    padding: 8px 3px 14px;
   }
 
   .accept-reject-level .sheep-slot {
@@ -1013,7 +1013,7 @@
   .accept-reject-level .sheep-panel {
     width: 42px;
     min-width: 42px;
-    padding: 6px 2px;
+    padding: 6px 2px 12px;
   }
   
   .accept-reject-level .sheep-slot {

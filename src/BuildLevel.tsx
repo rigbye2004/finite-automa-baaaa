@@ -1317,22 +1317,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                         Play Again
                       </button>
                     )}
-                    {!isLastLevel && (
-                      <button
-                        className="feedback-btn-secondary"
-                        onClick={handleReset}
-                        style={{ position: 'relative', zIndex: 101 }}
-                      >
-                        Play Again
-                      </button>
-                    )}
-                    <button
-                      className="feedback-btn-secondary"
-                      onClick={onBack}
-                      style={{ position: 'relative', zIndex: 101 }}
-                    >
-                      Back to Menu
-                    </button>
                   </div>
                 </div>
               ) : (
