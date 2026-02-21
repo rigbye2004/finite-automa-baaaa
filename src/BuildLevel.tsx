@@ -985,6 +985,49 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
               }
             }}
             onMouseLeave={() => setMousePos(null)}
+            onTouchStart={(e) => {
+              if (mode === 'connect' && !connectingFrom && reactFlowInstance.current && graphRef.current) {
+                const touch = e.touches[0]
+                const point = reactFlowInstance.current.screenToFlowPosition({
+                  x: touch.clientX,
+                  y: touch.clientY,
+                })
+                const nearestId = findNearestNode(point)
+                if (nearestId) {
+                  dragConnectRef.current = { startPos: { x: touch.clientX, y: touch.clientY }, nodeId: nearestId }
+                }
+              }
+            }}
+            onTouchMove={(e) => {
+              const touch = e.touches[0]
+              if (dragConnectRef.current && !connectingFrom) {
+                const { startPos, nodeId } = dragConnectRef.current
+                if (Math.hypot(touch.clientX - startPos.x, touch.clientY - startPos.y) > 15) {
+                  setConnectingFrom(nodeId)
+                }
+              }
+              if (connectingFrom && graphRef.current) {
+                const rect = graphRef.current.getBoundingClientRect()
+                setMousePos({ x: touch.clientX - rect.left, y: touch.clientY - rect.top })
+              }
+            }}
+            onTouchEnd={(e) => {
+              const wasDragging = dragConnectRef.current !== null
+              dragConnectRef.current = null
+              setMousePos(null)
+              if (mode === 'connect' && connectingFrom && wasDragging && reactFlowInstance.current) {
+                e.preventDefault()
+                const touch = e.changedTouches[0]
+                const point = reactFlowInstance.current.screenToFlowPosition({
+                  x: touch.clientX,
+                  y: touch.clientY,
+                })
+                const nearestId = findNearestNode(point)
+                if (nearestId) {
+                  completeConnection(connectingFrom, nearestId)
+                }
+              }
+            }}
           >
           <ReactFlow
             nodes={styledNodes}
