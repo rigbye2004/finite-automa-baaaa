@@ -257,9 +257,11 @@
 
 /* Footer */
 .a11y-footer {
-  padding: 16px 20px;
+  padding: 12px 20px;
   border-top: 1px solid #eee;
-  text-align: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .a11y-reset-btn {
@@ -283,16 +285,35 @@
   outline-offset: 2px;
 }
 
+.a11y-save-btn {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.a11y-save-btn:hover {
+  background: #43A047;
+}
+
+.a11y-save-btn:focus {
+  outline: 3px solid #4CAF50;
+  outline-offset: 2px;
+}
+
 /* Responsive */
 @media (max-width: 500px) {
   .a11y-panel {
-    max-height: 95vh;
-    border-radius: 12px 12px 0 0;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    max-width: calc(100% - 32px);
   }
 
   .a11y-overlay-grid {

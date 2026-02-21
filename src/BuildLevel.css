@@ -1,9 +1,10 @@
 .build-level {
   display: flex;
   flex-direction: row;
-  min-height: 100dvh;
+  height: 100dvh;
   padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* ── Left sheep progress panel ── */

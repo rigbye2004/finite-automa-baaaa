@@ -187,6 +187,25 @@
   animation: none;
 }
 
+.feedback-btn-secondary {
+  padding: 8px 14px;
+  border: 1px solid #A5D6A7;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  background: white;
+  color: #2E7D32;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.feedback-btn-secondary:hover {
+  background: #E8F5E9;
+  border-color: #4CAF50;
+}
+
 
 /* ═══════════════════════════════════════
    Reflection prompt (kept for compatibility)

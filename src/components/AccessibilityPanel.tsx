@@ -213,6 +213,12 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
           >
             ↺ Start again
           </button>
+          <button
+            className="a11y-save-btn"
+            onClick={onClose}
+          >
+            Save ✓
+          </button>
         </footer>
       </div>
     </div>

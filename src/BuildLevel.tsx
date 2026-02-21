@@ -1278,11 +1278,13 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           {showDetailedFeedback && (
             <div ref={feedbackRef} style={{ position: 'relative', zIndex: 100 }}>
               {levelComplete ? (
-                <div className="result-card correct">
-                  <h3>{isLastLevel ? 'Stage Complete' : 'Level Complete'}</h3>
-                  <p style={{ margin: '12px 0', color: '#2E7D32' }}>
-                    All {feedbackData.matchedPatterns.length} patterns matched.
-                  </p>
+                <div className="detailed-feedback correct feedback-flash">
+                  <div className="feedback-celebrate">
+                    <span className="feedback-big-icon" aria-hidden="true">✓</span>
+                    <span className="feedback-matched-count">
+                      {feedbackData.matchedPatterns.length}/{feedbackData.matchedPatterns.length}
+                    </span>
+                  </div>
                   {sessionBadges.length > 0 && (
                     <div className="badges-earned">
                       <h4 className="badges-earned-title">Badges Earned</h4>
@@ -1296,25 +1298,35 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                       </div>
                     </div>
                   )}
-                  <div className="final-buttons" style={{ marginTop: '16px' }}>
-                    {!isLastLevel && (
+                  <div className="final-buttons" style={{ marginTop: '12px' }}>
+                    {!isLastLevel ? (
                       <button
-                        className="next-btn"
+                        className="feedback-btn"
                         onClick={handleContinueFromFeedback}
                         style={{ position: 'relative', zIndex: 101 }}
                       >
                         Next Level
                       </button>
+                    ) : (
+                      <button
+                        className="feedback-btn"
+                        onClick={handleReset}
+                        style={{ position: 'relative', zIndex: 101 }}
+                      >
+                        Play Again
+                      </button>
+                    )}
+                    {!isLastLevel && (
+                      <button
+                        className="feedback-btn-secondary"
+                        onClick={handleReset}
+                        style={{ position: 'relative', zIndex: 101 }}
+                      >
+                        Play Again
+                      </button>
                     )}
                     <button
-                      className="next-btn secondary"
-                      onClick={handleReset}
-                      style={{ position: 'relative', zIndex: 101 }}
-                    >
-                      Play Again
-                    </button>
-                    <button
-                      className="next-btn secondary"
+                      className="feedback-btn-secondary"
                       onClick={onBack}
                       style={{ position: 'relative', zIndex: 101 }}
                     >

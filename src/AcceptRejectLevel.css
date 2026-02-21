@@ -1,8 +1,9 @@
 .accept-reject-level {
   display: flex;
   flex-direction: row;
-  min-height: 100dvh;
+  height: 100dvh;
   padding: 0;
+  overflow: hidden;
 }
 
 /* ── Left sheep progress panel ── */
@@ -751,6 +752,7 @@
   .accept-reject-level {
     height: auto;
     min-height: 100vh;
+    overflow: visible;
   }
 
   .accept-reject-level .main-content {
