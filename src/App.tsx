@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { GameProgressProvider, useGameProgress } from './contexts/GameProgressContext'
 import { AccessibilityProvider, useAccessibility } from './contexts/AccessibilityContext'
 import AcceptRejectLevel from './AcceptRejectLevel'
@@ -28,6 +28,19 @@ function AppContent() {
   const earnedBadges = getEarnedBadges()
   const level1Progress = getLevelProgress('accept-reject')
   const level2Progress = getLevelProgress('drag')
+
+  const titleTapCount = useRef(0)
+  const titleTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const handleTitleTap = () => {
+    titleTapCount.current += 1
+    if (titleTapTimer.current) clearTimeout(titleTapTimer.current)
+    if (titleTapCount.current >= 5) {
+      titleTapCount.current = 0
+      window.dispatchEvent(new CustomEvent('toggle-dev-mode'))
+    } else {
+      titleTapTimer.current = setTimeout(() => { titleTapCount.current = 0 }, 3000)
+    }
+  }
   const level3Progress = getLevelProgress('build')
 
   const devUnlockAll = localStorage.getItem(UNLOCK_ALL_KEY) === 'true'
@@ -97,7 +110,7 @@ function AppContent() {
                 alt="" 
                 aria-hidden="true"
               />
-              <h1>Finite Automa-baaa</h1>
+              <h1 onClick={handleTitleTap} style={{ cursor: 'default', userSelect: 'none' }}>Finite Automa-baaa</h1>
               <img 
                 src={withBase("sheep-assets/sheep-8.svg")}
                 width={60} 

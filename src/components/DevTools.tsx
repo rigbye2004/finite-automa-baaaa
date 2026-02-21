@@ -35,6 +35,17 @@ export function DevTools({ enabled = true }: DevToolsProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
 
+  useEffect(() => {
+    const handler = () => {
+      const next = !devModeEnabled
+      if (next) localStorage.setItem(DEV_MODE_KEY, 'true')
+      else { localStorage.removeItem(DEV_MODE_KEY); setIsOpen(false) }
+      setDevModeEnabled(next)
+    }
+    window.addEventListener('toggle-dev-mode', handler)
+    return () => window.removeEventListener('toggle-dev-mode', handler)
+  }, [devModeEnabled])
+
   if (!enabled) return null
 
   const toggleUnlock = () => {
