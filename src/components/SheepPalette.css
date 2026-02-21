@@ -64,16 +64,14 @@
 @media (max-width: 768px) {
   .sheep-palette {
     margin-left: 0;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    gap: 4px;
+    gap: 6px;
   }
 
   .sheep-btn {
-    flex: 1 1 0;
-    min-width: 44px;
-    max-width: 72px;
+    flex: 0 0 52px;
     padding: 4px;
   }
 
