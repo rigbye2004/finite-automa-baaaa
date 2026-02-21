@@ -574,47 +574,63 @@ body {
 /* Mobile menu adjustments */
 @media (max-width: 500px) {
   .menu-screen {
-    padding: 60px 16px 100px;
-    justify-content: flex-start;
+    padding: 12px 16px 80px;
+    justify-content: center;
+    overflow-y: auto;
+    gap: 0;
   }
-  
+
+  .menu-header {
+    margin-bottom: 8px;
+  }
+
   .menu-header img {
     width: 40px;
     height: 40px;
   }
-  
-  .menu-farmer img {
-    width: 80px;
-    height: 80px;
+
+  .menu-subtitle {
+    margin-bottom: 12px;
   }
-  
+
+  .menu-farmer {
+    margin-bottom: 12px;
+  }
+
+  .menu-farmer img {
+    width: 70px;
+    height: 70px;
+  }
+
   .menu-buttons {
     width: 100%;
+    gap: 10px;
   }
-  
+
   .level-btn {
-    padding: 16px 20px;
+    padding: 12px 16px;
+    min-width: 0;
   }
-  
+
   .accessibility-btn {
-    bottom: 80px;
+    bottom: 16px;
     left: 16px;
     min-width: 2rem;
     min-height: 2rem;
     padding: 0.45em;
     font-size: 14px;
   }
-  
+
   .devtools-trigger {
-    bottom: 80px;
+    bottom: 16px;
     right: 16px;
   }
-  
+
   .menu-progress {
     position: relative;
     top: 0;
     right: 0;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 }
 
