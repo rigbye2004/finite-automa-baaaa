@@ -884,12 +884,13 @@
 
   .build-level .main-content {
     overflow-y: visible;
-    flex: none;
+    /* keep flex: 1 so it fills the width after the sheep panel */
   }
 
   .build-level .game-container {
     flex: none;
     flex-wrap: wrap;
+    width: 100%;
   }
   
   .build-level .toolbar {

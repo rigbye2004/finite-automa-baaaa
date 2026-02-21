@@ -641,12 +641,13 @@ body {
 
   .main-content {
     overflow-y: visible;
-    flex: none;
+    /* keep flex: 1 so it fills the width after the sheep panel */
   }
 
   .game-container {
     flex-direction: column;
     flex: none;
+    width: 100%;
   }
 
   .graph-column {
