@@ -62,7 +62,19 @@
 
 /* Mobile */
 @media (max-width: 768px) {
+  .sheep-palette {
+    margin-left: 0;
+    justify-content: center;
+  }
+
   .sheep-btn {
     padding: 6px;
+  }
+}
+
+@media (max-width: 500px) {
+  .sheep-img {
+    width: var(--sheep-img-md, 56px);
+    height: var(--sheep-img-md, 56px);
   }
 }

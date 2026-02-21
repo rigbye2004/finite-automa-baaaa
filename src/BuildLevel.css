@@ -947,6 +947,12 @@
 
 /* Tablet */
 @media (max-width: 768px) {
+  /* Shrink sheep images inside edge labels so they don't dominate the graph */
+  .build-level .edge-label img {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
   .build-level .sheep-panel {
     width: 62px;
     min-width: 62px;
@@ -1025,6 +1031,11 @@
 
 /* Phone */
 @media (max-width: 500px) {
+  .build-level .edge-label img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
   .build-level .sheep-panel {
     width: 48px;
     min-width: 48px;
@@ -1056,9 +1067,9 @@
   }
   
   .build-level .graph-area {
-    min-height: 180px;
-    height: 28vh;
-    max-height: 260px;
+    min-height: 200px;
+    height: 35vh;
+    max-height: 320px;
     border-radius: 12px;
   }
   

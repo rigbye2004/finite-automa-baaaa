@@ -115,31 +115,56 @@
   letter-spacing: 0.3px;
 }
 
-/* Responsive: shrink demo on small screens */
-@media (max-width: 700px) {
-  .demo-scene {
-    transform: scale(0.68);
-    transform-origin: center center;
+/* Responsive: shrink the inner animation to fit narrower screens.
+   We scale .demo-scene-inner (not the outer scene) so the layout box
+   and overflow clipping behave correctly. */
+
+/* ≤600px — large phones in landscape, smaller tablets */
+@media (max-width: 600px) {
+  .demo-scene-inner {
+    transform: scale(1.15);
+    margin-left: 16px;
   }
-  
+
+  .demo-anim-area {
+    height: 322px; /* 280 × 1.15 */
+  }
+
   .demo-step-dot {
     width: 10px;
     height: 10px;
   }
 }
 
-@media (max-width: 480px) {
-  .demo-scene {
-    transform: scale(0.5);
-    transform-origin: center center;
+/* ≤500px — portrait phones */
+@media (max-width: 500px) {
+  .demo-scene-inner {
+    transform: scale(0.84);
+    margin-left: 8px;
   }
-  
+
+  .demo-anim-area {
+    height: 236px; /* 280 × 0.84 */
+  }
+
   .demo-bottom-bar {
     padding: 6px 10px;
   }
-  
+
   .demo-bar-spacer {
     width: 70px;
+  }
+}
+
+/* ≤360px — very small phones */
+@media (max-width: 360px) {
+  .demo-scene-inner {
+    transform: scale(0.70);
+    margin-left: 4px;
+  }
+
+  .demo-anim-area {
+    height: 196px; /* 280 × 0.70 */
   }
 }
 

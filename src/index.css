@@ -14,13 +14,14 @@
   --sheep-img-sm: clamp(36px, 6vw, 56px);
   --sheep-img-md: clamp(44px, 8vw, 64px);
   --sheep-img-lg: clamp(50px, 10vw, 80px);
-  --sidebar-width: clamp(240px, 30vw, 400px);
+  --sidebar-width: clamp(180px, 30vw, 400px);
 }
 
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 button {

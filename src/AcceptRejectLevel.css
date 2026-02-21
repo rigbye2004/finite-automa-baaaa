@@ -784,6 +784,31 @@
   .answer-btn {
     flex: 1;
   }
+
+  /* On mobile the layout is stacked, so don't compact the question card
+     when the result section appears — there's plenty of vertical space to scroll */
+  .result-section ~ .question-card .test-pattern img,
+  .sidebar:has(.result-section) .question-card .test-pattern img {
+    width: var(--sheep-img-md, 44px);
+    height: var(--sheep-img-md, 44px);
+  }
+
+  .sidebar:has(.result-section) .question-card {
+    padding: 12px;
+  }
+
+  .sidebar:has(.result-section) .test-pattern {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .sidebar:has(.result-section) .pattern-sheep {
+    gap: 6px;
+  }
+
+  .sidebar:has(.result-section) .pattern-sheep .arrow {
+    font-size: 24px;
+  }
 }
 
 /* Small tablet / large phone */
