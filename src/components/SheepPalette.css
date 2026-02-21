@@ -72,7 +72,7 @@
 
   .sheep-btn {
     flex: 1 1 0;
-    min-width: 0;
+    min-width: 44px;
     max-width: 72px;
     padding: 4px;
   }
