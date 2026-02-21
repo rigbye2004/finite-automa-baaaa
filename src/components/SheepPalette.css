@@ -71,8 +71,8 @@
   }
 
   .sheep-btn {
-    flex: 0 0 70px;
-    padding: 6px;
+    flex: 0 0 80px;
+    padding: 4px;
   }
 
   .sheep-img {
@@ -88,8 +88,8 @@
   }
 
   .sheep-btn {
-    flex: 0 0 58px;
-    padding: 5px;
+    flex: 0 0 68px;
+    padding: 3px;
   }
 }
 
@@ -99,7 +99,7 @@
   }
 
   .sheep-btn {
-    flex: 0 0 48px;
-    padding: 3px;
+    flex: 0 0 56px;
+    padding: 2px;
   }
 }
