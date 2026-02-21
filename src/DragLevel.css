@@ -649,41 +649,45 @@ body {
 
 /* Tablet: stack vertically */
 @media (max-width: 900px) {
-  /* Allow scrolling instead of clipping content */
   .app {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .main-content {
-    overflow-y: visible;
-    /* keep flex: 1 so it fills the width after the sheep panel */
+    overflow: hidden;
+    min-height: 0;
   }
 
+  /* Fill remaining height so sidebar can scroll inside */
   .game-container {
     flex-direction: column;
-    flex: none;
+    flex: 1;
+    min-height: 0;
     width: 100%;
   }
 
   .graph-column {
     width: 100%;
     min-width: auto;
+    flex-shrink: 0;
   }
 
   .graph-area {
-    min-height: 220px;
-    height: 40vh;
-    max-height: 400px;
+    min-height: 180px;
+    height: 38vh;
+    max-height: 380px;
   }
 
+  /* Sidebar scrolls internally — no page scroll */
   .sidebar {
     width: 100%;
     flex-basis: auto;
     min-width: auto;
+    flex: 1;
+    min-height: 0;
     max-height: none;
-    overflow-y: visible;
+    overflow-y: auto;
   }
 
   .footer {

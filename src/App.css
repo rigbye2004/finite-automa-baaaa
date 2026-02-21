@@ -633,6 +633,57 @@ body {
   }
 }
 
+/* Landscape phone */
+@media (max-height: 500px) and (orientation: landscape) {
+  .menu-screen {
+    padding: 8px 16px;
+    justify-content: center;
+    gap: 6px;
+    overflow-y: auto;
+  }
+
+  .menu-header {
+    margin-bottom: 4px;
+    gap: 10px;
+  }
+
+  .menu-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .menu-header img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .menu-subtitle {
+    font-size: 0.9rem;
+    margin: 0 0 6px 0;
+  }
+
+  .menu-farmer {
+    display: none;
+  }
+
+  .menu-buttons {
+    gap: 8px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .level-btn {
+    padding: 10px 16px;
+    min-width: 0;
+  }
+
+  .menu-progress {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 4px;
+  }
+}
+
 /* Very small phone */
 @media (max-width: 360px) {
   .accessibility-btn {

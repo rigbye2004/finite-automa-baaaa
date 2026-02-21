@@ -896,22 +896,22 @@
     display: none;
   }
 
-  /* Allow scrolling instead of clipping on tablet */
+  /* Lock to viewport height — no page scroll */
   .build-level {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .build-level .main-content {
-    overflow-y: visible;
-    /* keep flex: 1 so it fills the width after the sheep panel */
+    overflow: hidden;
+    min-height: 0;
   }
 
   .build-level .game-container {
-    flex: none;
+    flex: 1;
     flex-wrap: wrap;
     width: 100%;
+    min-height: 0;
   }
   
   .build-level .toolbar {
@@ -954,16 +954,18 @@
   }
   
   .build-level .graph-area {
-    min-height: 220px;
-    height: 40vh;
-    max-height: 400px;
+    min-height: 200px;
+    height: 38vh;
+    max-height: 380px;
     width: 100%;
     min-width: auto;
     flex: none;
   }
-  
+
   .build-level .sidebar {
     width: 100%;
+    overflow-y: auto;
+    max-height: 35vh;
   }
 }
 

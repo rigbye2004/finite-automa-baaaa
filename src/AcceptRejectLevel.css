@@ -763,34 +763,37 @@
 
 /* Tablet / narrow: stack vertically */
 @media (max-width: 900px) {
-  /* Allow the page to scroll rather than clip */
   .accept-reject-level {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .accept-reject-level .main-content {
-    overflow-y: visible;
-    /* keep flex: 1 so it always fills the width after the sheep panel */
+    overflow: hidden;
+    min-height: 0;
   }
 
+  /* Fill remaining height so sidebar can scroll inside */
   .accept-reject-level .game-container {
     flex-direction: column;
-    flex: none;
+    flex: 1;
+    min-height: 0;
     width: 100%;
   }
 
+  /* Sidebar scrolls internally — no page scroll */
   .accept-reject-level .sidebar {
     width: 100%;
+    flex: 1;
+    min-height: 0;
     max-height: none;
-    overflow-y: visible;
+    overflow-y: auto;
   }
 
   .accept-reject-level .graph-area {
-    min-height: 220px;
-    height: 40vh;
-    max-height: 400px;
+    min-height: 180px;
+    height: 38vh;
+    max-height: 380px;
     flex: none;
   }
 
