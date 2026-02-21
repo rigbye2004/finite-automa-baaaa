@@ -1,4 +1,5 @@
 import { withBase } from '../withBase'
+import { startTouchDrag } from '../utils/touchDrag'
 import './SheepPalette.css'
 
 const ALL_SHEEP = [
@@ -24,10 +25,11 @@ interface SheepPaletteProps {
   onSelectSheep: (sheepId: string) => void
   selectedSheep?: string | null
   availableSheep?: string[]
+  onTouchDrop?: (sheepId: string, clientX: number, clientY: number) => void
 }
 
-export default function SheepPalette({ onSelectSheep, selectedSheep, availableSheep }: SheepPaletteProps) {
-  const sheepToShow = availableSheep 
+export default function SheepPalette({ onSelectSheep, selectedSheep, availableSheep, onTouchDrop }: SheepPaletteProps) {
+  const sheepToShow = availableSheep
     ? ALL_SHEEP.filter(s => availableSheep.includes(s.id))
     : ALL_SHEEP.filter(s => ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'].includes(s.id))
 
@@ -40,6 +42,7 @@ export default function SheepPalette({ onSelectSheep, selectedSheep, availableSh
           onClick={() => onSelectSheep(sheep.id)}
           draggable
           onDragStart={(e) => e.dataTransfer.setData('text/sheep', sheep.id)}
+          onTouchStart={onTouchDrop ? (e) => startTouchDrag(e.touches[0], sheep.id, sheep.src, onTouchDrop) : undefined}
           title={sheep.name}
         >
           <img

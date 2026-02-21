@@ -480,6 +480,31 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
           <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </button>
         <div className="sheep-panel-label">Q{currentQuestion + 1}</div>
+        {currentQuestion > 0 && (
+          <button
+            className="prev-btn"
+            onClick={() => {
+              const prevIdx = currentQuestion - 1
+              const prevQ = ACCEPT_REJECT_QUESTIONS[prevIdx]
+              const gotRight = completedQuestions.includes(prevIdx)
+              const prevAnswer = gotRight
+                ? prevQ.correctAnswer
+                : (prevQ.correctAnswer === 'accept' ? 'reject' : 'accept')
+              resetAnimation()
+              if (returnToQuestion.current === null) {
+                returnToQuestion.current = currentQuestion
+              }
+              setCurrentQuestion(prevIdx)
+              setAnswer(prevAnswer)
+              setShowResult(true)
+              setHintUsedThisQuestion(false)
+              setWrongAttemptThisQuestion(!gotRight)
+            }}
+            aria-label="Previous question"
+          >
+            ←
+          </button>
+        )}
         <div className="sheep-list">
           {Array.from({ length: ACCEPT_REJECT_QUESTION_COUNT }, (_, raw) => {
             const i = ACCEPT_REJECT_QUESTION_COUNT - 1 - raw  // reverse: bottom-up

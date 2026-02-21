@@ -8,6 +8,7 @@ import ReactFlow, {
 import type { Node, Edge, ReactFlowInstance } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { withBase } from './withBase'
+import { startTouchDrag } from './utils/touchDrag'
 import './BuildLevel.css'
 import StateNode from './components/StateNode'
 import PatternDisplay from './components/PatternDisplay'
@@ -292,9 +293,56 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     return Math.hypot(p.x - projx, p.y - projy)
   }
 
+  const dropSheepAtPosition = useCallback((sheepType: string, fromEdgeId: string | null, clientX: number, clientY: number) => {
+    if (!reactFlowInstance.current) return
+
+    const point = reactFlowInstance.current.screenToFlowPosition({ x: clientX, y: clientY })
+
+    let best = { id: null as string | null, dist: Infinity }
+    edges.forEach((edge) => {
+      const sourceNode = nodes.find((n) => n.id === edge.source)
+      const targetNode = nodes.find((n) => n.id === edge.target)
+      if (!sourceNode || !targetNode) return
+
+      const sourceCenter = { x: sourceNode.position.x + 60, y: sourceNode.position.y + 50 }
+      const targetCenter = { x: targetNode.position.x + 60, y: targetNode.position.y + 50 }
+
+      let d: number
+      if (edge.source === edge.target) {
+        const loopCenter = { x: sourceCenter.x, y: sourceCenter.y - 170 }
+        d = Math.hypot(point.x - loopCenter.x, point.y - loopCenter.y)
+      } else {
+        d = pointToSegmentDistance(point, sourceCenter, targetCenter)
+      }
+
+      if (d < best.dist) best = { id: edge.id, dist: d }
+    })
+
+    if (best.id && best.dist < 100) {
+      setEdges((eds) =>
+        eds.map((edge) => {
+          if (fromEdgeId && edge.id === fromEdgeId && edge.id !== best.id) {
+            return { ...edge, data: { ...edge.data, sheep: null } }
+          }
+          if (edge.id === best.id) {
+            return { ...edge, data: { ...edge.data, sheep: sheepType } }
+          }
+          return edge
+        })
+      )
+      setSelectedEdge(null)
+    } else if (fromEdgeId) {
+      setEdges((eds) =>
+        eds.map((edge) =>
+          edge.id === fromEdgeId ? { ...edge, data: { ...edge.data, sheep: null } } : edge
+        )
+      )
+    }
+  }, [edges, nodes, setEdges])
+
   const handleDropOnGraph = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
-    
+
     if (!reactFlowInstance.current) return
 
     const toolType = event.dataTransfer.getData('text/tool')
@@ -304,7 +352,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         y: event.clientY,
       })
       const nearestNodeId = findNearestNode(point)
-      
+
       if (toolType === 'arrow-from' && nearestNodeId) {
         setConnectingFrom(nearestNodeId)
         setMode('connect')
@@ -319,10 +367,10 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           id: `state-${nodeIdCounter.current++}`,
           type: 'stateNode',
           position,
-          data: { 
+          data: {
             label: `Fence ${nodeIdCounter.current - 1}`,
-            isStart: false, 
-            isAccepting: true, 
+            isStart: false,
+            isAccepting: true,
             sheep: null,
             showLabel: false
           },
@@ -333,63 +381,9 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     }
 
     const sheepType = event.dataTransfer.getData('text/sheep')
-    const fromEdgeId = event.dataTransfer.getData('text/fromEdge')
-
+    const fromEdgeId = event.dataTransfer.getData('text/fromEdge') || null
     if (sheepType) {
-      const point = reactFlowInstance.current.screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      })
-
-      let best = { id: null as string | null, dist: Infinity }
-      edges.forEach((edge) => {
-        const sourceNode = nodes.find((n) => n.id === edge.source)
-        const targetNode = nodes.find((n) => n.id === edge.target)
-        if (!sourceNode || !targetNode) return
-
-        const sourceCenter = { x: sourceNode.position.x + 60, y: sourceNode.position.y + 50 }
-        const targetCenter = { x: targetNode.position.x + 60, y: targetNode.position.y + 50 }
-        
-        let d: number
-        
-        if (edge.source === edge.target) {
-          const loopCenter = { 
-            x: sourceCenter.x, 
-            y: sourceCenter.y - 170
-          }
-          d = Math.hypot(point.x - loopCenter.x, point.y - loopCenter.y)
-        } else {
-          d = pointToSegmentDistance(point, sourceCenter, targetCenter)
-        }
-        
-        if (d < best.dist) {
-          best = { id: edge.id, dist: d }
-        }
-      })
-
-      if (best.id && best.dist < 100) {
-        setEdges((eds) =>
-          eds.map((edge) => {
-            if (fromEdgeId && edge.id === fromEdgeId && edge.id !== best.id) {
-              return { ...edge, data: { ...edge.data, sheep: null } }
-            }
-            if (edge.id === best.id) {
-              return { ...edge, data: { ...edge.data, sheep: sheepType } }
-            }
-            return edge
-          })
-        )
-        setSelectedEdge(null)
-      } else if (fromEdgeId) {
-        setEdges((eds) =>
-          eds.map((edge) => {
-            if (edge.id === fromEdgeId) {
-              return { ...edge, data: { ...edge.data, sheep: null } }
-            }
-            return edge
-          })
-        )
-      }
+      dropSheepAtPosition(sheepType, fromEdgeId, event.clientX, event.clientY)
       return
     }
 
@@ -407,17 +401,17 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       id: `state-${nodeIdCounter.current++}`,
       type: 'stateNode',
       position,
-      data: { 
+      data: {
         label: `Fence ${nodeIdCounter.current - 1}`,
-        isStart: false, 
-        isAccepting: false, 
+        isStart: false,
+        isAccepting: false,
         sheep: null,
         showLabel: false
       },
     }
 
     setNodes((nds) => [...nds, newNode])
-  }, [levelConfig, edges, nodes, setNodes, setEdges, findNearestNode, completeConnection, connectingFrom])
+  }, [levelConfig, dropSheepAtPosition, setNodes, findNearestNode, completeConnection, connectingFrom])
 
   const onNodeClick = useCallback((_: any, node: Node) => {
     if (mode === 'connect') {
@@ -767,6 +761,18 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </button>
         <div className="sheep-panel-label">L{currentLevelId}</div>
+        {currentLevelId > 1 && (
+          <button
+            className="prev-btn"
+            onClick={() => {
+              resetAnimation()
+              setCurrentLevelId(currentLevelId - 1)
+            }}
+            aria-label="Previous level"
+          >
+            ←
+          </button>
+        )}
         <div className="sheep-list">
           {Array.from({ length: BUILD_LEVEL_COUNT }, (_, raw) => {
             const i = BUILD_LEVEL_COUNT - 1 - raw  // reverse: bottom-up
@@ -918,6 +924,12 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                 onDragStart={(e) => {
                   e.dataTransfer.setData('text/sheep', sheepId)
                 }}
+                onTouchStart={(e) => startTouchDrag(
+                  e.touches[0],
+                  sheepId,
+                  withBase(`sheep-assets/${sheepId}.svg`),
+                  (id, x, y) => dropSheepAtPosition(id, null, x, y),
+                )}
                 title="Click or drag onto an arrow"
               >
                 <img src={withBase(`sheep-assets/${sheepId}.svg`)} alt={sheepId} />

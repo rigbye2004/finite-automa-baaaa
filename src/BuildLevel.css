@@ -41,6 +41,27 @@
   background: #e0e0e0;
 }
 
+.build-level .prev-btn {
+  width: calc(100% - 8px);
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: #4FC3F7;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+  transition: background 0.2s;
+}
+
+.build-level .prev-btn:hover {
+  background: #29b6f6;
+}
+
 .build-level .sheep-panel-label {
   background: #4FC3F7;
   color: white;

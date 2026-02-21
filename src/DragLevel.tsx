@@ -293,17 +293,10 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     return path1.every((sheep, index) => sheep === path2[index])
   }
 
-  const handleDropOnGraph = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault()
-    const sheepType = event.dataTransfer.getData('text/sheep')
-    const fromEdgeId = event.dataTransfer.getData('text/fromEdge')
+  const dropAtPosition = useCallback((sheepType: string, fromEdgeId: string | null, clientX: number, clientY: number) => {
+    if (!reactFlowInstance.current) return
 
-    if (!sheepType || !reactFlowInstance.current) return
-
-    const point = reactFlowInstance.current.screenToFlowPosition({
-      x: event.clientX,
-      y: event.clientY,
-    })
+    const point = reactFlowInstance.current.screenToFlowPosition({ x: clientX, y: clientY })
 
     let best = { id: null as string | null, dist: Infinity }
     edges.forEach((edge) => {
@@ -313,22 +306,16 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
       const sourceCenter = { x: sourceNode.position.x + 60, y: sourceNode.position.y + 50 }
       const targetCenter = { x: targetNode.position.x + 60, y: targetNode.position.y + 50 }
-      
+
       let d: number
-      
       if (edge.source === edge.target) {
-        const loopCenter = {
-          x: sourceCenter.x,
-          y: sourceCenter.y - 170
-        }
+        const loopCenter = { x: sourceCenter.x, y: sourceCenter.y - 170 }
         d = Math.hypot(point.x - loopCenter.x, point.y - loopCenter.y)
       } else {
         d = pointToSegmentDistance(point, sourceCenter, targetCenter)
       }
-      
-      if (d < best.dist) {
-        best = { id: edge.id, dist: d }
-      }
+
+      if (d < best.dist) best = { id: edge.id, dist: d }
     })
 
     if (best.id && best.dist < 100) {
@@ -345,15 +332,20 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       )
     } else if (fromEdgeId) {
       setEdges((eds) =>
-        eds.map((edge) => {
-          if (edge.id === fromEdgeId) {
-            return { ...edge, label: '?', data: { ...edge.data, sheep: null } }
-          }
-          return edge
-        })
+        eds.map((edge) =>
+          edge.id === fromEdgeId ? { ...edge, label: '?', data: { ...edge.data, sheep: null } } : edge
+        )
       )
     }
   }, [edges, nodes, setEdges])
+
+  const handleDropOnGraph = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    const sheepType = event.dataTransfer.getData('text/sheep')
+    const fromEdgeId = event.dataTransfer.getData('text/fromEdge') || null
+    if (!sheepType) return
+    dropAtPosition(sheepType, fromEdgeId, event.clientX, event.clientY)
+  }, [dropAtPosition])
 
   const onEdgeClick = useCallback((_: any, edge: Edge) => {
     if (selectedSheep) {
@@ -618,6 +610,18 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
             <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
           </button>
           <div className="sheep-panel-label">L{currentLevelId}</div>
+          {currentLevelId > 1 && (
+            <button
+              className="prev-btn"
+              onClick={() => {
+                resetAnimation()
+                setCurrentLevelId(currentLevelId - 1)
+              }}
+              aria-label="Previous level"
+            >
+              ←
+            </button>
+          )}
           <div className="sheep-list">
             {Array.from({ length: DRAG_LEVEL_COUNT }, (_, raw) => {
               const i = DRAG_LEVEL_COUNT - 1 - raw  // reverse: bottom-up
@@ -706,10 +710,11 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
             </div>
 
             <footer className={`footer ${showNudge ? 'nudge-pulse' : ''}`}>
-              <SheepPalette 
+              <SheepPalette
                 onSelectSheep={onSelectSheep}
                 selectedSheep={selectedSheep}
                 availableSheep={levelConfig.availableSheep}
+                onTouchDrop={(sheepId, clientX, clientY) => dropAtPosition(sheepId, null, clientX, clientY)}
               />
 
               <div className="controls">
