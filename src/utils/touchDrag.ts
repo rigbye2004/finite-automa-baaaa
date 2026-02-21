@@ -45,19 +45,29 @@ export function startTouchDrag(
     }
   }
 
-  const onEnd = (endEvent: TouchEvent) => {
+  const cleanup = () => {
     document.removeEventListener('touchmove', onMove)
     document.removeEventListener('touchend', onEnd)
+    document.removeEventListener('touchcancel', onCancel)
     if (ghost) {
       document.body.removeChild(ghost)
       ghost = null
     }
+  }
+
+  const onEnd = (endEvent: TouchEvent) => {
+    cleanup()
     if (hasMoved) {
       const t = endEvent.changedTouches[0]
       onDrop(sheepId, t.clientX, t.clientY)
     }
   }
 
+  const onCancel = () => {
+    cleanup()
+  }
+
   document.addEventListener('touchmove', onMove, { passive: false })
   document.addEventListener('touchend', onEnd)
+  document.addEventListener('touchcancel', onCancel)
 }
