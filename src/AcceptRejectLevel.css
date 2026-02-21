@@ -42,11 +42,11 @@
 }
 
 .accept-reject-level .prev-btn {
-  width: calc(100% - 8px);
-  height: 32px;
+  width: 38px;
+  height: 38px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #4FC3F7;
   color: white;
   cursor: pointer;
@@ -54,7 +54,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 20px;
+  font-size: 16px;
   transition: background 0.2s;
 }
 
@@ -865,6 +865,12 @@
     height: 18px;
   }
 
+  .accept-reject-level .prev-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
   .accept-reject-level .main-content {
     padding: 8px 12px;
   }
@@ -1034,6 +1040,12 @@
   .accept-reject-level .home-btn {
     width: 30px;
     height: 30px;
+  }
+
+  .accept-reject-level .prev-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
   }
   
   .accept-reject-level .graph-area {

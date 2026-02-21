@@ -53,11 +53,11 @@ body {
 }
 
 .prev-btn {
-  width: calc(100% - 8px);
-  height: 32px;
+  width: 38px;
+  height: 38px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #4FC3F7;
   color: white;
   cursor: pointer;
@@ -65,7 +65,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 20px;
+  font-size: 16px;
   transition: background 0.2s;
 }
 
@@ -735,6 +735,12 @@ body {
     height: 18px;
   }
 
+  .prev-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
   .main-content {
     padding: 8px 12px;
   }
@@ -888,6 +894,12 @@ body {
   .home-btn {
     width: 28px;
     height: 28px;
+  }
+
+  .prev-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
   }
   
   .graph-area {
