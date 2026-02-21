@@ -1,4 +1,5 @@
 import { useAccessibility } from '../contexts/AccessibilityContext'
+import { CloseIcon } from './Icons'
 import './AccessibilityPanel.css'
 import { useEffect, useRef } from 'react'
 
@@ -83,7 +84,7 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
             onClick={onClose}
             aria-label="Close"
           >
-            ✕
+            <CloseIcon />
           </button>
         </header>
 
@@ -211,13 +212,13 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
             className="a11y-reset-btn"
             onClick={resetSettings}
           >
-            ↺ Start again
+            Start again
           </button>
           <button
             className="a11y-save-btn"
             onClick={onClose}
           >
-            Save ✓
+            Save
           </button>
         </footer>
       </div>

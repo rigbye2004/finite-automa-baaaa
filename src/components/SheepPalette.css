@@ -71,7 +71,7 @@
   }
 
   .sheep-btn {
-    flex: 0 0 52px;
+    flex: 0 0 44px;
     padding: 4px;
   }
 
@@ -79,5 +79,23 @@
     width: 100%;
     height: auto;
     aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .sheep-palette {
+    gap: 4px;
+  }
+
+  .sheep-btn {
+    flex: 0 0 40px;
+    padding: 3px;
+  }
+}
+
+@media (max-width: 360px) {
+  .sheep-btn {
+    flex: 0 0 36px;
+    padding: 2px;
   }
 }

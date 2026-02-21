@@ -11,6 +11,7 @@ import { withBase } from './withBase'
 import { startTouchDrag } from './utils/touchDrag'
 import './BuildLevel.css'
 import StateNode from './components/StateNode'
+import { EyeIcon } from './components/Icons'
 import PatternDisplay from './components/PatternDisplay'
 import CustomEdge from './components/CustomEdge'
 import { useGameProgress } from './contexts/GameProgressContext'
@@ -1249,11 +1250,11 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                   onClick={startAnimation}
                   disabled={isAnimating}
                 >
-                  {isAnimating ? '👁 Watching...' : '👁 Watch Path'}
+                  {isAnimating ? <><EyeIcon /> Watching...</> : <><EyeIcon /> Watch Path</>}
                 </button>
               )}
               <button className="btn reset-btn" onClick={handleReset}>
-                ↺ Reset
+                Reset
               </button>
               {isDevMode() && (
                 <button 

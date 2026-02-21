@@ -661,14 +661,14 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
                   />
                   {!isAnimating && (
                     <button className="watch-again-btn" onClick={startAnimation}>
-                      🔁 Watch the path again
+                      Watch the path again
                     </button>
                   )}
                 </>
               ) : (
                 <>
                   {isAnimating ? (
-                    <div className="watching-indicator">🐑 Watching the path...</div>
+                    <div className="watching-indicator">Watching the path...</div>
                   ) : (
                     <>
                       <DetailedFeedback
@@ -676,7 +676,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
                         onContinue={isLastQuestion ? handleLevelComplete : handleNext}
                       />
                       <button className="watch-again-btn" onClick={startAnimation}>
-                        🔁 Watch the path again
+                        Watch the path again
                       </button>
                     </>
                   )}

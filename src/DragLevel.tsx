@@ -10,6 +10,7 @@ import { withBase } from './withBase'
 import './DragLevel.css'
 import StateNode from './components/StateNode'
 import SheepPalette from './components/SheepPalette'
+import { EyeIcon, CheckIcon } from './components/Icons'
 import PatternDisplay from './components/PatternDisplay'
 import CustomEdge from './components/CustomEdge'
 import { useGameProgress } from './contexts/GameProgressContext'
@@ -723,7 +724,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                   onClick={handleSubmit}
                   disabled={levelComplete || isAnimating}
                 >
-                  ✓ Submit
+                  <CheckIcon /> Submit
                 </button>
                 {showDetailedFeedback && (
                   <button
@@ -731,11 +732,11 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                     onClick={startAnimation}
                     disabled={isAnimating}
                   >
-                    {isAnimating ? '👁 Watching...' : '👁 Watch Path'}
+                    {isAnimating ? <><EyeIcon /> Watching...</> : <><EyeIcon /> Watch Path</>}
                   </button>
                 )}
                 <button className="btn reset-btn" onClick={handleReset}>
-                  ↺ Reset
+                  Reset
                 </button>
                 {isDevMode() && (
                   <button 
