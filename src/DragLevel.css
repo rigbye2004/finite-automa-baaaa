@@ -28,7 +28,7 @@ body {
   border-right: 2px solid #C8E6C9;
   width: 62px;
   min-width: 62px;
-  overflow-y: auto;
+  overflow-y: hidden;
   flex-shrink: 0;
 }
 
@@ -89,8 +89,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin-top: 10px;
+  gap: clamp(2px, 0.6vh, 6px);
+  margin-top: clamp(4px, 1vh, 10px);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
 }
 
 .sheep-slot {
@@ -100,8 +104,19 @@ body {
   justify-content: center;
   width: 34px;
   height: 34px;
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 48px;
   border-radius: 10px;
   position: relative;
+}
+
+.sheep-slot img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
 }
 
 .sheep-slot.status-future {
@@ -888,55 +903,82 @@ body {
     height: 100vh;
     overflow: hidden;
   }
-  
+
+  .main-content {
+    padding: 4px 8px;
+    overflow: hidden;
+  }
+
+  .header-compact {
+    padding: 2px 0 4px;
+  }
+
+  /* Reset tablet's flex:none / width:100% so the container fills height */
   .game-container {
     flex-direction: row;
+    flex: 1;
+    width: auto;
+    min-height: 0;
   }
-  
+
   .graph-column {
     flex: 1;
     min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
-  
+
   .graph-area {
     min-height: unset;
     height: auto;
     max-height: unset;
     flex: 1;
+    min-height: 0;
   }
-  
+
   .sidebar {
-    width: 240px;
-    min-width: 240px;
-    flex-basis: 240px;
-    max-height: calc(100dvh - 60px);
+    width: 220px;
+    min-width: 220px;
+    flex-basis: 220px;
+    max-height: 100vh;
     overflow-y: auto;
   }
-  
+
   .sheep-panel {
-    width: 48px;
-    min-width: 48px;
-    padding: 6px 3px;
+    width: 44px;
+    min-width: 44px;
+    padding: 4px 2px;
   }
-  
+
   .sheep-slot {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
-  
+
   .sheep-slot img {
-    width: 22px !important;
-    height: 22px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
-  
+
   .footer {
-    padding: 4px 8px;
+    padding: 3px 6px;
+    gap: 4px;
   }
-  
+
   .footer .btn {
-    padding: 0.3em 0.6em;
-    font-size: 12px;
-    min-height: 2em;
+    padding: 0.3em 0.5em;
+    font-size: 11px;
+    min-height: 1.8em;
+  }
+
+  .pattern-display {
+    padding: 6px 8px;
+  }
+
+  .pattern-display h3 {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
   }
 }
 

@@ -18,7 +18,7 @@
   border-right: 2px solid #C8E6C9;
   width: 62px;
   min-width: 62px;
-  overflow-y: auto;
+  overflow-y: hidden;
   flex-shrink: 0;
 }
 
@@ -79,8 +79,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin-top: 10px;
+  gap: clamp(2px, 0.6vh, 6px);
+  margin-top: clamp(4px, 1vh, 10px);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
 }
 
 .build-level .sheep-slot {
@@ -90,8 +94,19 @@
   justify-content: center;
   width: 34px;
   height: 34px;
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 48px;
   border-radius: 10px;
   position: relative;
+}
+
+.build-level .sheep-slot img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
 }
 
 .build-level .sheep-slot.status-future {
@@ -1188,88 +1203,108 @@
     height: 100vh;
     overflow: hidden;
   }
-  
+
+  .build-level .main-content {
+    padding: 4px 8px;
+    overflow: hidden;
+  }
+
+  /* Reset tablet's flex:none / width:100% / flex-wrap:wrap */
   .build-level .game-container {
+    flex: 1;
+    width: auto;
     flex-wrap: nowrap;
     flex-direction: row;
+    min-height: 0;
   }
-  
+
   .build-level .toolbar {
     width: auto;
     flex-direction: column;
     flex-wrap: nowrap;
-    padding: 8px;
-    gap: 6px;
-    min-width: 140px;
-    max-width: 160px;
-    max-height: calc(100dvh - 60px);
+    order: 0;
+    padding: 6px;
+    gap: 4px;
+    min-width: 120px;
+    max-width: 140px;
+    max-height: 100vh;
     overflow-y: auto;
   }
 
   .build-level .toolbar-divider {
     display: block;
   }
-  
+
+  .build-level .tool-cell {
+    min-height: 40px;
+    padding: 6px 4px;
+  }
+
   .build-level .tool-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .build-level .tool-delete {
     grid-column: span 2;
   }
-  
+
   .build-level .toolbar-sheep {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-  
+
   .build-level .graph-column {
     flex: 1;
     min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
-  
+
+  /* Reset tablet's flex:none / height/min-height/max-height */
   .build-level .graph-area {
-    min-height: unset;
+    flex: 1;
+    min-height: 0;
     height: auto;
     max-height: unset;
-    flex: 1;
+    width: auto;
+    min-width: 0;
   }
-  
+
   .build-level .sidebar {
-    width: 220px;
-    min-width: 220px;
-    flex-basis: 220px;
-    max-height: calc(100dvh - 60px);
+    width: 200px;
+    min-width: 200px;
+    flex-basis: 200px;
+    max-height: 100vh;
     overflow-y: auto;
   }
-  
+
   .build-level .sheep-panel {
-    width: 48px;
-    min-width: 48px;
-    padding: 6px 3px;
+    width: 44px;
+    min-width: 44px;
+    padding: 4px 2px;
   }
-  
+
   .build-level .sheep-slot {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
-  
+
   .build-level .sheep-slot img {
-    width: 20px !important;
-    height: 20px !important;
+    width: 18px !important;
+    height: 18px !important;
   }
-  
+
   .build-level .footer {
-    padding: 4px 8px;
+    padding: 3px 6px;
   }
-  
+
   .build-level .footer .btn {
-    padding: 0.3em 0.5em;
+    padding: 0.3em 0.4em;
     font-size: 11px;
     min-height: 1.8em;
   }
-  
 }
 
 /* Watch Path Button */
