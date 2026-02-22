@@ -65,6 +65,10 @@ function AppContent() {
 
   return (
     <>
+      <div className="rotate-overlay" aria-hidden="true">
+        <p>Please rotate your device to portrait mode</p>
+      </div>
+
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>

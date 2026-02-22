@@ -2,6 +2,29 @@
   box-sizing: border-box;
 }
 
+.rotate-overlay {
+  display: none;
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .rotate-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+  }
+
+  .rotate-overlay p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2e7d32;
+  }
+}
+
 body {
   margin: 0;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
