@@ -823,7 +823,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       <div className="main-content">
       <header className="header-compact">
         <div style={{flex:1}} />
-        <BadgeNotch badges={getEarnedBadges()} />
         <button className="hint-button" onClick={handleHintClick} title="Show me how">
           ?
         </button>

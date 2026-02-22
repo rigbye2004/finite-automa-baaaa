@@ -84,6 +84,7 @@
   min-height: 0;
   overflow: hidden;
   width: 100%;
+  padding: 4px 2px;
 }
 
 .accept-reject-level .sheep-slot {

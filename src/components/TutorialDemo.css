@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   animation: demo-overlay-in 0.2s ease;
 }
 
