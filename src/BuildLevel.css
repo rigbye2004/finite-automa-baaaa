@@ -85,6 +85,7 @@
   min-height: 0;
   overflow: hidden;
   width: 100%;
+  padding: 4px 2px;
 }
 
 .build-level .sheep-slot {
@@ -1077,11 +1078,15 @@
     height: 34px;
   }
 
+  .build-level .sheep-slot.status-current {
+    transform: none;
+  }
+
   .build-level .sheep-slot img {
     width: 24px !important;
     height: 24px !important;
   }
-  
+
   .build-level .sheep-badge {
     width: 16px;
     height: 16px;
@@ -1194,13 +1199,13 @@
   }
   
   .build-level .home-btn {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
   }
 
   .build-level .prev-btn {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     font-size: 13px;
   }
   
