@@ -790,6 +790,10 @@ body {
     height: 40px;
   }
 
+  .sheep-slot.status-current {
+    transform: none;
+  }
+
   .sheep-slot img {
     width: 100% !important;
     height: auto !important;

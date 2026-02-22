@@ -556,6 +556,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
       <div className="main-content">
         <header className="header-compact">
           <div style={{flex:1}} />
+          <BadgeNotch badges={getEarnedBadges()} />
           <button className="hint-button" onClick={handleHintClick} aria-label="Get a hint">
             ?
           </button>

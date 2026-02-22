@@ -768,19 +768,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                         {feedbackData.matchedPatterns.length}/{feedbackData.matchedPatterns.length}
                       </span>
                     </div>
-                    {sessionBadges.length > 0 && (
-                      <div className="badges-earned">
-                        <h4 className="badges-earned-title">Badges Earned</h4>
-                        <div className="badges-earned-list">
-                          {sessionBadges.map(badge => (
-                            <div key={badge.id} className="badges-earned-item">
-                              <span className="badges-earned-icon">{badge.icon || '⭐'}</span>
-                              <span className="badges-earned-name">{badge.name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                     <div className="final-buttons" style={{ marginTop: '12px' }}>
                       {!isLastLevel ? (
                         <button
