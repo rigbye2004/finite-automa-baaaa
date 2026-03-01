@@ -10,6 +10,7 @@ import { withBase } from './withBase'
 import './AcceptRejectLevel.css'
 import StateNode from './components/StateNode'
 import { useGameProgress } from './contexts/GameProgressContext'
+import { useAccessibility } from './contexts/AccessibilityContext'
 import type { Badge } from './contexts/GameProgressContext'
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
@@ -70,29 +71,30 @@ function SheepEdge({
 
   if (isSelfLoop) {
     const nodeCenter = (sourceX + targetX) / 2
-    const nodeTop = Math.min(sourceY, targetY) - 45
+    const nodeTop = Math.min(sourceY, targetY) - 40
 
-    const loopHeight = 80
-    const loopWidth = 40
-    const gapSize = 12
+    const loopHeight = 50
+    const loopWidth = 30
+    const gapSize = 10
 
     const startX = nodeCenter - gapSize
     const startY = nodeTop
     const endX = nodeCenter + gapSize
     const endY = nodeTop
+    const peakY = nodeTop - loopHeight
 
     edgePath = `
       M ${startX} ${startY}
-      C ${startX - loopWidth} ${startY - loopHeight * 0.3},
-        ${startX - loopWidth} ${startY - loopHeight},
-        ${nodeCenter} ${startY - loopHeight}
-      C ${endX + loopWidth} ${endY - loopHeight},
-        ${endX + loopWidth} ${endY - loopHeight * 0.3},
+      C ${startX - loopWidth} ${startY - loopHeight * 0.4},
+        ${startX - loopWidth * 0.5} ${peakY},
+        ${nodeCenter} ${peakY}
+      C ${endX + loopWidth * 0.5} ${peakY},
+        ${endX + loopWidth} ${endY - loopHeight * 0.4},
         ${endX} ${endY}
     `
-    
+
     labelX = nodeCenter
-    labelY = nodeTop - loopHeight - 45
+    labelY = peakY - 30
   } else {
     const isBidirectional = data?.bidirectional === true
     const offsetDirection = source > target ? 1 : -1
@@ -236,11 +238,23 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
 
   const questionStartTime = useRef<number>(Date.now())
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null)
+
+  const { settings: a11ySettings } = useAccessibility()
+
+  // Re-fit the graph whenever font size changes (CSS zoom changes ReactFlow's
+  // coordinate measurements, so a fresh fitView is needed to fix edge positions)
+  useEffect(() => {
+    if (!reactFlowInstance.current) return
+    const timer = setTimeout(() => {
+      reactFlowInstance.current?.fitView({ padding: 0.5, duration: 0, minZoom: 0.3, maxZoom: 1.5 })
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [a11ySettings.fontSize])
   
   const handleFitView = useCallback(() => {
     if (reactFlowInstance.current) {
       reactFlowInstance.current.fitView({
-        padding: 0.4,
+        padding: 0.5,
         duration: 0,
         minZoom: 0.3,
         maxZoom: 1.5
@@ -574,8 +588,8 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
               reactFlowInstance.current = instance
             }}
             fitView
-            fitViewOptions={{ 
-              padding: 0.4,
+            fitViewOptions={{
+              padding: 0.5,
               minZoom: 0.3,
               maxZoom: 1.5,
             }}

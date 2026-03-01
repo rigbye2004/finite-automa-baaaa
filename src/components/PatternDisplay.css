@@ -37,14 +37,14 @@
 
 /* Responsive sheep images */
 .pattern-item img {
-  width: var(--sheep-img-sm, 56px);
-  height: var(--sheep-img-sm, 56px);
+  width: clamp(32px, min(4vw, 7vh), 56px);
+  height: clamp(32px, min(4vw, 7vh), 56px);
 }
 
 /* Responsive farmer icon */
 .pattern-item .farmer-icon {
-  width: var(--sheep-img-md, 60px);
-  height: var(--sheep-img-md, 60px);
+  width: clamp(36px, min(4.5vw, 7.5vh), 60px);
+  height: clamp(36px, min(4.5vw, 7.5vh), 60px);
 }
 
 .pattern-end {

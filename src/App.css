@@ -38,7 +38,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100dvh;
-  overflow: hidden;
+  overflow-y: auto;
   text-align: center;
   padding: 20px;
 }
@@ -536,7 +536,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100dvh;
-  overflow: hidden;
+  overflow-y: auto;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -597,14 +597,15 @@ body {
 /* Mobile menu adjustments */
 @media (max-width: 500px) {
   .menu-screen {
-    padding: 12px 16px 80px;
-    justify-content: center;
+    padding: 12px 16px 70px;
+    justify-content: flex-start;
     overflow-y: auto;
     gap: 0;
   }
 
   .menu-header {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    margin-top: 8px;
   }
 
   .menu-header img {
@@ -613,21 +614,16 @@ body {
   }
 
   .menu-subtitle {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
 
   .menu-farmer {
-    margin-bottom: 12px;
-  }
-
-  .menu-farmer img {
-    width: 70px;
-    height: 70px;
+    display: none;
   }
 
   .menu-buttons {
     width: 100%;
-    gap: 10px;
+    gap: 8px;
   }
 
   .level-btn {
@@ -669,6 +665,34 @@ body {
   .menu-screen {
     max-width: 700px;
     margin: 0 auto;
+  }
+}
+
+/* Short landscape screens (e.g. Nest Hub 1024x600) */
+@media (max-height: 650px) and (min-width: 600px) {
+  .menu-screen {
+    padding: 12px 20px;
+  }
+
+  .menu-farmer {
+    margin: 4px 0;
+  }
+
+  .menu-farmer img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .menu-subtitle {
+    margin-bottom: 4px;
+  }
+
+  .menu-buttons {
+    gap: 8px;
+  }
+
+  .level-btn {
+    padding: 12px 20px;
   }
 }
 
@@ -720,6 +744,48 @@ body {
     top: 0;
     right: 0;
     margin-bottom: 4px;
+  }
+}
+
+/* Short landscape viewport (e.g. Nest Hub 1024×600) */
+@media (max-height: 650px) and (min-height: 501px) and (orientation: landscape) {
+  .menu-screen {
+    padding: 10px 20px;
+  }
+
+  .menu-header {
+    margin-bottom: 2px;
+  }
+
+  .menu-subtitle {
+    margin: 0 0 2px 0;
+  }
+
+  .menu-farmer {
+    margin: 2px 0;
+  }
+
+  .menu-farmer img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .menu-buttons {
+    gap: 8px;
+  }
+
+  .level-btn {
+    padding: 10px 20px;
+  }
+
+  .level-btn-icon {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+  }
+
+  .menu-hint {
+    margin-top: 6px;
+    font-size: 0.85rem;
   }
 }
 

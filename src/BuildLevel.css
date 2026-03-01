@@ -274,7 +274,7 @@
 
 /* Toolbar (left sidebar) */
 .build-level .toolbar {
-  width: clamp(160px, 15vw, 210px);
+  width: clamp(200px, 16vw, 250px);
   background: white;
   border-radius: 16px;
   padding: 14px;
@@ -284,6 +284,7 @@
   gap: 10px;
   flex-shrink: 0;
   user-select: none;
+  overflow: hidden;
 }
 
 /* ── Arrow capsule (one button, two visual halves) ── */
@@ -911,16 +912,18 @@
   .build-level .game-container {
     flex: 1;
     flex-wrap: wrap;
+    align-content: flex-start;
     width: 100%;
     min-height: 0;
   }
-  
+
   .build-level .toolbar {
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
+    align-self: flex-start;
     gap: 8px;
     padding: 10px 12px;
     order: -1;
@@ -1097,14 +1100,38 @@
     padding: 6px 8px;
   }
   
+  /* Switch to grid so patterns get a guaranteed slot at the top */
   .build-level .game-container {
-    gap: 8px;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 6px;
   }
-  
+
+  /* Patterns panel first, compact */
+  .build-level .sidebar {
+    grid-row: 1;
+    width: 100%;
+    max-height: 130px;
+    overflow-y: auto;
+    flex-basis: auto;
+  }
+
+  /* Toolbar second */
+  .build-level .toolbar {
+    grid-row: 2;
+  }
+
+  /* Graph fills remaining space */
+  .build-level .graph-column {
+    grid-row: 3;
+    min-height: 0;
+  }
+
   .build-level .graph-area {
-    min-height: 200px;
-    height: 35vh;
-    max-height: 320px;
+    flex: 1;
+    height: auto;
+    max-height: none;
+    min-height: 120px;
     border-radius: 12px;
   }
   
@@ -1165,13 +1192,38 @@
     height: 2.2em;
     font-size: var(--font-size-base, 16px);
   }
-  
+
   .build-level .result-icon {
     font-size: 36px;
   }
-  
+
   .build-level .result-card h3 {
     font-size: 1.1rem;
+  }
+
+  /* Compact pattern display in sidebar so it fits in the 130px slot */
+  .build-level .sidebar .pattern-display {
+    padding: 5px 7px;
+  }
+
+  .build-level .sidebar .pattern-display h3 {
+    font-size: 0.75rem;
+    margin-bottom: 3px;
+  }
+
+  .build-level .sidebar .pattern-item {
+    padding: 3px 5px;
+    gap: 3px;
+  }
+
+  .build-level .sidebar .pattern-item img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .build-level .sidebar .pattern-item .farmer-icon {
+    width: 28px !important;
+    height: 28px !important;
   }
 }
 
@@ -1210,10 +1262,12 @@
   }
   
   .build-level .graph-area {
-    min-height: 150px;
-    height: 25vh;
+    flex: 1;
+    height: auto;
+    max-height: none;
+    min-height: 100px;
   }
-  
+
 }
 
 /* Landscape phone */
@@ -1397,6 +1451,7 @@
   border-radius: 10px;
   padding: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 .build-level .pattern-display h3 {
@@ -1418,16 +1473,21 @@
   padding: 8px 10px;
   background: #f5f5f5;
   border-radius: 8px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 .build-level .pattern-display .pattern-item img {
-  width: var(--sheep-img-sm, 60px);
-  height: var(--sheep-img-sm, 60px);
+  width: clamp(28px, 3.2vw, 40px);
+  height: clamp(28px, 3.2vw, 40px);
+}
+
+.build-level .pattern-display .pattern-item .farmer-icon {
+  width: clamp(34px, 3.8vw, 48px);
+  height: clamp(34px, 3.8vw, 48px);
 }
 
 .build-level .pattern-display .pattern-arrow {
-  font-size: clamp(14px, 2vw, 20px);
+  font-size: clamp(12px, 1.5vw, 18px);
   color: #888;
 }
 

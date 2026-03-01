@@ -293,7 +293,7 @@ body {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 .controls {
@@ -396,11 +396,7 @@ body {
 }
 
 .patterns-with-score .pattern-display h3 {
-  margin-bottom: 16px;
-} 
-
-.patterns-with-score .pattern-display h3 {
-  padding-right: 90px;
+  padding-right: 0;
 }
 
 .sidebar > * {
@@ -1028,7 +1024,12 @@ body {
 .sheep-palette {
   display: flex;
   gap: 4px;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sheep-palette .sheep-item {
@@ -1079,8 +1080,8 @@ body {
 }
 
 .pattern-display .pattern-item img {
-  width: var(--sheep-img-sm, 60px);
-  height: var(--sheep-img-sm, 60px);
+  width: clamp(32px, min(4vw, 7vh), 60px);
+  height: clamp(32px, min(4vw, 7vh), 60px);
 }
 
 .pattern-display .pattern-arrow {
@@ -1128,4 +1129,56 @@ body {
   font-weight: 600;
   color: #5D4037;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
+}
+
+/* ── Phone overrides (must be at end of file so they beat the general rules above) ── */
+@media (max-width: 500px) {
+  /* Grid layout: patterns on top (natural height), graph+footer fills remaining space.
+     This guarantees all patterns are visible without scrolling on any phone. */
+  .game-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 8px;
+  }
+
+  /* Sidebar goes to row 1 — takes its natural height, never scrolls */
+  .sidebar {
+    grid-row: 1;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+    flex: none;
+  }
+
+  /* Graph column fills whatever height remains in row 2 */
+  .graph-column {
+    grid-row: 2;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Graph area expands to fill graph column */
+  .graph-area {
+    flex: 1;
+    height: auto;
+    min-height: 100px;
+    max-height: none;
+  }
+
+  /* Compact pattern display */
+  .pattern-display .pattern-list {
+    gap: 3px;
+  }
+
+  .pattern-display .pattern-item {
+    padding: 3px 5px;
+    gap: 3px;
+  }
+
+  .pattern-display .pattern-item img {
+    width: clamp(26px, 6vw, 36px);
+    height: clamp(26px, 6vw, 36px);
+  }
 }

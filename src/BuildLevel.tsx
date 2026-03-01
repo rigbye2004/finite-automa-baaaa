@@ -15,6 +15,7 @@ import { EyeIcon } from './components/Icons'
 import PatternDisplay from './components/PatternDisplay'
 import CustomEdge from './components/CustomEdge'
 import { useGameProgress } from './contexts/GameProgressContext'
+import { useAccessibility } from './contexts/AccessibilityContext'
 import type { Badge } from './contexts/GameProgressContext'
 import { getBuildLevelConfig, BUILD_LEVEL_COUNT, type BuildLevelConfig } from './buildLevelConfigs'
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
@@ -146,7 +147,17 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   } = useSheepAnimation()
 
   const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
-  
+  const { settings: a11ySettings } = useAccessibility()
+
+  useEffect(() => {
+    if (!reactFlowInstance.current) return
+    const timer = setTimeout(() => {
+      reactFlowInstance.current?.fitView({ padding: 0.4, duration: 0, minZoom: 0.3, maxZoom: 1.5 })
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [a11ySettings.fontSize])
+
+
   const [sessionBadges, setSessionBadges] = useState<Badge[]>([])
 
   useEffect(() => {

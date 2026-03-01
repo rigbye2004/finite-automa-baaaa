@@ -14,6 +14,7 @@ import { EyeIcon, CheckIcon } from './components/Icons'
 import PatternDisplay from './components/PatternDisplay'
 import CustomEdge from './components/CustomEdge'
 import { useGameProgress } from './contexts/GameProgressContext'
+import { useAccessibility } from './contexts/AccessibilityContext'
 import type { Badge } from './contexts/GameProgressContext'
 import { getDragLevelConfig, DRAG_LEVEL_COUNT, type DragLevelConfig } from './dragLevelConfigs'
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
@@ -124,6 +125,15 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   const [sessionBadges, setSessionBadges] = useState<Badge[]>([])
 
   const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
+  const { settings: a11ySettings } = useAccessibility()
+
+  useEffect(() => {
+    if (!reactFlowInstance.current) return
+    const timer = setTimeout(() => {
+      reactFlowInstance.current?.fitView({ padding: 0.4, duration: 0, minZoom: 0.3, maxZoom: 1.5 })
+    }, 50)
+    return () => clearTimeout(timer)
+  }, [a11ySettings.fontSize])
 
   useEffect(() => {
     if (currentLevelId <= DRAG_LEVEL_COUNT) {

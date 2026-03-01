@@ -658,6 +658,11 @@
   display: none !important;
 }
 
+/* Allow self-loop edges to render above the SVG boundary without clipping */
+.react-flow__edges {
+  overflow: visible;
+}
+
 /* Level Complete Overlay */
 .level-complete-overlay {
   position: fixed;

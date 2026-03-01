@@ -115,14 +115,106 @@
   --font-scale: 1.25;
 }
 
-/* Use zoom to scale the entire UI proportionally,
-   so hardcoded px/rem/em font sizes also respond. */
-[data-font-size="large"] #root {
+/* Apply zoom to <html> so that dvh/vw units automatically shrink
+   to match — meaning 100dvh always fills the viewport after zoom,
+   with no height compensation needed anywhere else. */
+[data-font-size="large"] {
   zoom: 1.125;
+  /* Cap html at exactly viewport height after zoom so nothing overflows */
+  height: calc(100vh / 1.125);
+  overflow: hidden;
 }
 
-[data-font-size="x-large"] #root {
+[data-font-size="x-large"] {
   zoom: 1.25;
+  height: calc(100vh / 1.25);
+  overflow: hidden;
+}
+
+/* body has min-height: 100dvh in multiple CSS files which fights the html
+   height cap above — zero it out so body stays inside the zoomed html. */
+[data-font-size="large"] body,
+[data-font-size="x-large"] body {
+  min-height: 0 !important;
+  overflow: hidden;
+}
+
+/* All level containers use height: 100dvh. CSS zoom on <html> does NOT
+   shrink dvh units, so compensate explicitly for each zoom level. */
+
+[data-font-size="large"] .accept-reject-level,
+[data-font-size="large"] .app,
+[data-font-size="large"] .build-level {
+  height: calc(100dvh / 1.125);
+}
+
+[data-font-size="x-large"] .accept-reject-level,
+[data-font-size="x-large"] .app,
+[data-font-size="x-large"] .build-level {
+  height: calc(100dvh / 1.25);
+}
+
+/* Compress menu spacing so the zoomed content still fits in the
+   (now smaller in CSS px) 100dvh container. */
+
+[data-font-size="large"] .menu-screen {
+  height: calc(100dvh / 1.125);
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+[data-font-size="large"] .menu-header {
+  margin-bottom: 4px;
+}
+
+[data-font-size="large"] .menu-subtitle {
+  margin-bottom: 4px;
+}
+
+[data-font-size="large"] .menu-farmer {
+  margin: 4px 0;
+}
+
+[data-font-size="large"] .menu-farmer img {
+  width: 64px;
+  height: 64px;
+}
+
+[data-font-size="large"] .menu-buttons {
+  gap: 6px;
+}
+
+[data-font-size="x-large"] .menu-screen {
+  height: calc(100dvh / 1.25);
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+[data-font-size="x-large"] .menu-header {
+  margin-bottom: 2px;
+}
+
+[data-font-size="x-large"] .menu-subtitle {
+  margin-bottom: 2px;
+}
+
+[data-font-size="x-large"] .menu-farmer {
+  margin: 2px 0;
+}
+
+[data-font-size="x-large"] .menu-farmer img {
+  width: 48px;
+  height: 48px;
+}
+
+[data-font-size="x-large"] .menu-buttons {
+  gap: 6px;
+}
+
+/* Reduce button padding for x-large — the 1.25× zoom already makes
+   buttons visually large, so 10px CSS → 12.5px visual padding is plenty. */
+[data-font-size="x-large"] .level-btn {
+  padding: 10px 20px;
 }
 
 
@@ -267,10 +359,15 @@
   font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
 }
 
-/* OpenDyslexic renders ~12% larger than standard fonts at the same px size */
+/* OpenDyslexic renders ~12% larger than standard fonts at the same px size.
+   Shrink rem-based button text directly since body font-size doesn't affect rem. */
 .dyslexia-font {
   font-size: calc(var(--font-size-base) * 0.80);
 }
+
+.dyslexia-font .level-btn-text { font-size: 1.05rem; }
+.dyslexia-font .level-btn-desc { font-size: 0.875rem; }
+.dyslexia-font .menu-header h1 { font-size: 1.5rem; }
 
 
 /* ============================================
@@ -363,6 +460,181 @@ p {
 .larger-targets .answer-btn {
   padding: 20px 24px;
   font-size: 1.2rem;
+}
+
+/* Tighten menu spacing for relaxed line-height (1.75).
+   Taller text adds ~70px to button heights, so claw it back elsewhere. */
+[data-line-spacing="relaxed"] .menu-screen {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+[data-line-spacing="relaxed"] .menu-header {
+  margin-bottom: 4px;
+}
+
+[data-line-spacing="relaxed"] .menu-subtitle {
+  margin-bottom: 4px;
+}
+
+[data-line-spacing="relaxed"] .menu-farmer {
+  margin: 4px 0;
+}
+
+[data-line-spacing="relaxed"] .menu-farmer img {
+  width: 64px;
+  height: 64px;
+}
+
+[data-line-spacing="relaxed"] .menu-buttons {
+  gap: 6px;
+}
+
+/* Tighten menu spacing for loose line-height (2.0).
+   Taller text adds ~110px, so compress more aggressively. */
+[data-line-spacing="loose"] .menu-screen {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+[data-line-spacing="loose"] .menu-header {
+  margin-bottom: 2px;
+}
+
+[data-line-spacing="loose"] .menu-subtitle {
+  margin-bottom: 2px;
+}
+
+[data-line-spacing="loose"] .menu-farmer {
+  margin: 2px 0;
+}
+
+[data-line-spacing="loose"] .menu-farmer img {
+  width: 48px;
+  height: 48px;
+}
+
+[data-line-spacing="loose"] .menu-buttons {
+  gap: 4px;
+}
+
+[data-line-spacing="loose"] .level-btn {
+  padding: 12px 24px;
+}
+
+/* Combined font-size + line-spacing rules.
+   When both are active the taller text AND smaller container compound,
+   so individual rules aren't enough. Hide the decorative farmer image
+   and compress further. Specificity (0,3,0) beats the single rules. */
+
+[data-font-size="large"][data-line-spacing="relaxed"] .menu-screen {
+  height: calc(100dvh / 1.125);
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+[data-font-size="large"][data-line-spacing="relaxed"] .menu-header { margin-bottom: 2px; }
+[data-font-size="large"][data-line-spacing="relaxed"] .menu-subtitle { margin-bottom: 2px; }
+[data-font-size="large"][data-line-spacing="relaxed"] .menu-farmer { display: none; }
+[data-font-size="large"][data-line-spacing="relaxed"] .menu-buttons { gap: 4px; }
+
+[data-font-size="large"][data-line-spacing="loose"] .menu-screen {
+  height: calc(100dvh / 1.125);
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+[data-font-size="large"][data-line-spacing="loose"] .menu-header { margin-bottom: 2px; }
+[data-font-size="large"][data-line-spacing="loose"] .menu-subtitle { margin-bottom: 2px; }
+[data-font-size="large"][data-line-spacing="loose"] .menu-farmer { display: none; }
+[data-font-size="large"][data-line-spacing="loose"] .menu-buttons { gap: 4px; }
+[data-font-size="large"][data-line-spacing="loose"] .level-btn { padding: 10px 20px; }
+
+[data-font-size="x-large"][data-line-spacing="relaxed"] .menu-screen {
+  height: calc(100dvh / 1.25);
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+[data-font-size="x-large"][data-line-spacing="relaxed"] .menu-header { margin-bottom: 2px; }
+[data-font-size="x-large"][data-line-spacing="relaxed"] .menu-subtitle { margin-bottom: 2px; }
+[data-font-size="x-large"][data-line-spacing="relaxed"] .menu-farmer { display: none; }
+[data-font-size="x-large"][data-line-spacing="relaxed"] .menu-buttons { gap: 4px; }
+
+[data-font-size="x-large"][data-line-spacing="loose"] .menu-screen {
+  height: calc(100dvh / 1.25);
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+[data-font-size="x-large"][data-line-spacing="loose"] .menu-header { margin-bottom: 0; }
+[data-font-size="x-large"][data-line-spacing="loose"] .menu-subtitle { margin-bottom: 0; }
+[data-font-size="x-large"][data-line-spacing="loose"] .menu-farmer { display: none; }
+[data-font-size="x-large"][data-line-spacing="loose"] .menu-buttons { gap: 2px; }
+[data-font-size="x-large"][data-line-spacing="loose"] .level-btn { padding: 4px 20px; }
+
+/* OpenDyslexic has larger internal font metrics so rem-based button
+   text renders slightly taller — compress spacing to compensate. */
+.dyslexia-font .menu-screen {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.dyslexia-font .menu-header { margin-bottom: 6px; }
+.dyslexia-font .menu-subtitle { margin-bottom: 6px; }
+.dyslexia-font .menu-farmer { margin: 4px 0; }
+.dyslexia-font .menu-farmer img { width: 70px; height: 70px; }
+.dyslexia-font .menu-buttons { gap: 10px; }
+
+/* Dyslexia + large font zoom */
+[data-font-size="large"] .dyslexia-font .menu-screen {
+  height: calc(100dvh / 1.125);
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+[data-font-size="large"] .dyslexia-font .menu-header { margin-bottom: 2px; }
+[data-font-size="large"] .dyslexia-font .menu-subtitle { margin-bottom: 2px; }
+[data-font-size="large"] .dyslexia-font .menu-farmer { display: none; }
+[data-font-size="large"] .dyslexia-font .menu-buttons { gap: 6px; }
+[data-font-size="large"] .dyslexia-font .level-btn-text { font-size: 1.0rem; }
+[data-font-size="large"] .dyslexia-font .level-btn-desc { font-size: 0.85rem; }
+[data-font-size="large"] .dyslexia-font .menu-header h1 { font-size: 1.3rem; }
+
+/* Dyslexia + x-large font zoom */
+[data-font-size="x-large"] .dyslexia-font .menu-screen {
+  height: calc(100dvh / 1.25);
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+[data-font-size="x-large"] .dyslexia-font .menu-header { margin-bottom: 0; }
+[data-font-size="x-large"] .dyslexia-font .menu-subtitle { margin-bottom: 0; }
+[data-font-size="x-large"] .dyslexia-font .menu-farmer { display: none; }
+[data-font-size="x-large"] .dyslexia-font .menu-buttons { gap: 4px; }
+[data-font-size="x-large"] .dyslexia-font .level-btn-text { font-size: 0.95rem; }
+[data-font-size="x-large"] .dyslexia-font .level-btn-desc { font-size: 0.8rem; }
+[data-font-size="x-large"] .dyslexia-font .menu-header h1 { font-size: 1.2rem; }
+
+/* Tighten menu chrome when larger targets are active so the
+   extra button padding doesn't push content off screen. */
+.larger-targets .menu-screen {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.larger-targets .menu-header {
+  margin-bottom: 4px;
+}
+
+.larger-targets .menu-subtitle {
+  margin-bottom: 4px;
+}
+
+.larger-targets .menu-farmer {
+  margin: 4px 0;
+}
+
+.larger-targets .menu-farmer img {
+  width: 64px;
+  height: 64px;
+}
+
+.larger-targets .menu-buttons {
+  gap: 8px;
 }
 
 
@@ -621,6 +893,46 @@ p {
     background: white;
     color: black;
   }
+}
+
+
+/* ============================================
+   ACCESSIBILITY PANEL ZOOM COMPENSATION
+   ============================================ */
+
+/* The panel uses max-height: 90vh. With CSS zoom on <html>, vh units don't
+   scale with zoom, so compensate to keep the panel within the visual viewport. */
+[data-font-size="large"] .a11y-panel {
+  max-height: calc(90vh / 1.125);
+}
+
+[data-font-size="x-large"] .a11y-panel {
+  max-height: calc(90vh / 1.25);
+}
+
+[data-font-size="x-large"] .a11y-overlay {
+  padding: 12px;
+}
+
+/* Panel header and footer are UI chrome — prevent line-spacing from bloating
+   them. Specificity (0,2,0)+ beats the (0,1,1) line-spacing rule. */
+.a11y-panel .a11y-header,
+.a11y-panel .a11y-footer {
+  line-height: normal !important;
+}
+
+.a11y-panel .a11y-header *,
+.a11y-panel .a11y-footer * {
+  line-height: normal !important;
+}
+
+/* At x-large zoom, tighten header/footer padding so content area is larger. */
+[data-font-size="x-large"] .a11y-panel .a11y-header {
+  padding: 12px 16px;
+}
+
+[data-font-size="x-large"] .a11y-panel .a11y-footer {
+  padding: 8px 16px;
 }
 
 
