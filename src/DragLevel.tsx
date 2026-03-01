@@ -20,6 +20,7 @@ import { getDragLevelConfig, DRAG_LEVEL_COUNT, type DragLevelConfig } from './dr
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
 
+import { playCorrect, playIncorrect, playHop } from './utils/sounds'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickDragDemo } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
 import { PatternMatchFeedback } from './components/DetailedFeedback'
@@ -126,6 +127,22 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
   const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
   const { settings: a11ySettings } = useAccessibility()
+
+  const handleStepWithSound = useCallback((step: number, currentNode: string) => {
+    handleStepChange(step, currentNode)
+    if (a11ySettings.soundEffects) playHop()
+  }, [handleStepChange, a11ySettings.soundEffects])
+
+  const pendingSoundRef = useRef<'correct' | 'incorrect' | null>(null)
+
+  const handleAllPatternsCompleteWithSound = useCallback((results: any[]) => {
+    handleAllPatternsComplete(results)
+    if (a11ySettings.soundEffects && pendingSoundRef.current) {
+      if (pendingSoundRef.current === 'correct') playCorrect()
+      else playIncorrect()
+      pendingSoundRef.current = null
+    }
+  }, [handleAllPatternsComplete, a11ySettings.soundEffects])
 
   useEffect(() => {
     if (!reactFlowInstance.current) return
@@ -504,6 +521,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     const allPatternsMatched = unmatched.length === 0
 
     if (allPatternsMatched) {
+      pendingSoundRef.current = 'correct'
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
         const newScore = score + 1
@@ -512,7 +530,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         setCompletedLevels(newCompleted)
         saveProgress({ currentLevelId, score: newScore, completedLevels: newCompleted })
       }
-      
+
       setLevelComplete(true)
       setShowDetailedFeedback(true)
       setMessage('Correct')
@@ -537,6 +555,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       )
       if (uniqueBadges.length > 0) setSessionBadges(prev => [...prev, ...uniqueBadges])
     } else {
+      pendingSoundRef.current = 'incorrect'
       setShowDetailedFeedback(true)
       setMessage('')
       setMessageType('error')
@@ -713,8 +732,8 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                 patterns={levelConfig.targetPatterns}
                 isPlaying={isAnimating}
                 onComplete={handleAnimationComplete}
-                onAllPatternsComplete={handleAllPatternsComplete}
-                onStepChange={handleStepChange}
+                onAllPatternsComplete={handleAllPatternsCompleteWithSound}
+                onStepChange={handleStepWithSound}
                 speed={450}
                 reactFlowInstance={reactFlowInstance.current}
               />

@@ -15,6 +15,7 @@ import type { Badge } from './contexts/GameProgressContext'
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
 
+import { playCorrect, playIncorrect, playHop, playLevelComplete } from './utils/sounds'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickARDemo } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
 import { DetailedFeedback, type FeedbackData } from './components/DetailedFeedback'
@@ -314,6 +315,11 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
     resetAnimation,
   } = useSheepAnimation()
   
+  const handleStepWithSound = useCallback((step: number, currentNode: string) => {
+    handleStepChange(step, currentNode)
+    if (a11ySettings.soundEffects) playHop()
+  }, [handleStepChange, a11ySettings.soundEffects])
+
   const { recordCorrectAnswer, recordIncorrectAnswer, awardStars, checkAndAwardBadge, getEarnedBadges } = useGameProgress()
 
   useEffect(() => {
@@ -385,18 +391,27 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
     setShowDemo(true)
   }
 
+  const pendingSoundRef = useRef<'correct' | 'incorrect' | null>(null)
+
   const onAnimationComplete = useCallback((result: { success: boolean; stoppedAt?: string }) => {
     handleAnimationComplete(result)
-  }, [handleAnimationComplete])
+    if (a11ySettings.soundEffects && pendingSoundRef.current) {
+      if (pendingSoundRef.current === 'correct') playCorrect()
+      else playIncorrect()
+      pendingSoundRef.current = null
+    }
+  }, [handleAnimationComplete, a11ySettings.soundEffects])
 
   const handleAnswer = (selectedAnswer: 'accept' | 'reject') => {
     setAnswer(selectedAnswer)
     setShowResult(true)
-    
+
     const isCorrect = selectedAnswer === question.correctAnswer
-    
+
+    pendingSoundRef.current = isCorrect ? 'correct' : 'incorrect'
+
     startAnimation()
-    
+
     if (isCorrect) {
       const timeTaken = Date.now() - questionStartTime.current
       const timeSeconds = timeTaken / 1000
@@ -443,6 +458,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   }
 
   const handleLevelComplete = () => {
+    if (a11ySettings.soundEffects) playLevelComplete()
     clearProgress()
     const percentage = score / ACCEPT_REJECT_QUESTION_COUNT
     let levelStars = 1
@@ -612,7 +628,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
             pattern={question.testPattern}
             isPlaying={isAnimating}
             onComplete={onAnimationComplete}
-            onStepChange={handleStepChange}
+            onStepChange={handleStepWithSound}
             speed={500}
             reactFlowInstance={reactFlowInstance.current}
           />

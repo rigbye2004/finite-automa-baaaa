@@ -157,6 +157,25 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
           </section>
 
           <section className="a11y-section">
+            <h3>Sound</h3>
+
+            <div className="a11y-option">
+              <label className="a11y-toggle">
+                <input
+                  type="checkbox"
+                  checked={settings.soundEffects}
+                  onChange={e => updateSetting('soundEffects', e.target.checked)}
+                />
+                <span className="toggle-switch"></span>
+                <span className="toggle-label">
+                  Sound effects
+                  <small>Plays sounds when sheep move and answers are checked</small>
+                </span>
+              </label>
+            </div>
+          </section>
+
+          <section className="a11y-section">
             <h3>Screen</h3>
 
             <div className="a11y-option">

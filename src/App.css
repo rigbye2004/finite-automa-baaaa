@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 .rotate-overlay {
   display: none;
 }
@@ -30,6 +34,7 @@ body {
   font-family: 'Nunito', 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
   min-height: 100dvh;
+  overflow-x: hidden;
 }
 
 .menu-screen {

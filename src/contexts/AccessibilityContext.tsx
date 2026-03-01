@@ -25,7 +25,7 @@ const defaultSettings: AccessibilitySettings = {
   reducedMotion: false,
   largerClickTargets: false,
   screenReaderMode: false,
-  soundEffects: true,
+  soundEffects: false,
 }
 
 interface AccessibilityContextType {

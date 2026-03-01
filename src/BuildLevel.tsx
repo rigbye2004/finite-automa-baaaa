@@ -21,6 +21,7 @@ import { getBuildLevelConfig, BUILD_LEVEL_COUNT, type BuildLevelConfig } from '.
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
 
+import { playCorrect, playIncorrect, playHop } from './utils/sounds'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickDemoForState } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
 import { PatternMatchFeedback } from './components/DetailedFeedback'
@@ -148,6 +149,22 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
 
   const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
   const { settings: a11ySettings } = useAccessibility()
+
+  const handleStepWithSound = useCallback((step: number, currentNode: string) => {
+    handleStepChange(step, currentNode)
+    if (a11ySettings.soundEffects) playHop()
+  }, [handleStepChange, a11ySettings.soundEffects])
+
+  const pendingSoundRef = useRef<'correct' | 'incorrect' | null>(null)
+
+  const handleAllPatternsCompleteWithSound = useCallback((results: any[]) => {
+    handleAllPatternsComplete(results)
+    if (a11ySettings.soundEffects && pendingSoundRef.current) {
+      if (pendingSoundRef.current === 'correct') playCorrect()
+      else playIncorrect()
+      pendingSoundRef.current = null
+    }
+  }, [handleAllPatternsComplete, a11ySettings.soundEffects])
 
   useEffect(() => {
     if (!reactFlowInstance.current) return
@@ -664,6 +681,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     const allPatternsMatched = unmatched.length === 0
 
     if (allPatternsMatched) {
+      pendingSoundRef.current = 'correct'
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
         const newScore = score + 1
@@ -697,6 +715,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       )
       if (uniqueBadges.length > 0) setSessionBadges(prev => [...prev, ...uniqueBadges])
     } else {
+      pendingSoundRef.current = 'incorrect'
       setShowDetailedFeedback(true)
       setMessage('')
       setMessageType('error')
@@ -1243,8 +1262,8 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             patterns={levelConfig.targetPatterns}
             isPlaying={isAnimating}
             onComplete={handleAnimationComplete}
-            onAllPatternsComplete={handleAllPatternsComplete}
-            onStepChange={handleStepChange}
+            onAllPatternsComplete={handleAllPatternsCompleteWithSound}
+            onStepChange={handleStepWithSound}
             speed={450}
             reactFlowInstance={reactFlowInstance.current}
           />
