@@ -1154,20 +1154,20 @@ body {
     flex: none;
   }
 
-  /* Graph column fills whatever height remains in row 2 */
+  /* Graph column fills whatever height remains in row 2.
+     Inner grid guarantees footer always gets its natural height first,
+     graph area gets whatever space is left — never pushes footer off-screen. */
   .graph-column {
     grid-row: 2;
     min-height: 0;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr auto;
   }
 
-  /* Graph area expands to fill graph column */
+  /* Graph area fills remaining height after footer */
   .graph-area {
-    flex: 1;
-    height: auto;
-    min-height: 100px;
-    max-height: none;
+    min-height: 0;
+    overflow: hidden;
   }
 
   /* Compact pattern display */
