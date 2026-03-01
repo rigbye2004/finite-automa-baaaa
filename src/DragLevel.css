@@ -713,8 +713,9 @@ body {
   }
 
   .sheep-slot img {
-    width: 32px !important;
-    height: 32px !important;
+    width: 85% !important;
+    height: auto !important;
+    aspect-ratio: 1 !important;
   }
 
   .sheep-panel-label {
@@ -792,10 +793,11 @@ body {
   }
 
   .sheep-slot img {
-    width: 24px !important;
-    height: 24px !important;
+    width: 85% !important;
+    height: auto !important;
+    aspect-ratio: 1 !important;
   }
-  
+
   .sheep-badge {
     width: 16px;
     height: 16px;
@@ -888,10 +890,11 @@ body {
   }
 
   .sheep-slot img {
-    width: 22px !important;
-    height: 22px !important;
+    width: 85% !important;
+    height: auto !important;
+    aspect-ratio: 1 !important;
   }
-  
+
   .sheep-panel-label {
     font-size: 9px;
     padding: 2px 5px;

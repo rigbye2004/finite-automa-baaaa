@@ -319,4 +319,15 @@
   .a11y-overlay-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  .a11y-button-group {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .a11y-btn {
+    flex: 1 1 auto;
+    min-width: max-content;
+    padding: 8px 12px;
+  }
 }
