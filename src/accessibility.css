@@ -1,5 +1,5 @@
 /* ============================================
-   FINITE AUTOMA-BAAA - ACCESSIBILITY STYLES
+   FINITE AUTOMA-BAAAA - ACCESSIBILITY STYLES
    ============================================ */
 
 /* Import OpenDyslexic font */
@@ -140,18 +140,21 @@
 }
 
 /* All level containers use height: 100dvh. CSS zoom on <html> does NOT
-   shrink dvh units, so compensate explicitly for each zoom level. */
+   shrink dvh units, so compensate explicitly for each zoom level.
+   Use vh (not dvh) here to match the html element's own height: calc(100vh / zoom),
+   so the containers always fill the html exactly — no gap at the bottom on iPad
+   when dvh < vh (e.g. Safari toolbar visible). */
 
 [data-font-size="large"] .accept-reject-level,
 [data-font-size="large"] .app,
 [data-font-size="large"] .build-level {
-  height: calc(100dvh / 1.125);
+  height: calc(100vh / 1.125);
 }
 
 [data-font-size="x-large"] .accept-reject-level,
 [data-font-size="x-large"] .app,
 [data-font-size="x-large"] .build-level {
-  height: calc(100dvh / 1.25);
+  height: calc(100vh / 1.25);
 }
 
 /* Compress menu spacing so the zoomed content still fits in the

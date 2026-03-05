@@ -114,7 +114,7 @@ function AppContent() {
                 alt="" 
                 aria-hidden="true"
               />
-              <h1 onClick={handleTitleTap} style={{ cursor: 'default', userSelect: 'none' }}>Finite Automa-baaa</h1>
+              <h1 onClick={handleTitleTap} style={{ cursor: 'default', userSelect: 'none' }}>Finite Automa-baaaa</h1>
               <img 
                 src={withBase("sheep-assets/sheep-8.svg")}
                 width={60} 
@@ -227,7 +227,10 @@ function AppContent() {
         aria-label="Open accessibility settings"
         title="Accessibility Settings"
       >
-        <span className="accessibility-icon">Aa</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" width="1.4em" height="1.4em" style={{display:'block'}}>
+          <circle cx="12" cy="4" r="2" />
+          <path d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1l-.5-2z" />
+        </svg>
       </button>
 
       <DevTools enabled={true} />
