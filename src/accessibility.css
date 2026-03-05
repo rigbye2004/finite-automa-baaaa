@@ -161,7 +161,7 @@
    (now smaller in CSS px) 100dvh container. */
 
 [data-font-size="large"] .menu-screen {
-  height: calc(100dvh / 1.125);
+  height: calc(100vh / 1.125);
   padding-top: 8px;
   padding-bottom: 8px;
 }
@@ -188,13 +188,19 @@
 }
 
 [data-font-size="x-large"] .menu-screen {
-  height: calc(100dvh / 1.25);
-  padding-top: 6px;
-  padding-bottom: 6px;
+  height: calc(100vh / 1.25);
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 [data-font-size="x-large"] .menu-header {
-  margin-bottom: 2px;
+  margin-bottom: 0;
+  gap: 8px;
+}
+
+/* Hide decorative sheep images in header so title fits on one line */
+[data-font-size="x-large"] .menu-header img {
+  display: none;
 }
 
 [data-font-size="x-large"] .menu-subtitle {
@@ -211,13 +217,13 @@
 }
 
 [data-font-size="x-large"] .menu-buttons {
-  gap: 6px;
+  gap: 4px;
 }
 
 /* Reduce button padding for x-large — the 1.25× zoom already makes
-   buttons visually large, so 10px CSS → 12.5px visual padding is plenty. */
+   buttons visually large, so 8px CSS → 10px visual padding is plenty. */
 [data-font-size="x-large"] .level-btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
 }
 
 
@@ -531,7 +537,7 @@ p {
    and compress further. Specificity (0,3,0) beats the single rules. */
 
 [data-font-size="large"][data-line-spacing="relaxed"] .menu-screen {
-  height: calc(100dvh / 1.125);
+  height: calc(100vh / 1.125);
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -541,7 +547,7 @@ p {
 [data-font-size="large"][data-line-spacing="relaxed"] .menu-buttons { gap: 4px; }
 
 [data-font-size="large"][data-line-spacing="loose"] .menu-screen {
-  height: calc(100dvh / 1.125);
+  height: calc(100vh / 1.125);
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -552,7 +558,7 @@ p {
 [data-font-size="large"][data-line-spacing="loose"] .level-btn { padding: 10px 20px; }
 
 [data-font-size="x-large"][data-line-spacing="relaxed"] .menu-screen {
-  height: calc(100dvh / 1.25);
+  height: calc(100vh / 1.25);
   padding-top: 4px;
   padding-bottom: 4px;
 }
@@ -562,7 +568,7 @@ p {
 [data-font-size="x-large"][data-line-spacing="relaxed"] .menu-buttons { gap: 4px; }
 
 [data-font-size="x-large"][data-line-spacing="loose"] .menu-screen {
-  height: calc(100dvh / 1.25);
+  height: calc(100vh / 1.25);
   padding-top: 4px;
   padding-bottom: 4px;
 }
@@ -586,7 +592,7 @@ p {
 
 /* Dyslexia + large font zoom */
 [data-font-size="large"] .dyslexia-font .menu-screen {
-  height: calc(100dvh / 1.125);
+  height: calc(100vh / 1.125);
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -600,7 +606,7 @@ p {
 
 /* Dyslexia + x-large font zoom */
 [data-font-size="x-large"] .dyslexia-font .menu-screen {
-  height: calc(100dvh / 1.25);
+  height: calc(100vh / 1.25);
   padding-top: 4px;
   padding-bottom: 4px;
 }
