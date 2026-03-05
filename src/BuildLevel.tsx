@@ -22,6 +22,7 @@ import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnim
 import './components/SheepPathAnimator.css'
 
 import { playCorrect, playIncorrect, playHop } from './utils/sounds'
+import { findAllPaths, pathsMatch, calculateStars } from './utils/automata'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickDemoForState } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
 import { PatternMatchFeedback } from './components/DetailedFeedback'
@@ -527,42 +528,6 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     setPendingDelete(null)
   }, [])
 
-  const findAllPaths = useCallback(() => {
-    const allPaths: string[][] = []
-    const startNode = nodes.find(n => n.data.isStart)
-    const acceptingNodes = nodes.filter(n => n.data.isAccepting).map(n => n.id)
-
-    if (!startNode || acceptingNodes.length === 0) return allPaths
-
-    const traverse = (currentNode: string, path: string[], visited: Set<string>) => {
-      if (acceptingNodes.includes(currentNode) && path.length > 0) {
-        allPaths.push([...path])
-      }
-
-      if (path.length >= 10) return
-
-      edges.forEach((edge) => {
-        if (edge.source === currentNode && edge.data?.sheep) {
-          const visitKey = `${edge.id}-${path.length}`
-          if (!visited.has(visitKey)) {
-            visited.add(visitKey)
-            path.push(edge.data.sheep)
-            traverse(edge.target, path, visited)
-            path.pop()
-            visited.delete(visitKey)
-          }
-        }
-      })
-    }
-
-    traverse(startNode.id, [], new Set())
-    return allPaths
-  }, [nodes, edges])
-
-  const pathsMatch = (path1: string[], path2: string[]) => {
-    if (path1.length !== path2.length) return false
-    return path1.every((sheep, index) => sheep === path2[index])
-  }
 
   const styledEdges = edges.map((edge) => {
     const isEmptyEdge = !edge.data?.sheep
@@ -664,7 +629,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     startAnimation()
 
     setAttempts(prev => prev + 1)
-    const allPaths = findAllPaths()
+    const allPaths = findAllPaths(nodes, edges)
 
     const matched = levelConfig.targetPatterns.filter((pattern) =>
       allPaths.some((path) => pathsMatch(path, pattern))
@@ -701,12 +666,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       const answerBadges = recordCorrectAnswer(`build-level-${currentLevelId}`, 0)
       
       const finalScore = isFirstCompletion ? score + 1 : score
-      const percentage = finalScore / BUILD_LEVEL_COUNT
-      let stageStars = 1
-      if (percentage >= 0.9) stageStars = 3
-      else if (percentage >= 0.7) stageStars = 2
-      
-      const stageBadges = awardStars('build', stageStars, false)
+      const stageBadges = awardStars('build', calculateStars(finalScore / BUILD_LEVEL_COUNT), false)
       starBadges.push(...stageBadges)
       
       const allBadges = [...starBadges, ...answerBadges]
@@ -771,11 +731,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     }
     
     const finalScore = isFirstCompletion ? score + 1 : score
-    const percentage = finalScore / BUILD_LEVEL_COUNT
-    let stageStars = 1
-    if (percentage >= 0.9) stageStars = 3
-    else if (percentage >= 0.7) stageStars = 2
-    awardStars('build', stageStars, false)
+    awardStars('build', calculateStars(finalScore / BUILD_LEVEL_COUNT), false)
     
     if (currentLevelId < BUILD_LEVEL_COUNT) {
       setCurrentLevelId(currentLevelId + 1)

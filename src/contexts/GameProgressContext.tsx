@@ -162,34 +162,18 @@ export function GameProgressProvider({ children }: { children: ReactNode }) {
   }
 
   const awardStars = (levelId: string, stars: number, hintsUsed: boolean): Badge[] => {
-    // determine badges before setState to avoid React Strict Mode double-call
     const badgesToAward: string[] = []
-    
-    if (stars === 3) {
-      const badge = state.badges.find(b => b.id === 'perfect-flock')
-      if (badge && !badge.earned) badgesToAward.push('perfect-flock')
+    const maybePush = (id: string) => {
+      const b = state.badges.find(b => b.id === id)
+      if (b && !b.earned) badgesToAward.push(id)
     }
-    
-    if (!hintsUsed) {
-      const badge = state.badges.find(b => b.id === 'no-hints-needed')
-      if (badge && !badge.earned) badgesToAward.push('no-hints-needed')
-    }
-    
-    if (levelId.includes('accept-reject')) {
-      const badge = state.badges.find(b => b.id === 'pattern-spotter')
-      if (badge && !badge.earned) badgesToAward.push('pattern-spotter')
-    }
-    
-    if (levelId.includes('drag')) {
-      const badge = state.badges.find(b => b.id === 'path-finder')
-      if (badge && !badge.earned) badgesToAward.push('path-finder')
-    }
-    
-    if (levelId.includes('build')) {
-      const badge = state.badges.find(b => b.id === 'automaton-architect')
-      if (badge && !badge.earned) badgesToAward.push('automaton-architect')
-    }
-    
+
+    if (stars === 3) maybePush('perfect-flock')
+    if (!hintsUsed) maybePush('no-hints-needed')
+    if (levelId.includes('accept-reject')) maybePush('pattern-spotter')
+    if (levelId.includes('drag')) maybePush('path-finder')
+    if (levelId.includes('build')) maybePush('automaton-architect')
+
     const newBadges: Badge[] = badgesToAward.map(id => {
       const badge = state.badges.find(b => b.id === id)!
       return { ...badge, earned: true, earnedAt: new Date() }
@@ -207,7 +191,6 @@ export function GameProgressProvider({ children }: { children: ReactNode }) {
         attempts: (existingProgress?.attempts || 0) + 1,
       }
 
-      // Update badges
       const updatedBadges = prev.badges.map(b => {
         if (badgesToAward.includes(b.id)) {
           return { ...b, earned: true, earnedAt: new Date() }
@@ -231,27 +214,16 @@ export function GameProgressProvider({ children }: { children: ReactNode }) {
 
   const recordCorrectAnswer = (levelId: string, timeSeconds: number): Badge[] => {
     const badgesToAward: string[] = []
-    
-    if (state.totalCorrect === 0) {
-      const badge = state.badges.find(b => b.id === 'first-steps')
-      if (badge && !badge.earned) badgesToAward.push('first-steps')
+    const maybePush = (id: string) => {
+      const b = state.badges.find(b => b.id === id)
+      if (b && !b.earned) badgesToAward.push(id)
     }
-    
-    if (state.totalCorrect + 1 >= 5) {
-      const badge = state.badges.find(b => b.id === 'sheep-counter')
-      if (badge && !badge.earned) badgesToAward.push('sheep-counter')
-    }
-    
-    if (state.totalCorrect + 1 >= 10) {
-      const badge = state.badges.find(b => b.id === 'sleepy-farmer')
-      if (badge && !badge.earned) badgesToAward.push('sleepy-farmer')
-    }
-    
-    if (timeSeconds > 0 && timeSeconds < 10) {
-      const badge = state.badges.find(b => b.id === 'speed-shepherd')
-      if (badge && !badge.earned) badgesToAward.push('speed-shepherd')
-    }
-    
+
+    if (state.totalCorrect === 0) maybePush('first-steps')
+    if (state.totalCorrect + 1 >= 5) maybePush('sheep-counter')
+    if (state.totalCorrect + 1 >= 10) maybePush('sleepy-farmer')
+    if (timeSeconds > 0 && timeSeconds < 10) maybePush('speed-shepherd')
+
     const newBadges: Badge[] = badgesToAward.map(id => {
       const badge = state.badges.find(b => b.id === id)!
       return { ...badge, earned: true, earnedAt: new Date() }

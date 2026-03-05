@@ -35,7 +35,7 @@ interface SheepPathAnimatorProps {
   reactFlowInstance?: ReactFlowInstance | null
 }
 
-function calculatePath(
+export function calculatePath(
   nodes: Node[],
   edges: Edge[],
   pattern: string[]

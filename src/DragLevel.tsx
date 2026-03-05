@@ -21,6 +21,7 @@ import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnim
 import './components/SheepPathAnimator.css'
 
 import { playCorrect, playIncorrect, playHop } from './utils/sounds'
+import { findAllPaths, pathsMatch, calculateStars } from './utils/automata'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickDragDemo } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
 import { PatternMatchFeedback } from './components/DetailedFeedback'
@@ -283,43 +284,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     return Math.hypot(p.x - projx, p.y - projy)
   }
 
-  const findAllPaths = useCallback(() => {
-    const allPaths: string[][] = []
-    const acceptingNodes = nodes.filter(n => n.data.isAccepting).map(n => n.id)
-    
-    const traverse = (currentNode: string, path: string[], visited: Set<string>) => {
-      if (acceptingNodes.includes(currentNode) && path.length > 0) {
-        allPaths.push([...path])
-      }
-
-      if (path.length >= 10) return
-
-      edges.forEach((edge) => {
-        if (edge.source === currentNode && edge.data?.sheep) {
-          const visitKey = `${edge.id}-${path.length}`
-          if (!visited.has(visitKey)) {
-            visited.add(visitKey)
-            path.push(edge.data.sheep)
-            traverse(edge.target, path, visited)
-            path.pop()
-            visited.delete(visitKey)
-          }
-        }
-      })
-    }
-
-    const startNode = nodes.find(n => n.data.isStart)
-    if (startNode) {
-      traverse(startNode.id, [], new Set())
-    }
-
-    return allPaths
-  }, [nodes, edges])
-
-  const pathsMatch = (path1: string[], path2: string[]) => {
-    if (path1.length !== path2.length) return false
-    return path1.every((sheep, index) => sheep === path2[index])
-  }
 
   const dropAtPosition = useCallback((sheepType: string, fromEdgeId: string | null, clientX: number, clientY: number) => {
     if (!reactFlowInstance.current) return
@@ -504,7 +468,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     startAnimation()
     
     setAttempts(prev => prev + 1)
-    const allPaths = findAllPaths()
+    const allPaths = findAllPaths(nodes, edges)
 
     const matched = levelConfig.targetPatterns.filter((pattern) =>
       allPaths.some((path) => pathsMatch(path, pattern))
@@ -541,12 +505,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       const answerBadges = recordCorrectAnswer(`drag-level-${currentLevelId}`, 0)
       
       const finalScore = isFirstCompletion ? score + 1 : score
-      const percentage = finalScore / DRAG_LEVEL_COUNT
-      let stageStars = 1
-      if (percentage >= 0.9) stageStars = 3
-      else if (percentage >= 0.7) stageStars = 2
-      
-      const stageBadges = awardStars('drag', stageStars, false)
+      const stageBadges = awardStars('drag', calculateStars(finalScore / DRAG_LEVEL_COUNT), false)
       starBadges.push(...stageBadges)
       
       const allBadges = [...starBadges, ...answerBadges]
@@ -601,11 +560,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     }
 
     const finalScore = isFirstCompletion ? score + 1 : score
-    const percentage = finalScore / DRAG_LEVEL_COUNT
-    let stageStars = 1
-    if (percentage >= 0.9) stageStars = 3
-    else if (percentage >= 0.7) stageStars = 2
-    awardStars('drag', stageStars, false)
+    awardStars('drag', calculateStars(finalScore / DRAG_LEVEL_COUNT), false)
 
     if (currentLevelId < DRAG_LEVEL_COUNT) {
       setCurrentLevelId(currentLevelId + 1)

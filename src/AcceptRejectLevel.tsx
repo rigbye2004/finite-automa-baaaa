@@ -16,6 +16,7 @@ import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnim
 import './components/SheepPathAnimator.css'
 
 import { playCorrect, playIncorrect, playHop, playLevelComplete } from './utils/sounds'
+import { calculateStars } from './utils/automata'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickARDemo } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
 import { DetailedFeedback, type FeedbackData } from './components/DetailedFeedback'
@@ -460,12 +461,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   const handleLevelComplete = () => {
     if (a11ySettings.soundEffects) playLevelComplete()
     clearProgress()
-    const percentage = score / ACCEPT_REJECT_QUESTION_COUNT
-    let levelStars = 1
-    if (percentage >= 0.9) levelStars = 3
-    else if (percentage >= 0.7) levelStars = 2
-
-    const badges = awardStars('accept-reject', levelStars, anyHintUsed)
+    const badges = awardStars('accept-reject', calculateStars(score / ACCEPT_REJECT_QUESTION_COUNT), anyHintUsed)
     if (incorrectAnswers === 0) {
       const perfectBadge = checkAndAwardBadge('perfect-level-1')
       if (perfectBadge) badges.push(perfectBadge)
