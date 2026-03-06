@@ -68,13 +68,13 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
     <div
       className="a11y-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="a11y-title"
     >
       <div
         ref={panelRef}
         className="a11y-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="a11y-title"
         onClick={e => e.stopPropagation()}
       >
         <header className="a11y-header">
@@ -153,25 +153,6 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
                   </button>
                 ))}
               </div>
-            </div>
-          </section>
-
-          <section className="a11y-section">
-            <h3>Sound</h3>
-
-            <div className="a11y-option">
-              <label className="a11y-toggle">
-                <input
-                  type="checkbox"
-                  checked={settings.soundEffects}
-                  onChange={e => updateSetting('soundEffects', e.target.checked)}
-                />
-                <span className="toggle-switch"></span>
-                <span className="toggle-label">
-                  Sound effects
-                  <small>Plays sounds when sheep move and answers are checked</small>
-                </span>
-              </label>
             </div>
           </section>
 

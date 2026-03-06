@@ -497,7 +497,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
       setLevelComplete(true)
       setShowDetailedFeedback(true)
-      setMessage('Correct')
       setMessageType('success')
       
       const starsForUnlock = (attempts === 0 && !hintUsedThisLevel) ? 2 : 1
@@ -604,7 +603,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
               }}
               aria-label="Previous level"
             >
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+              <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
             </button>
           )}
           <div className="sheep-list">
@@ -736,7 +735,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
           </div>
 
           <aside className="sidebar">
-            {!levelComplete && (
+            {!levelComplete && !showDetailedFeedback && (
               <div className="patterns-with-score">
                 <PatternDisplay patterns={levelConfig.targetPatterns} />
               </div>

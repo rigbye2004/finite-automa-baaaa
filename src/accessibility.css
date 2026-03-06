@@ -22,7 +22,7 @@
   
   /* Text colors */
   --text-color: #333333;
-  --text-muted: #666666;
+  --text-muted: #595959;
   --text-light: #999999;
   --heading-color: #222222;
   
@@ -224,6 +224,22 @@
    buttons visually large, so 8px CSS → 10px visual padding is plenty. */
 [data-font-size="x-large"] .level-btn {
   padding: 8px 16px;
+}
+
+/* On narrow phones, zoom: 1.25 shrinks the effective layout width to ~312px,
+   making button text wrap. Reduce font sizes so titles fit on one line. */
+@media (max-width: 500px) {
+  [data-font-size="x-large"] .level-btn-text {
+    font-size: 0.875rem;
+  }
+  [data-font-size="x-large"] .level-btn-desc {
+    font-size: 0.75rem;
+  }
+  /* Prevent title from wrapping at hyphen — effective width is only 300px at x-large zoom */
+  [data-font-size="x-large"] .menu-header h1 {
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
 }
 
 
@@ -453,8 +469,8 @@ p {
 
 .larger-targets .fit-view-btn,
 .larger-targets .home-btn,
+.larger-targets .prev-btn,
 .larger-targets .sheep-badge,
-.larger-targets .a11y-close,
 .larger-targets .devtools-close,
 .larger-targets .react-flow__controls-button {
   min-height: initial;
@@ -577,6 +593,19 @@ p {
 [data-font-size="x-large"][data-line-spacing="loose"] .menu-farmer { display: none; }
 [data-font-size="x-large"][data-line-spacing="loose"] .menu-buttons { gap: 2px; }
 [data-font-size="x-large"][data-line-spacing="loose"] .level-btn { padding: 4px 20px; }
+
+/* On short phone screens, the tall line-height inflates the three buttons past the
+   available height. Hide the description row to recover ~120px and avoid scrolling. */
+@media (max-height: 700px) {
+  [data-font-size="x-large"][data-line-spacing="relaxed"] .level-btn-desc,
+  [data-font-size="x-large"][data-line-spacing="loose"] .level-btn-desc {
+    display: none;
+  }
+  [data-font-size="x-large"][data-line-spacing="relaxed"] .menu-subtitle,
+  [data-font-size="x-large"][data-line-spacing="loose"] .menu-subtitle {
+    display: none;
+  }
+}
 
 /* OpenDyslexic has larger internal font metrics so rem-based button
    text renders slightly taller — compress spacing to compensate. */
@@ -942,6 +971,198 @@ p {
 
 [data-font-size="x-large"] .a11y-panel .a11y-footer {
   padding: 8px 16px;
+}
+
+
+/* ============================================
+   SHEEP PALETTE — LARGE FONT ZOOM OVERRIDES
+   The SheepPalette uses --sheep-img-lg (default 80px) for image
+   size. At large/x-large zoom the images + larger-targets padding
+   make each button ~104px tall, consuming most of the footer height.
+   ============================================ */
+
+/* Shrink sheep images via the CSS variable they already use */
+[data-font-size='large'] {
+  --sheep-img-lg: 68px;
+}
+[data-font-size='x-large'] {
+  --sheep-img-lg: 58px;
+}
+
+/* larger-targets adds padding: 12px 20px to ALL buttons — undo for
+   sheep palette buttons since the image already makes them large enough */
+.larger-targets .sheep-btn {
+  padding: 6px 8px;
+  min-height: unset;
+  min-width: unset;
+}
+
+[data-font-size='large'].larger-targets .sheep-btn,
+[data-font-size='x-large'].larger-targets .sheep-btn {
+  padding: 4px 6px;
+}
+
+
+/* ============================================
+   GAME LAYOUT — LARGE FONT ZOOM OVERRIDES
+   CSS zoom on <html> shrinks the effective CSS layout viewport,
+   which can accidentally fire tablet/phone @media breakpoints on
+   real desktop screens. A min-width: 800px wrapper re-targets
+   genuine desktops:
+     * At large zoom (x1.125): fires at >=900 px actual width
+     * At x-large zoom (x1.25): fires at >=1000 px actual width
+   ============================================ */
+
+@media (min-width: 800px) {
+
+  /* -- DragLevel (.app) -- */
+  [data-font-size='large'] .app .game-container,
+  [data-font-size='x-large'] .app .game-container {
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+  }
+
+  [data-font-size='large'] .app .graph-column,
+  [data-font-size='x-large'] .app .graph-column {
+    min-width: 150px;
+    width: auto;
+    flex-shrink: 1;
+  }
+
+  [data-font-size='large'] .app .graph-area,
+  [data-font-size='x-large'] .app .graph-area {
+    flex: 1;
+    height: auto;
+    max-height: none;
+    min-height: clamp(180px, 30vh, 300px);
+  }
+
+  [data-font-size='large'] .app .sidebar,
+  [data-font-size='x-large'] .app .sidebar {
+    flex: 0 1 35%;
+    width: auto;
+    min-width: 0;
+    max-height: calc(100dvh - 140px);
+  }
+
+  /* -- BuildLevel (.build-level) -- */
+  [data-font-size='large'] .build-level .game-container,
+  [data-font-size='x-large'] .build-level .game-container {
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+
+  /* Restore toolbar to vertical sidebar layout */
+  [data-font-size='large'] .build-level .toolbar,
+  [data-font-size='x-large'] .build-level .toolbar {
+    width: clamp(160px, 14vw, 220px);
+    flex-direction: column;
+    flex-wrap: nowrap;
+    order: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+    align-self: stretch;
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  [data-font-size='large'] .build-level .toolbar-divider,
+  [data-font-size='x-large'] .build-level .toolbar-divider {
+    display: block;
+  }
+
+  [data-font-size='large'] .build-level .tool-grid,
+  [data-font-size='x-large'] .build-level .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  [data-font-size='large'] .build-level .tool-delete,
+  [data-font-size='x-large'] .build-level .tool-delete {
+    grid-column: span 2;
+  }
+
+  [data-font-size='large'] .build-level .toolbar-sheep,
+  [data-font-size='x-large'] .build-level .toolbar-sheep {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  [data-font-size='large'] .build-level .graph-column,
+  [data-font-size='x-large'] .build-level .graph-column {
+    min-width: 130px;
+    width: auto;
+  }
+
+  [data-font-size='large'] .build-level .graph-area,
+  [data-font-size='x-large'] .build-level .graph-area {
+    flex: 1;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    width: auto;
+    min-width: 0;
+  }
+
+  /* Shrink toolbar sheep images — use vh so they scale on short screens too */
+  [data-font-size='x-large'] .build-level .toolbar-sheep-item img {
+    width: clamp(24px, 4vh, 40px);
+    height: clamp(24px, 4vh, 40px);
+  }
+
+  [data-font-size='large'] .build-level .tool-cell {
+    min-height: 0;
+    padding: 8px 6px;
+    flex-shrink: 1;
+  }
+
+  [data-font-size='x-large'] .build-level .tool-cell {
+    min-height: 0;
+    padding: 6px 4px;
+    flex-shrink: 1;
+  }
+
+  /* Tighten the arrow capsule */
+  [data-font-size='large'] .build-level .arrow-cap,
+  [data-font-size='x-large'] .build-level .arrow-cap {
+    padding: 6px 10px;
+  }
+
+  /* Allow toolbar sheep items to shrink so the grid fits in available height */
+  [data-font-size='large'] .build-level .toolbar-sheep-item,
+  [data-font-size='x-large'] .build-level .toolbar-sheep-item {
+    padding: 4px;
+    flex-shrink: 1;
+    min-height: 0;
+  }
+
+  [data-font-size='large'] .build-level .toolbar-sheep-item img {
+    width: clamp(26px, 4.5vh, 44px);
+    height: clamp(26px, 4.5vh, 44px);
+  }
+
+  /* Compress footer buttons — zoom already makes them visually large */
+  [data-font-size='large'] .build-level .footer .btn,
+  [data-font-size='x-large'] .build-level .footer .btn,
+  [data-font-size='large'] .app .footer .btn,
+  [data-font-size='x-large'] .app .footer .btn {
+    padding: 0.4em 0.8em;
+    font-size: 13px;
+    min-height: unset;
+  }
+
+  /* larger-targets adds 12px 20px padding to all buttons; undo for
+     game footer so buttons do not overflow their containers */
+  [data-font-size='large'].larger-targets .build-level .footer .btn,
+  [data-font-size='x-large'].larger-targets .build-level .footer .btn,
+  [data-font-size='large'].larger-targets .app .footer .btn,
+  [data-font-size='x-large'].larger-targets .app .footer .btn {
+    padding: 0.4em 0.8em;
+    min-height: unset;
+  }
 }
 
 

@@ -15,7 +15,7 @@
 }
 
 .a11y-panel {
-  background: #fff;
+  background: var(--panel-bg, #fff);
   border-radius: 16px;
   width: 100%;
   max-width: 420px;
@@ -32,7 +32,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: #4CAF50;
+  background: var(--primary-color);
   color: white;
 }
 
@@ -46,8 +46,8 @@
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   font-size: 18px;
   cursor: pointer;
@@ -61,7 +61,7 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-.a11y-close:focus {
+.a11y-close:focus-visible {
   outline: 3px solid white;
   outline-offset: 2px;
 }
@@ -85,10 +85,10 @@
 .a11y-section h3 {
   font-size: 1rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-color, #333);
   margin: 0 0 12px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid var(--border-color, #eee);
 }
 
 /* Options */
@@ -104,7 +104,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #444;
+  color: var(--text-color, #444);
   margin-bottom: 8px;
 }
 
@@ -127,7 +127,7 @@
   flex-shrink: 0;
   width: 48px;
   height: 28px;
-  background: #ccc;
+  background: var(--toggle-off, #ccc);
   border-radius: 14px;
   position: relative;
   transition: background 0.3s;
@@ -147,15 +147,15 @@
 }
 
 .a11y-toggle input:checked + .toggle-switch {
-  background: #4CAF50;
+  background: var(--toggle-on, #4CAF50);
 }
 
 .a11y-toggle input:checked + .toggle-switch::after {
   transform: translateX(20px);
 }
 
-.a11y-toggle input:focus + .toggle-switch {
-  outline: 3px solid #4CAF50;
+.a11y-toggle input:focus-visible + .toggle-switch {
+  outline: 3px solid var(--focus-color, #4CAF50);
   outline-offset: 2px;
 }
 
@@ -164,12 +164,12 @@
   flex-direction: column;
   gap: 2px;
   font-size: 0.95rem;
-  color: #333;
+  color: var(--text-color, #333);
 }
 
 .toggle-label small {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--text-muted, #595959);
 }
 
 /* Button groups */
@@ -181,10 +181,10 @@
 .a11y-btn {
   flex: 1;
   padding: 10px 16px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--border-color, #ddd);
   border-radius: 8px;
-  background: #f5f5f5;
-  color: #333;
+  background: var(--btn-bg, #f5f5f5);
+  color: var(--text-color, #333);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -192,18 +192,18 @@
 }
 
 .a11y-btn:hover {
-  border-color: #4CAF50;
-  background: #e8f5e9;
+  border-color: var(--primary-color, #4CAF50);
+  background: var(--btn-hover-bg, #e8f5e9);
 }
 
 .a11y-btn.active {
-  border-color: #4CAF50;
-  background: #4CAF50;
+  border-color: var(--primary-color, #4CAF50);
+  background: var(--primary-color, #4CAF50);
   color: white;
 }
 
-.a11y-btn:focus {
-  outline: 3px solid #4CAF50;
+.a11y-btn:focus-visible {
+  outline: 3px solid var(--focus-color, #4CAF50);
   outline-offset: 2px;
 }
 
@@ -222,7 +222,7 @@
 
 .a11y-overlay-btn {
   aspect-ratio: 1;
-  border: 2px solid #ddd;
+  border: 2px solid var(--border-color, #ddd);
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
@@ -231,7 +231,7 @@
   justify-content: center;
   color: #999;
   transition: all 0.2s;
-  background: #f5f5f5;
+  background: var(--btn-bg, #f5f5f5);
 }
 
 .a11y-overlay-btn:hover {
@@ -239,26 +239,26 @@
 }
 
 .a11y-overlay-btn.active {
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+  border-color: var(--primary-color, #4CAF50);
+  box-shadow: 0 0 0 3px var(--focus-ring, rgba(76, 175, 80, 0.3));
 }
 
-.a11y-overlay-btn:focus {
-  outline: 3px solid #4CAF50;
+.a11y-overlay-btn:focus-visible {
+  outline: 3px solid var(--focus-color, #4CAF50);
   outline-offset: 2px;
 }
 
 .a11y-hint {
   display: block;
   font-size: 0.8rem;
-  color: #666;
+  color: var(--text-muted, #595959);
   font-style: italic;
 }
 
 /* Footer */
 .a11y-footer {
   padding: 12px 20px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color, #eee);
   display: flex;
   gap: 10px;
   align-items: center;
@@ -266,10 +266,10 @@
 
 .a11y-reset-btn {
   padding: 10px 20px;
-  border: 2px solid #ddd;
+  border: 2px solid var(--border-color, #ddd);
   border-radius: 8px;
   background: transparent;
-  color: #666;
+  color: var(--text-muted, #595959);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -280,8 +280,8 @@
   color: #f44336;
 }
 
-.a11y-reset-btn:focus {
-  outline: 3px solid #4CAF50;
+.a11y-reset-btn:focus-visible {
+  outline: 3px solid var(--focus-color, #4CAF50);
   outline-offset: 2px;
 }
 
@@ -290,7 +290,7 @@
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  background: #4CAF50;
+  background: var(--primary-color, #4CAF50);
   color: white;
   font-size: 0.95rem;
   font-weight: 700;
@@ -300,12 +300,13 @@
 }
 
 .a11y-save-btn:hover {
-  background: #43A047;
+  background: var(--primary-dark, #43A047);
 }
 
-.a11y-save-btn:focus {
-  outline: 3px solid #4CAF50;
-  outline-offset: 2px;
+/* White inner ring + colored outer ring so focus is visible on any button color */
+.a11y-save-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 5px var(--focus-color, #4CAF50);
 }
 
 /* Responsive */
