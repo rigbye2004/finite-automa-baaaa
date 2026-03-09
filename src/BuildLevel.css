@@ -909,7 +909,7 @@
 }
 
 /* Medium: stack toolbar horizontally above graph */
-@media (max-width: 1000px) {
+@media (max-width: 900px) {
   /* Hide zoom controls — pinch-to-zoom works on all touch devices */
   .build-level .react-flow__controls {
     display: none;
@@ -1135,11 +1135,12 @@
     min-height: 0;
   }
 
-  /* Patterns panel first, compact */
+  /* Patterns panel first, compact — cap height so graph always gets space */
   .build-level .sidebar {
     grid-row: 1;
     width: 100%;
-    overflow-y: visible;
+    max-height: 35vh;
+    overflow-y: auto;
     flex-basis: auto;
   }
 

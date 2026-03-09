@@ -803,13 +803,6 @@
     flex: none;
   }
 
-  /* When result is showing, shrink graph so the sidebar has room for feedback */
-  .accept-reject-level .game-container:has(.result-section) .graph-area {
-    height: 25vh;
-    min-height: 120px;
-    max-height: 200px;
-  }
-
   /* Answer buttons horizontal on tablet when stacked */
   .answer-buttons {
     flex-direction: row;
