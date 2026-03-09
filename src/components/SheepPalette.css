@@ -60,8 +60,22 @@
   animation: sheep-jump 0.6s ease-in-out infinite;
 }
 
+/* Tablet (iPad Mini etc.) */
+@media (max-width: 1100px) {
+  .sheep-btn {
+    flex: 0 0 60px;
+    padding: 6px;
+  }
+
+  .sheep-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
+
 /* Mobile — single row, scale to fit */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .sheep-palette {
     margin-left: 0;
     flex-wrap: wrap;
@@ -71,7 +85,7 @@
   }
 
   .sheep-btn {
-    flex: 0 0 80px;
+    flex: 0 0 52px;
     padding: 4px;
   }
 

@@ -223,6 +223,52 @@ body {
   background-color: #E8F5E9 !important;
 }
 
+/* Tighten spacing on phones where content is close to viewport height */
+@media (max-height: 880px) and (max-width: 480px) {
+  .menu-screen {
+    padding: 14px 20px;
+  }
+
+  .menu-subtitle {
+    margin-bottom: 16px;
+  }
+
+  .menu-farmer {
+    margin-bottom: 20px;
+  }
+
+  .menu-buttons {
+    gap: 10px;
+  }
+}
+
+/* Short phones (e.g. Galaxy S8+ 740px) — hide farmer, compress further */
+@media (max-height: 760px) and (max-width: 480px) {
+  .menu-screen {
+    padding: 10px 16px;
+  }
+
+  .menu-farmer {
+    display: none;
+  }
+
+  .menu-header {
+    margin-bottom: 8px;
+  }
+
+  .menu-subtitle {
+    margin-bottom: 10px;
+  }
+
+  .menu-buttons {
+    gap: 8px;
+  }
+
+  .level-btn {
+    padding: 12px 16px;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .menu-header h1 {

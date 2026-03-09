@@ -5,7 +5,7 @@
 .detailed-feedback {
   background: white;
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -87,7 +87,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 4px 0 6px 0;
+  padding: 2px 0 4px 0;
 }
 
 .feedback-try-again {
@@ -113,23 +113,23 @@
    ═══════════════════════════════════════ */
 
 .patterns-unmatched {
-  margin: 6px 0 8px 0;
+  margin: 4px 0 6px 0;
 }
 
 .pattern-row {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 10px;
+  padding: 4px 10px;
   background: #FFEBEE;
   border-radius: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   flex-wrap: wrap;
 }
 
 .pattern-row img {
-  width: 60px;
-  height: 60px;
+  width: 44px;
+  height: 44px;
 }
 
 
@@ -259,11 +259,20 @@
    ═══════════════════════════════════════ */
 
 @media (max-width: 768px) {
-  .pattern-row img {
-    width: 52px;
-    height: 52px;
+  .detailed-feedback {
+    padding: 6px 10px;
   }
-  
+
+  .pattern-row {
+    padding: 4px 8px;
+    margin-bottom: 4px;
+  }
+
+  .pattern-row img {
+    width: 40px;
+    height: 40px;
+  }
+
   .feedback-big-icon {
     font-size: 2rem;
   }

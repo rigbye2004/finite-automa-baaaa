@@ -163,11 +163,19 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     }
   }, [currentLevelId, score, completedLevels])
 
+  // Derive a key from just the sheep assignments — ignores ReactFlow internal
+  // state changes (selection, hover) that would otherwise dismiss feedback on
+  // touch devices (e.g. Nest Hub) before the user has a chance to see it.
+  const edgeSheepKey = useMemo(
+    () => edges.map(e => e.data?.sheep ?? '').join('|'),
+    [edges]
+  )
+
   useEffect(() => {
     if (showDetailedFeedback && !levelComplete) {
       setShowDetailedFeedback(false)
     }
-  }, [edges]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [edgeSheepKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!message) return
@@ -692,46 +700,6 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                 reactFlowInstance={reactFlowInstance.current}
               />
             </div>
-
-            <footer className={`footer ${showNudge ? 'nudge-pulse' : ''}`}>
-              <SheepPalette
-                onSelectSheep={onSelectSheep}
-                selectedSheep={selectedSheep}
-                availableSheep={levelConfig.availableSheep}
-                onTouchDrop={(sheepId, clientX, clientY) => dropAtPosition(sheepId, null, clientX, clientY)}
-              />
-
-              <div className="controls">
-                <button
-                  className="btn submit-btn"
-                  onClick={handleSubmit}
-                  disabled={levelComplete || isAnimating}
-                >
-                  <CheckIcon /> Submit
-                </button>
-                {showDetailedFeedback && (
-                  <button
-                    className="btn watch-path-btn"
-                    onClick={startAnimation}
-                    disabled={isAnimating}
-                  >
-                    {isAnimating ? <><EyeIcon /> Watching...</> : <><EyeIcon /> Watch Path</>}
-                  </button>
-                )}
-                <button className="btn reset-btn" onClick={handleReset}>
-                  Reset
-                </button>
-                {isDevMode() && (
-                  <button 
-                    className="btn dev-auto-btn"
-                    onClick={handleDevAutoComplete}
-                    title="Dev: Auto-complete level"
-                  >
-                    Auto
-                  </button>
-                )}
-              </div>
-            </footer>
           </div>
 
           <aside className="sidebar">
@@ -789,6 +757,46 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
           </aside>
         </div>
+
+        <footer className={`footer ${showNudge ? 'nudge-pulse' : ''}`}>
+          <SheepPalette
+            onSelectSheep={onSelectSheep}
+            selectedSheep={selectedSheep}
+            availableSheep={levelConfig.availableSheep}
+            onTouchDrop={(sheepId, clientX, clientY) => dropAtPosition(sheepId, null, clientX, clientY)}
+          />
+
+          <div className="controls">
+            <button
+              className="btn submit-btn"
+              onClick={handleSubmit}
+              disabled={levelComplete || isAnimating}
+            >
+              <CheckIcon /> Submit
+            </button>
+            {showDetailedFeedback && (
+              <button
+                className="btn watch-path-btn"
+                onClick={startAnimation}
+                disabled={isAnimating}
+              >
+                {isAnimating ? <><EyeIcon /> Watching...</> : <><EyeIcon /> Watch Path</>}
+              </button>
+            )}
+            <button className="btn reset-btn" onClick={handleReset}>
+              Reset
+            </button>
+            {isDevMode() && (
+              <button 
+                className="btn dev-auto-btn"
+                onClick={handleDevAutoComplete}
+                title="Dev: Auto-complete level"
+              >
+                Auto
+              </button>
+            )}
+          </div>
+        </footer>
 
         {message && (
           <div className={`toast-message toast-${messageType}`} key={message}>

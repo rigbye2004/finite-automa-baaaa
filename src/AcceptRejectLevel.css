@@ -803,6 +803,13 @@
     flex: none;
   }
 
+  /* When result is showing, shrink graph so the sidebar has room for feedback */
+  .accept-reject-level .game-container:has(.result-section) .graph-area {
+    height: 25vh;
+    min-height: 120px;
+    max-height: 200px;
+  }
+
   /* Answer buttons horizontal on tablet when stacked */
   .answer-buttons {
     flex-direction: row;
@@ -882,11 +889,27 @@
   }
   
   .accept-reject-level .graph-area {
-    min-height: 200px;
-    height: 30vh;
-    max-height: 300px;
+    flex: 1;
+    min-height: 220px;
+    height: auto;
+    max-height: none;
   }
-  
+
+  .accept-reject-level .sidebar {
+    flex: none;
+    max-height: 45vh;
+  }
+
+  /* When result is showing, expand sidebar cap and shrink graph */
+  .accept-reject-level .sidebar:has(.result-section) {
+    max-height: 55vh;
+  }
+
+  .accept-reject-level .game-container:has(.result-section) .graph-area {
+    min-height: 130px;
+    max-height: 180px;
+  }
+
   .level-complete-modal {
     padding: 24px 28px;
     max-width: 320px;
@@ -943,10 +966,36 @@
   }
   
   .accept-reject-level .graph-area {
+    flex: 1;
     min-height: 180px;
-    height: 28vh;
-    max-height: 260px;
+    height: auto;
+    max-height: none;
     border-radius: 12px;
+  }
+
+  /* Sidebar: structured so answer buttons are always visible, not scrolled away */
+  .accept-reject-level .sidebar {
+    flex: none;
+    max-height: 48vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .accept-reject-level .question-card {
+    flex-shrink: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .accept-reject-level .answer-buttons {
+    flex-shrink: 0;
+  }
+
+  .accept-reject-level .result-section {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
   }
   
   .question-card {
@@ -1059,8 +1108,21 @@
   }
   
   .accept-reject-level .graph-area {
-    min-height: 160px;
-    height: 25vh;
+    min-height: 180px;
+    height: 32vh;
+  }
+}
+
+/* Short desktop / tablet (e.g. Nest Hub 1024×600) — shrink sheep so
+   the pattern fits in one row and both answer buttons stay visible */
+@media (max-height: 680px) and (min-width: 900px) {
+  .accept-reject-level .test-pattern img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .accept-reject-level .answer-btn {
+    padding: 0.5em 0.8em;
   }
 }
 

@@ -221,6 +221,9 @@ body {
   flex: 1;
   gap: 16px;
   min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+  margin-bottom: 8px;
 }
 
 /* Left column: graph area + footer underneath */
@@ -229,6 +232,7 @@ body {
   flex-direction: column;
   flex: 1;
   min-width: 150px;
+  min-height: 0;
   gap: 12px;
 }
 
@@ -372,8 +376,13 @@ body {
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
-  max-height: calc(100dvh - 140px);
+  /* 210px = header (~46px) + footer (~112px) + main-content padding (24px) +
+     game-container margin-bottom (8px) + 20px buffer. This prevents the sidebar
+     from overflowing into the footer on devices where 100dvh < full screen height
+     (e.g. real iPads with Safari address bar reducing the visual viewport). */
+  max-height: calc(100dvh - 210px);
   padding-right: 0;
+  padding-bottom: 8px;
   position: relative;
   z-index: 10;
 }
@@ -659,11 +668,16 @@ body {
     min-height: 0;
   }
 
-  /* Fill remaining height so sidebar can scroll inside */
+  /* Fill remaining height so sidebar can scroll inside.
+     height: 0 forces flex to compute height from available space
+     rather than content, giving game-container a definite height
+     so overflow: hidden actually clips the sidebar. */
   .game-container {
     flex-direction: column;
     flex: 1;
+    height: 0;
     min-height: 0;
+    overflow: hidden;
     width: 100%;
   }
 
@@ -687,12 +701,57 @@ body {
     flex: 1;
     min-height: 0;
     max-height: none;
+    overflow-x: hidden;
     overflow-y: auto;
+    padding-bottom: 12px;
+  }
+
+  /* When wrong feedback is showing, shrink the graph so the sidebar
+     has enough room to display all unmatched pattern rows */
+  .game-container:has(.detailed-feedback.incorrect) .graph-area {
+    height: 25vh;
+    min-height: 120px;
+    max-height: 200px;
   }
 
   .footer {
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  /* Compact sheep palette so it fits in one row */
+  .sheep-palette {
+    margin-left: 0;
+  }
+
+  .sheep-btn {
+    flex: 0 0 64px;
+    padding: 6px;
+  }
+
+  .sheep-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  /* Compact pattern display so sidebar content fits without scrolling
+     at tablet sizes (especially at large/x-large font zoom where the
+     effective CSS viewport is narrower than the physical screen). */
+  .pattern-display {
+    padding: 10px;
+  }
+
+  .pattern-display h3 {
+    margin-bottom: 7px;
+  }
+
+  .pattern-display .pattern-list {
+    gap: 5px;
+  }
+
+  .pattern-display .pattern-item {
+    padding: 5px 8px;
   }
 }
 
@@ -702,6 +761,11 @@ body {
   .edge-label img {
     width: 52px !important;
     height: 52px !important;
+  }
+
+  /* Footer must never be squished or pushed off-screen on narrow devices */
+  .main-content > .footer {
+    flex-shrink: 0;
   }
 
   .sheep-panel {
@@ -747,9 +811,9 @@ body {
   }
   
   .graph-area {
-    min-height: 180px;
-    height: 28vh;
-    max-height: 260px;
+    min-height: 160px;
+    height: 25vh;
+    max-height: 240px;
     border-radius: 12px;
   }
   
@@ -760,6 +824,15 @@ body {
 
   .pattern-display h3 {
     font-size: 0.9rem;
+    margin-bottom: 7px;
+  }
+
+  .pattern-display .pattern-list {
+    gap: 5px;
+  }
+
+  .pattern-display .pattern-item {
+    padding: 5px 8px;
   }
 
   .footer .btn {
@@ -830,11 +903,25 @@ body {
     padding: 6px 8px;
     gap: 6px;
     border-radius: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
   .footer .score-display {
     font-size: 12px;
     padding: 4px 8px;
+  }
+
+  /* Sheep palette smaller on phone so controls row is always visible */
+  .sheep-palette .sheep-item {
+    width: 40px;
+    height: 40px;
+  }
+
+  .controls {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   
   .pattern-display .pattern-item {
@@ -1178,7 +1265,6 @@ body {
   /* Graph column: fills all remaining space */
   .graph-column {
     flex: 1;
-    height: 0;          /* same trick — prevents content from dictating height */
     min-height: 0;
     min-width: 0;
     display: flex;
@@ -1186,21 +1272,49 @@ body {
     overflow: hidden;
   }
 
-  /* Graph area: grows to fill space above footer */
+  /* Graph area: fills remaining space in graph-column */
   .graph-area {
     flex: 1;
     min-height: 0;
     height: auto;
-    max-height: none;
     overflow: hidden;
   }
 
+  /* Patterns sidebar: cap height so it doesn't eat all vertical space.
+     padding-right creates a gap between the card's right edge and the
+     overflow:hidden clip boundary (game-container right edge), so the
+     card's box-shadow is visible instead of being clipped flush against it. */
+  .sidebar {
+    max-height: 42vh;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  /* When wrong feedback is showing, allow sidebar to grow and shrink graph */
+  .game-container:has(.detailed-feedback.incorrect) .sidebar {
+    max-height: 52vh;
+  }
+
+  .game-container:has(.detailed-feedback.incorrect) .graph-area {
+    height: 18vh;
+    min-height: 0;
+    max-height: 150px;
+  }
+
   /* Footer: always visible, never squished */
-  .graph-column > .footer {
+  .main-content > .footer {
     flex-shrink: 0;
   }
 
   /* Compact pattern display */
+  .pattern-display {
+    padding: 8px;
+  }
+
+  .pattern-display h3 {
+    margin-bottom: 5px;
+  }
+
   .pattern-display .pattern-list {
     gap: 3px;
   }
@@ -1213,5 +1327,61 @@ body {
   .pattern-display .pattern-item img {
     width: clamp(26px, 6vw, 36px);
     height: clamp(26px, 6vw, 36px);
+  }
+}
+
+/* Short landscape screens (e.g. Nest Hub 1024×600) */
+@media (max-height: 640px) and (min-width: 901px) {
+  .footer {
+    --sheep-img-lg: 44px;
+    padding: 6px 8px;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .sheep-btn {
+    padding: 4px;
+  }
+
+  .pattern-display {
+    padding: 8px;
+  }
+
+  .pattern-display h3 {
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+  }
+
+  .pattern-display .pattern-list {
+    gap: 4px;
+  }
+
+  .pattern-display .pattern-item {
+    padding: 4px 7px;
+    gap: 3px;
+  }
+
+  .pattern-display .pattern-item img {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Compact detailed feedback so it fits in the shorter sidebar */
+  .detailed-feedback {
+    padding: 6px 10px;
+  }
+
+  .feedback-big-icon {
+    font-size: 1.8rem;
+  }
+
+  .pattern-row {
+    padding: 4px 8px;
+    margin-bottom: 4px;
+  }
+
+  .pattern-row img {
+    width: 40px;
+    height: 40px;
   }
 }

@@ -240,6 +240,62 @@
     font-size: 1.3rem;
     white-space: nowrap;
   }
+
+  /* Answer buttons side-by-side are too narrow at large zoom / dyslexic font /
+     wide letter spacing — stack them vertically so text has room to fit. */
+  [data-font-size="large"] .answer-buttons,
+  [data-font-size="x-large"] .answer-buttons,
+  .dyslexia-font .answer-buttons,
+  [data-letter-spacing="wider"] .answer-buttons {
+    flex-direction: column;
+  }
+
+  /* Compact button padding so stacked buttons are shorter */
+  [data-font-size="large"] .answer-btn,
+  [data-font-size="x-large"] .answer-btn,
+  .dyslexia-font .answer-btn,
+  [data-letter-spacing="wider"] .answer-btn {
+    padding: 0.45em 0.7em;
+    font-size: 0.85rem;
+    min-height: 2em;
+  }
+
+  /* Shrink pattern sheep images so the question card takes less vertical space */
+  [data-font-size="large"] .accept-reject-level .test-pattern img,
+  [data-font-size="x-large"] .accept-reject-level .test-pattern img,
+  .dyslexia-font .accept-reject-level .test-pattern img,
+  [data-letter-spacing="wider"] .accept-reject-level .test-pattern img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* Sidebar: use px not vh — vh ignores the html zoom so vh values
+     overshoot the available space. 350px fits a compact question card
+     + 2 stacked buttons even at max dyslexic + loose + wide settings. */
+  [data-font-size="large"] .accept-reject-level .sidebar,
+  [data-font-size="x-large"] .accept-reject-level .sidebar,
+  .dyslexia-font .accept-reject-level .sidebar,
+  [data-letter-spacing="wider"] .accept-reject-level .sidebar {
+    max-height: 390px;
+    overflow: auto;
+  }
+
+  /* Remove canvas min-height so it uses flex:1 to fill whatever space
+     remains after the sidebar — prevents overflow when sidebar is tall. */
+  [data-font-size="large"] .accept-reject-level .graph-area,
+  [data-font-size="x-large"] .accept-reject-level .graph-area,
+  .dyslexia-font .accept-reject-level .graph-area,
+  [data-letter-spacing="wider"] .accept-reject-level .graph-area {
+    min-height: 0;
+  }
+
+  /* Question card must not shrink away — patterns visible at top of sidebar */
+  [data-font-size="large"] .accept-reject-level .question-card,
+  [data-font-size="x-large"] .accept-reject-level .question-card,
+  .dyslexia-font .accept-reject-level .question-card,
+  [data-letter-spacing="wider"] .accept-reject-level .question-card {
+    flex-shrink: 0;
+  }
 }
 
 
@@ -607,6 +663,26 @@ p {
   }
 }
 
+/* 930px threshold catches 740px physical screens regardless of whether Chrome
+   uses the physical or CSS-zoomed (740/1.25=592px) viewport for media queries.
+   Hide descriptions and clamp button line-height for all a11y combos. */
+@media (max-height: 930px) and (max-width: 480px) {
+  [data-line-spacing="relaxed"] .level-btn-desc,
+  [data-line-spacing="loose"] .level-btn-desc {
+    display: none;
+  }
+
+  /* Clamp line-height inside menu buttons — line-height:2 makes each text
+     line 40px tall and 3 buttons won't fit on a short phone. 1.4 is still
+     comfortably readable and halves the height inflation. */
+  [data-line-spacing="relaxed"] .level-btn,
+  [data-line-spacing="loose"] .level-btn,
+  [data-line-spacing="relaxed"] .level-btn *,
+  [data-line-spacing="loose"] .level-btn * {
+    line-height: 1.4 !important;
+  }
+}
+
 /* OpenDyslexic has larger internal font metrics so rem-based button
    text renders slightly taller — compress spacing to compensate. */
 .dyslexia-font .menu-screen {
@@ -819,8 +895,8 @@ p {
   }
 }
 
-/* Tablet: 640px - 1023px */
-@media (min-width: 640px) and (max-width: 1023px) {
+/* Tablet: 900px - 1023px (matches game-level breakpoints) */
+@media (min-width: 900px) and (max-width: 1023px) {
   .game-container {
     flex-direction: row;
   }
@@ -1043,7 +1119,7 @@ p {
     flex: 0 1 35%;
     width: auto;
     min-width: 0;
-    max-height: calc(100dvh - 140px);
+    max-height: calc(100dvh - 210px);
   }
 
   /* -- BuildLevel (.build-level) -- */
@@ -1162,6 +1238,110 @@ p {
   [data-font-size='x-large'].larger-targets .app .footer .btn {
     padding: 0.4em 0.8em;
     min-height: unset;
+  }
+}
+
+
+/* ============================================
+   DRAGLEVEL PHONE LAYOUT — LARGE FONT ZOOM
+   At large/x-large zoom the flex algorithm for .main-content can fail
+   to leave room for the footer (sheep palette + Submit button), pushing
+   it off-screen.  Switch .main-content to a CSS Grid with explicit
+   rows so the footer always gets its natural height as the last row.
+   ============================================ */
+
+@media (max-width: 500px) {
+  /* Both large + x-large: grid so footer always gets its natural height */
+  [data-font-size="large"] .app .main-content,
+  [data-font-size="x-large"] .app .main-content {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  /* large: game-container fills the 1fr row */
+  [data-font-size="large"] .app .game-container {
+    height: 100%;
+  }
+
+  /* x-large: switch to all-auto rows so the total layout height stays within
+     the visible viewport even when Safari's dynamic toolbar is showing.
+     At 1.25× zoom, html = 534px CSS = 667px physical, but the toolbar hides
+     the bottom ~35px CSS, leaving ~499px visible.  With 1fr the game-container
+     expands to ~378px and pushes the footer (starts at 424px) partially behind
+     the toolbar.  Using auto rows + align-content: start packs everything
+     from the top and leaves blank space below the footer (overflow: hidden). */
+  [data-font-size="x-large"] .app .main-content {
+    grid-template-rows: auto auto auto;
+    align-content: start;
+  }
+
+  [data-font-size="x-large"] .app .game-container {
+    height: auto;
+  }
+
+  /* graph-column must not try to fill a now-auto container */
+  [data-font-size="x-large"] .app .graph-column {
+    flex: none;
+    height: auto;
+  }
+
+  /* Cap the canvas at 140px CSS (175px physical).
+     Keeps the automaton visible while cutting the empty ReactFlow whitespace.
+     Also overrides the ≤360px DragLevel.css min-height: 160px so max-height wins. */
+  [data-font-size="x-large"] .app .graph-area {
+    height: 140px;
+    max-height: 140px;
+    min-height: 0;
+    flex: none;
+  }
+
+  /* Compact the sheep palette so all 6 buttons fit in one row and the
+     footer stays short, leaving maximum height for the graph canvas. */
+  [data-font-size="large"] .app .sheep-btn,
+  [data-font-size="x-large"] .app .sheep-btn {
+    flex: 0 0 32px;
+    padding: 1px;
+  }
+
+  /* Keep Submit + Reset side-by-side and left-aligned.
+     Left-align keeps the buttons away from the fixed accessibility FAB
+     at the bottom-right (which overlaps centered buttons at 300px CSS viewport). */
+  [data-font-size="large"] .app .controls,
+  [data-font-size="x-large"] .app .controls {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+}
+
+
+/* ============================================
+   FEEDBACK COMPACTION — LARGE FONT ZOOM
+   At large/x-large zoom the effective CSS layout area is smaller
+   (100vh / zoom), so shrink pattern-row images and spacing to keep
+   the feedback card from overflowing the sidebar in column layouts.
+   ============================================ */
+
+@media (max-width: 800px) {
+  [data-font-size='large'] .pattern-row,
+  [data-font-size='x-large'] .pattern-row {
+    padding: 4px 8px;
+    margin-bottom: 4px;
+  }
+
+  [data-font-size='large'] .pattern-row img,
+  [data-font-size='x-large'] .pattern-row img {
+    width: 36px;
+    height: 36px;
+  }
+
+  [data-font-size='large'] .patterns-unmatched,
+  [data-font-size='x-large'] .patterns-unmatched {
+    margin: 4px 0;
+  }
+
+  [data-font-size='large'] .feedback-big-icon,
+  [data-font-size='x-large'] .feedback-big-icon {
+    font-size: 1.6rem;
   }
 }
 
