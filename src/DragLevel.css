@@ -1290,15 +1290,12 @@ body {
     padding-right: 8px;
   }
 
-  /* When wrong feedback is showing, allow sidebar to grow and shrink graph */
-  .game-container:has(.detailed-feedback.incorrect) .sidebar {
-    max-height: 52vh;
-  }
-
+  /* On phone, never shrink the canvas when feedback shows — sidebar scrolls internally.
+     This overrides the tablet-breakpoint shrink rule that applies at this width too. */
   .game-container:has(.detailed-feedback.incorrect) .graph-area {
-    height: 18vh;
+    height: auto;
     min-height: 0;
-    max-height: 150px;
+    max-height: none;
   }
 
   /* Footer: always visible, never squished */

@@ -973,6 +973,13 @@
     border-radius: 12px;
   }
 
+  /* Override the tablet-breakpoint shrink rule — on phone the canvas must stay full size */
+  .accept-reject-level .game-container:has(.result-section) .graph-area {
+    height: auto;
+    min-height: 180px;
+    max-height: none;
+  }
+
   /* Sidebar: structured so answer buttons are always visible, not scrolled away */
   .accept-reject-level .sidebar {
     flex: none;
