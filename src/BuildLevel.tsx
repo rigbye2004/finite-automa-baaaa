@@ -390,6 +390,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const handleDropOnGraph = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
 
+    if (isAnimating) return
     if (!reactFlowInstance.current) return
 
     const toolType = event.dataTransfer.getData('text/tool')
@@ -461,6 +462,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   }, [levelConfig, dropSheepAtPosition, setNodes, findNearestNode, completeConnection, connectingFrom])
 
   const onNodeClick = useCallback((_: any, node: Node) => {
+    if (isAnimating) return
     if (mode === 'connect') {
       if (connectingFrom === null) {
         setConnectingFrom(node.id)
@@ -476,6 +478,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   }, [mode, connectingFrom, completeConnection])
 
   const onEdgeClick = useCallback((_: any, edge: Edge) => {
+    if (isAnimating) return
     if (mode === 'delete') {
       setPendingDelete({ type: 'edge', id: edge.id })
       setShowDeleteConfirm(true)
@@ -540,6 +543,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         ...edge.data,
         isHighlighted,
         isSelected: selectedEdge === edge.id,
+        isLocked: isAnimating,
         onClick: () => {
           if (mode === 'delete') {
             setPendingDelete({ type: 'edge', id: edge.id })
@@ -815,7 +819,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       </header>
 
       <div className="game-container">
-        <aside className={`toolbar ${showNudge === 'toolbar' ? 'nudge-pulse' : ''}`}>
+        <aside className={`toolbar ${showNudge === 'toolbar' ? 'nudge-pulse' : ''}`} style={{ opacity: isAnimating ? 0.4 : undefined, pointerEvents: isAnimating ? 'none' : undefined }}>
           <div className="tool-row-top">
             <div
               className={`tool-cell tool-select ${mode === 'select' ? 'active' : ''}`}
@@ -977,9 +981,11 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           <div
             ref={graphRef}
             className={`graph-area ${mode === 'connect' ? 'mode-connect' : mode === 'delete' ? 'mode-delete' : 'mode-select'}${showNudge === 'graph' ? ' nudge-pulse' : ''}`}
+            style={{ pointerEvents: isAnimating ? 'none' : undefined }}
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDropOnGraph}
             onMouseDown={(e) => {
+              if (isAnimating) return
               if (mode === 'connect' && !connectingFrom && reactFlowInstance.current && graphRef.current) {
                 const point = reactFlowInstance.current.screenToFlowPosition({
                   x: e.clientX,
@@ -1021,6 +1027,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             }}
             onMouseLeave={() => setMousePos(null)}
             onTouchStart={(e) => {
+              if (isAnimating) return
               if (mode === 'connect' && !connectingFrom && reactFlowInstance.current && graphRef.current) {
                 const touch = e.touches[0]
                 const point = reactFlowInstance.current.screenToFlowPosition({
@@ -1083,7 +1090,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             zoomOnDoubleClick={false}
             minZoom={0.2}
             maxZoom={2}
-            nodesDraggable={mode === 'select'}
+            nodesDraggable={mode === 'select' && !isAnimating}
             nodesConnectable={false}
             elementsSelectable={true}
           >
@@ -1231,14 +1238,13 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
               </button>
               {showDetailedFeedback && (
                 <button
-                  className="btn watch-path-btn"
-                  onClick={startAnimation}
-                  disabled={isAnimating}
+                  className={`btn watch-path-btn${isAnimating ? ' watching' : ''}`}
+                  onClick={() => { if (!isAnimating) startAnimation() }}
                 >
                   {isAnimating ? <><EyeIcon /> Watching...</> : <><EyeIcon /> Watch Path</>}
                 </button>
               )}
-              <button className="btn reset-btn" onClick={handleReset}>
+              <button className="btn reset-btn" onClick={handleReset} disabled={isAnimating} style={{ opacity: isAnimating ? 0.4 : undefined }}>
                 Reset
               </button>
               {isDevMode() && (

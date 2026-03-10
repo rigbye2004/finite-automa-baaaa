@@ -341,6 +341,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
   const handleDropOnGraph = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
+    if (isAnimating) return
     const sheepType = event.dataTransfer.getData('text/sheep')
     const fromEdgeId = event.dataTransfer.getData('text/fromEdge') || null
     if (!sheepType) return
@@ -348,6 +349,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   }, [dropAtPosition])
 
   const onEdgeClick = useCallback((_: any, edge: Edge) => {
+    if (isAnimating) return
     if (selectedSheep) {
       setEdges((eds) =>
         eds.map((e) => {
@@ -402,6 +404,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         ...edge.data,
         isHighlighted,
         isSelected: selectedEdge === edge.id,
+        isLocked: isAnimating,
         onClick: () => {
           if (selectedSheep) {
             setEdges((eds) =>
@@ -656,6 +659,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
           <div className="graph-column">
             <div
               className="graph-area"
+              style={{ pointerEvents: isAnimating ? 'none' : undefined }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDropOnGraph}
             >
@@ -759,31 +763,33 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         </div>
 
         <footer className={`footer ${showNudge ? 'nudge-pulse' : ''}`}>
-          <SheepPalette
-            onSelectSheep={onSelectSheep}
-            selectedSheep={selectedSheep}
-            availableSheep={levelConfig.availableSheep}
-            onTouchDrop={(sheepId, clientX, clientY) => dropAtPosition(sheepId, null, clientX, clientY)}
-          />
+          <div style={{ opacity: isAnimating ? 0.4 : undefined, pointerEvents: isAnimating ? 'none' : undefined }}>
+            <SheepPalette
+              onSelectSheep={onSelectSheep}
+              selectedSheep={selectedSheep}
+              availableSheep={levelConfig.availableSheep}
+              onTouchDrop={(sheepId, clientX, clientY) => dropAtPosition(sheepId, null, clientX, clientY)}
+            />
+          </div>
 
           <div className="controls">
             <button
               className="btn submit-btn"
               onClick={handleSubmit}
               disabled={levelComplete || isAnimating}
+              style={{ opacity: isAnimating ? 0.4 : undefined }}
             >
               <CheckIcon /> Submit
             </button>
             {showDetailedFeedback && (
               <button
-                className="btn watch-path-btn"
-                onClick={startAnimation}
-                disabled={isAnimating}
+                className={`btn watch-path-btn${isAnimating ? ' watching' : ''}`}
+                onClick={() => { if (!isAnimating) startAnimation() }}
               >
                 {isAnimating ? <><EyeIcon /> Watching...</> : <><EyeIcon /> Watch Path</>}
               </button>
             )}
-            <button className="btn reset-btn" onClick={handleReset}>
+            <button className="btn reset-btn" onClick={handleReset} disabled={isAnimating} style={{ opacity: isAnimating ? 0.4 : undefined }}>
               Reset
             </button>
             {isDevMode() && (

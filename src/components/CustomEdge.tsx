@@ -69,6 +69,7 @@ export default function CustomEdge({
   }
 
   const handleDragStart = (e: React.DragEvent) => {
+    if (data?.isLocked) { e.preventDefault(); return }
     if (data?.sheep) {
       e.dataTransfer.setData('text/sheep', data.sheep)
       e.dataTransfer.setData('text/fromEdge', id)
@@ -76,6 +77,7 @@ export default function CustomEdge({
   }
 
   const handleClick = (e: React.MouseEvent) => {
+    if (data?.isLocked) return
     if (data?.onLabelClick) {
       e.stopPropagation()
       data.onLabelClick()
@@ -104,7 +106,7 @@ export default function CustomEdge({
             padding: 4,
             borderRadius: 8,
             border: `2px solid ${data?.isSelected ? '#4CAF50' : '#ccc'}`,
-            pointerEvents: 'all',
+            pointerEvents: data?.isLocked ? 'none' : 'all',
             cursor: data?.sheep ? 'pointer' : 'default',
             zIndex: data?.sheep ? 10 : 1,
           }}
