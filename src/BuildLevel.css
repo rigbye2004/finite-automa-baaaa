@@ -980,6 +980,19 @@
   .build-level .toolbar-sheep {
     display: flex;
     gap: 5px;
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .build-level .toolbar-sheep-item {
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .build-level .toolbar-sheep-item img {
+    width: clamp(28px, 5vw, 44px);
+    height: clamp(28px, 5vw, 44px);
   }
 
   .build-level .graph-column {
@@ -1226,8 +1239,8 @@
   }
 
   .build-level .toolbar-sheep-item img {
-    width: 28px;
-    height: 28px;
+    width: 28px !important;
+    height: 28px !important;
   }
   
   .build-level .footer {
