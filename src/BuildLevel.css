@@ -479,8 +479,9 @@
 .build-level .toolbar-sheep {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: 1fr;
+  grid-auto-rows: auto;
   gap: 8px;
+  align-content: start;
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -496,13 +497,12 @@
   background: #fafafa;
   cursor: grab;
   transition: all 0.15s;
-  min-height: 0;
   overflow: hidden;
 }
 
 .build-level .toolbar-sheep-item img {
-  width: 100%;
-  height: 100%;
+  width: clamp(28px, 4vw, 52px);
+  height: clamp(28px, 4vw, 52px);
   max-width: 56px;
   max-height: 56px;
   min-width: 20px;
@@ -521,8 +521,7 @@
 }
 
 .build-level .toolbar-sheep-item:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-  justify-self: center;
+  grid-column: 1 / 2;
 }
 
 /* ── Tool icon images ── */
