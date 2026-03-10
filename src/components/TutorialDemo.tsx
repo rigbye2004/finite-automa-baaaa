@@ -229,6 +229,8 @@ function BuildLoopDemo() {
       <div className="demo-el demo-fence-a"><FenceIcon size={60} /></div>
       <div className="demo-el demo-glow-a1"><ClickRipple /></div>
       <div className="demo-el demo-glow-a2"><ClickRipple /></div>
+      <div className="demo-el demo-click-1">1</div>
+      <div className="demo-el demo-click-2">2</div>
       <div className="demo-el demo-loop-arrow"><LoopArrow w={64} h={52} /></div>
       <div className="demo-el demo-q-label">?</div>
       <div className="demo-el demo-check">✓</div>
@@ -506,6 +508,7 @@ export type DemoConcept =
   | 'ar-basics' | 'ar-reject' | 'ar-sequence'
   | 'ar-branch' | 'ar-loop' | 'ar-dead'
   | 'ar-multi'
+
 
 const DEMO_TITLES: Record<DemoConcept, string> = {
   'connecting':    'Draw arrows between fences',

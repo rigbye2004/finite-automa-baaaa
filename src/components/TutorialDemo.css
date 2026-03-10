@@ -748,6 +748,50 @@
   animation: bl-ripple-a2 5.5s ease infinite;
 }
 
+.demo-build-loop .demo-click-1,
+.demo-build-loop .demo-click-2 {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #1976d2;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.demo-build-loop .demo-click-1 {
+  left: 240px; top: 96px;
+  animation: bl-click-num-1 5.5s ease infinite;
+}
+
+.demo-build-loop .demo-click-2 {
+  left: 240px; top: 96px;
+  animation: bl-click-num-2 5.5s ease infinite;
+}
+
+@keyframes bl-click-num-1 {
+  0%, 28%  { opacity: 0; transform: scale(0.5); }
+  33%      { opacity: 1; transform: scale(1.2); }
+  37%      { transform: scale(1); }
+  50%      { opacity: 1; }
+  56%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
+@keyframes bl-click-num-2 {
+  0%, 54%  { opacity: 0; transform: scale(0.5); }
+  59%      { opacity: 1; transform: scale(1.2); }
+  63%      { transform: scale(1); }
+  75%      { opacity: 1; }
+  82%      { opacity: 0; }
+  100%     { opacity: 0; }
+}
+
 /* Cursor: From button → fence (1st click) → same fence (2nd click) */
 @keyframes bl-cursor {
   0%        { left: 18px; top: 22px; opacity: 0; }

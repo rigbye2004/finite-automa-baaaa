@@ -819,7 +819,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         <div style={{flex:1}} />
         <BadgeNotch badges={getEarnedBadges()} />
         <button className="hint-button" onClick={handleHintClick} title="Show me how">
-          ?
+          💡
         </button>
       </header>
 

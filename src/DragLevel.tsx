@@ -654,7 +654,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
           <div style={{flex:1}} />
           <BadgeNotch badges={getEarnedBadges()} />
           <button className="hint-button" onClick={handleHintClick} aria-label="Get a hint">
-            ?
+            💡
           </button>
         </header>
 
