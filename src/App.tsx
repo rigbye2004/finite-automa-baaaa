@@ -16,6 +16,11 @@ import './components/DevTools.css'
 
 const UNLOCK_ALL_KEY = 'sheep-automata-unlock-all'
 
+// Auto-unlock all levels for user study
+if (localStorage.getItem(UNLOCK_ALL_KEY) === null) {
+  localStorage.setItem(UNLOCK_ALL_KEY, 'true')
+}
+
 function AppContent() {
   const [level, setLevel] = useState<'menu' | 'accept-reject' | 'drag' | 'build'>('menu')
   const [showBadges, setShowBadges] = useState(false)
