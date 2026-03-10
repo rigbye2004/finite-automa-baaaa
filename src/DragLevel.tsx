@@ -29,12 +29,14 @@ import BadgeNotch from './components/BadgeNotch'
 import './components/TutorialDemo.css'
 import './components/DetailedFeedback.css'
 import './components/BadgeNotch.css'
+import './FinalChallenge.css'
 
 const DEV_MODE_KEY = 'sheep-automata-dev-mode'
 const isDevMode = () => localStorage.getItem(DEV_MODE_KEY) === 'true'
 
 const edgeTypes = { custom: CustomEdge }
 const nodeTypes = { stateNode: StateNode }
+
 
 interface DragLevelProps {
   onBack?: () => void
@@ -117,6 +119,8 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     handleStepChange,
     resetAnimation,
   } = useSheepAnimation()
+
+  const [stageComplete, setStageComplete] = useState(false)
 
   const [showDetailedFeedback, setShowDetailedFeedback] = useState(false)
   const [feedbackData, setFeedbackData] = useState<{
@@ -265,15 +269,13 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       setShowDetailedFeedback(false)
       
       const concepts = config.conceptsIntroduced || []
-      if (concepts.length > 0) {
-        const demo = pickDragDemo(currentLevelId, concepts)
-        if (!hasSeenDemo(demo)) {
-          markDemoSeen(demo)
-          setTimeout(() => {
-            setDemoConcept(demo)
-            setShowDemo(true)
-          }, 400)
-        }
+      const demo = pickDragDemo(currentLevelId, concepts)
+      if ((concepts.length > 0 || currentLevelId === 6) && !hasSeenDemo(demo)) {
+        markDemoSeen(demo)
+        setTimeout(() => {
+          setDemoConcept(demo)
+          setShowDemo(true)
+        }, 400)
       }
     }
   }, [currentLevelId])
@@ -562,6 +564,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     setShowDemo(true)
   }
 
+
   const handleDevAutoComplete = () => {
     const isFirstCompletion = !completedLevels.includes(currentLevelId)
     if (isFirstCompletion) {
@@ -735,10 +738,10 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                       ) : (
                         <button
                           className="feedback-btn"
-                          onClick={handleReset}
+                          onClick={() => setStageComplete(true)}
                           style={{ position: 'relative', zIndex: 101 }}
                         >
-                          Play Again
+                          Continue
                         </button>
                       )}
                     </div>
@@ -822,7 +825,39 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         )}
 
         </div>{/* end main-content */}
-      </div>
+
+      {stageComplete && (
+        <div className="level-complete-overlay">
+          <div className="level-complete-modal">
+            <h2>Stage Complete</h2>
+            <div className="level-complete-score">
+              <span className="final-score">{score} / {DRAG_LEVEL_COUNT}</span>
+            </div>
+            {(() => { const earned = getEarnedBadges(); return earned.length > 0 && (
+              <div className="badges-earned">
+                <h3 className="badges-earned-title">Badges Earned</h3>
+                <div className="badges-earned-list">
+                  {earned.map(badge => (
+                    <div key={badge.id} className="badges-earned-item">
+                      <span className="badges-earned-icon">{badge.icon || '⭐'}</span>
+                      <span className="badges-earned-name">{badge.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )})()}
+            <div className="level-complete-buttons">
+              <button className="btn primary-btn" onClick={() => { setStageComplete(false); handleReset() }}>
+                Play Again
+              </button>
+              <button className="btn secondary-btn" onClick={onBack}>
+                Back to Menu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

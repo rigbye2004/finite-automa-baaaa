@@ -1670,3 +1670,43 @@
   color: #5D4037;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
 }
+
+/* Stage Complete overlay/modal */
+.level-complete-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.level-complete-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  animation: modalPop 0.3s ease-out;
+}
+
+@keyframes modalPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.level-complete-modal h2 {
+  color: #2E7D32;
+  margin: 0 0 16px 0;
+  font-size: 1.8rem;
+}

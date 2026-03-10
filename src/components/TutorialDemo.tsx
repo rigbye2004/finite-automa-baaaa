@@ -82,6 +82,17 @@ function DiagArrow({ w = 100, h = 60, dir = 'down', color = '#666' }: { w?: numb
   )
 }
 
+function VArrow({ h = 90, color = '#666' }: { h?: number; color?: string }) {
+  const w = 18
+  const tip = 10
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+      <line x1={w/2} y1="4" x2={w/2} y2={h - tip} stroke={color} strokeWidth="2.5" strokeLinecap="round"/>
+      <path d={`M${w/2 - 6},${h - tip - 2} L${w/2},${h - 2} L${w/2 + 6},${h - tip - 2}`} fill={color} stroke={color} strokeWidth="1.2" strokeLinejoin="round" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 function LoopArrow({ w = 56, h = 48, color = '#666' }: { w?: number; h?: number; color?: string }) {
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
@@ -413,6 +424,64 @@ function DragLoopDemo() {
   )
 }
 
+function DragCrossingDemo() {
+  return (
+    <div className="demo-scene-inner demo-drag-crossing">
+      <div className="demo-el demo-target-pattern demo-target-1">
+        <img src={withBase("sheep-assets/sheep-3.svg")} width={18} height={18} alt="" />
+        <span className="demo-target-arrow">→</span>
+        <img src={withBase("sheep-assets/sheep-13.svg")} width={18} height={18} alt="" />
+      </div>
+      <div className="demo-el demo-target-pattern demo-target-2">
+        <img src={withBase("sheep-assets/sheep-8.svg")} width={18} height={18} alt="" />
+        <span className="demo-target-arrow">→</span>
+        <img src={withBase("sheep-assets/sheep-16.svg")} width={18} height={18} alt="" />
+      </div>
+      <div className="demo-el demo-target-pattern demo-target-3">
+        <img src={withBase("sheep-assets/sheep-3.svg")} width={16} height={16} alt="" />
+        <span className="demo-target-arrow">→</span>
+        <img src={withBase("sheep-assets/sheep-7.svg")} width={16} height={16} alt="" />
+        <span className="demo-target-arrow">→</span>
+        <img src={withBase("sheep-assets/sheep-16.svg")} width={16} height={16} alt="" />
+      </div>
+      <div className="demo-el demo-fence-start"><FenceIcon size={44} /></div>
+      <div className="demo-el demo-fence-top"><FenceIcon size={44} /></div>
+      <div className="demo-el demo-fence-bot"><FenceIcon size={44} /></div>
+      <div className="demo-el demo-fence-end">
+        <img src={withBase("sheep-assets/awake-farmer.svg")} width={44} height={36} alt="" />
+      </div>
+      <div className="demo-el demo-start-arrow"><StartMark size={14} /></div>
+      <div className="demo-el demo-arrow-st"><DiagArrow w={109} h={72} dir="up" /></div>
+      <div className="demo-el demo-arrow-sb"><DiagArrow w={109} h={72} dir="down" /></div>
+      <div className="demo-el demo-arrow-te"><DiagArrow w={110} h={70} dir="down" /></div>
+      <div className="demo-el demo-arrow-tb"><VArrow h={90} /></div>
+      <div className="demo-el demo-arrow-be"><DiagArrow w={110} h={74} dir="up" /></div>
+      <img className="demo-el demo-pal-1" src={withBase("sheep-assets/sheep-3.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-pal-2" src={withBase("sheep-assets/sheep-13.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-pal-3" src={withBase("sheep-assets/sheep-8.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-pal-4" src={withBase("sheep-assets/sheep-7.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-pal-5" src={withBase("sheep-assets/sheep-16.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-drag-1" src={withBase("sheep-assets/sheep-3.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-placed-1" src={withBase("sheep-assets/sheep-3.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-drag-2" src={withBase("sheep-assets/sheep-13.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-placed-2" src={withBase("sheep-assets/sheep-13.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-drag-3" src={withBase("sheep-assets/sheep-8.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-placed-3" src={withBase("sheep-assets/sheep-8.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-drag-4" src={withBase("sheep-assets/sheep-7.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-placed-4" src={withBase("sheep-assets/sheep-7.svg")} width={28} height={28} alt="" />
+      <img className="demo-el demo-drag-5" src={withBase("sheep-assets/sheep-16.svg")} width={32} height={32} alt="" />
+      <img className="demo-el demo-placed-5" src={withBase("sheep-assets/sheep-16.svg")} width={28} height={28} alt="" />
+      <div className="demo-el demo-glow-1"><ClickRipple /></div>
+      <div className="demo-el demo-glow-2"><ClickRipple /></div>
+      <div className="demo-el demo-glow-3"><ClickRipple /></div>
+      <div className="demo-el demo-glow-4"><ClickRipple /></div>
+      <div className="demo-el demo-glow-5"><ClickRipple /></div>
+      <div className="demo-el demo-match-tick">✓ All Matched!</div>
+      <div className="demo-el demo-cursor"><CursorIcon /></div>
+    </div>
+  )
+}
+
 function ClickEdgeDemo() {
   return (
     <div className="demo-scene-inner demo-click-edge">
@@ -433,7 +502,7 @@ function ClickEdgeDemo() {
 export type DemoConcept =
   | 'connecting' | 'set-accepting' | 'add-state' | 'place-sheep' | 'build-loop'
   | 'trace-path' | 'click-edge'
-  | 'drag-single' | 'drag-match' | 'drag-branch' | 'drag-loop'
+  | 'drag-single' | 'drag-match' | 'drag-branch' | 'drag-loop' | 'drag-crossing'
   | 'ar-basics' | 'ar-reject' | 'ar-sequence'
   | 'ar-branch' | 'ar-loop' | 'ar-dead'
   | 'ar-multi'
@@ -450,6 +519,7 @@ const DEMO_TITLES: Record<DemoConcept, string> = {
   'drag-match':    'Match the pattern!',
   'drag-branch':   'Two paths to fill in',
   'drag-loop':     'Loops go round and round!',
+  'drag-crossing': 'Three patterns, crossing paths!',
   'ar-basics':     'Follow the path to the bed',
   'ar-reject':     'Wrong sheep, path blocked!',
   'ar-sequence':   'Sheep jump one at a time',
@@ -651,7 +721,8 @@ export function pickDragDemo(levelId: number, conceptsIntroduced?: string[]): De
   }
   if (levelId <= 1) return 'drag-single'
   if (levelId <= 3) return 'drag-match'
-  if (levelId <= 6) return 'drag-branch'
+  if (levelId <= 5) return 'drag-branch'
+  if (levelId === 6) return 'drag-crossing'
   if (levelId <= 8) return 'drag-loop'
   return 'drag-branch'
 }
@@ -705,6 +776,7 @@ const DEMO_DURATIONS: Record<string, number> = {
   'drag-match': 9000,
   'drag-branch': 11000,
   'drag-loop': 10000,
+  'drag-crossing': 14000,
   'ar-basics': 6500,
   'ar-reject': 6500,
   'ar-sequence': 8000,
@@ -737,8 +809,9 @@ const DEMO_STEPS: Record<string, number[]> = {
   // Drag demos
   'drag-single':    [0, 20, 65],         // Pick sheep → Place → Matched
   'drag-match':     [0, 14, 46, 78],     // Sheep 1 → Place 1 → Sheep 2 → Matched
-  'drag-branch':    [0, 10, 30, 52, 74], // Sheep 1 → Place → Sheep 2 → Place → Matched
-  'drag-loop':      [0, 12, 34, 60, 82], // Sheep 1 → Loop sheep → Place → Exit → Matched
+  'drag-branch':    [0, 10, 30, 52, 74],        // Sheep 1 → Place → Sheep 2 → Place → Matched
+  'drag-loop':      [0, 12, 34, 60, 82],        // Sheep 1 → Loop sheep → Place → Exit → Matched
+  'drag-crossing':  [0, 8, 22, 37, 52, 66, 82], // 5 sheep placements + Matched
 }
 
 const RIBBON_SHEEP: Record<string, string[]> = {
@@ -853,6 +926,7 @@ export function TutorialDemo({ concept, onDismiss }: TutorialDemoProps) {
             {concept === 'drag-match' && <DragMatchDemo />}
             {concept === 'drag-branch' && <DragBranchDemo />}
             {concept === 'drag-loop' && <DragLoopDemo />}
+            {concept === 'drag-crossing' && <DragCrossingDemo />}
             {concept === 'ar-basics' && <ARBasicsDemo />}
             {concept === 'ar-reject' && <ARRejectDemo />}
             {concept === 'ar-sequence' && <ARSequenceDemo />}

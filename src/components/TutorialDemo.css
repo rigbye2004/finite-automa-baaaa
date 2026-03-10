@@ -2384,6 +2384,221 @@
 }
 
 /* ══════════════════════════════════════════════════
+   DRAG-CROSSING DEMO
+   Crossing paths (L6): 4 fences, 5 arrows (inc. crossing), 5 sheep. 14s.
+   Shows three patterns where one path cuts through both states.
+
+   Timeline (% of 14s):
+     0-3%   fade in
+     5-17%  place sheep-3 on start→top
+     19-31% place sheep-13 on top→end
+     34-46% place sheep-8 on start→bot
+     50-62% place sheep-7 on top→bot (the crossing!)
+     66-78% place sheep-16 on bot→end
+     82-92% "All Matched!"
+     94-100% fade out
+   ══════════════════════════════════════════════════ */
+
+/* ── Layout ── */
+
+.demo-drag-crossing .demo-target-1 { left: 8px; top: 5px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-target-2 { left: 152px; top: 5px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-target-3 { left: 288px; top: 5px; animation: dcr-persist 14s ease infinite; }
+
+.demo-drag-crossing .demo-fence-start { left: 20px; top: 105px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-fence-top   { left: 175px; top: 38px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-fence-bot   { left: 175px; top: 168px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-fence-end   { left: 332px; top: 105px; animation: dcr-persist 14s ease infinite; }
+
+.demo-drag-crossing .demo-start-arrow { left: 8px; top: 120px; animation: dcr-persist 14s ease infinite; }
+
+.demo-drag-crossing .demo-arrow-st { left: 66px; top: 55px; width: 109px; height: 72px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-arrow-sb { left: 66px; top: 128px; width: 109px; height: 72px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-arrow-te { left: 221px; top: 58px; width: 110px; height: 70px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-arrow-tb { left: 193px; top: 78px; width: 20px; height: 90px; animation: dcr-persist 14s ease infinite; }
+.demo-drag-crossing .demo-arrow-be { left: 221px; top: 128px; width: 110px; height: 74px; animation: dcr-persist 14s ease infinite; }
+
+/* Palette */
+.demo-drag-crossing .demo-pal-1 { left: 65px; top: 236px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dcr-pal1 14s ease infinite; }
+.demo-drag-crossing .demo-pal-2 { left: 112px; top: 236px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dcr-pal2 14s ease infinite; }
+.demo-drag-crossing .demo-pal-3 { left: 159px; top: 236px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dcr-pal3 14s ease infinite; }
+.demo-drag-crossing .demo-pal-4 { left: 206px; top: 236px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dcr-pal4 14s ease infinite; }
+.demo-drag-crossing .demo-pal-5 { left: 253px; top: 236px; border: 2px solid #ccc; border-radius: 8px; padding: 3px; background: #fafafa; animation: dcr-pal5 14s ease infinite; }
+
+/* Dragged & placed sheep */
+.demo-drag-crossing .demo-drag-1 { left: 81px; top: 244px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dcr-drag1 14s ease infinite; }
+.demo-drag-crossing .demo-placed-1 { left: 106px; top: 82px; opacity: 0; animation: dcr-placed1 14s ease infinite; }
+
+.demo-drag-crossing .demo-drag-2 { left: 128px; top: 244px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dcr-drag2 14s ease infinite; }
+.demo-drag-crossing .demo-placed-2 { left: 266px; top: 78px; opacity: 0; animation: dcr-placed2 14s ease infinite; }
+
+.demo-drag-crossing .demo-drag-3 { left: 175px; top: 244px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dcr-drag3 14s ease infinite; }
+.demo-drag-crossing .demo-placed-3 { left: 106px; top: 155px; opacity: 0; animation: dcr-placed3 14s ease infinite; }
+
+.demo-drag-crossing .demo-drag-4 { left: 222px; top: 244px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dcr-drag4 14s ease infinite; }
+.demo-drag-crossing .demo-placed-4 { left: 197px; top: 115px; opacity: 0; animation: dcr-placed4 14s ease infinite; }
+
+.demo-drag-crossing .demo-drag-5 { left: 269px; top: 244px; opacity: 0; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3)); z-index: 5; animation: dcr-drag5 14s ease infinite; }
+.demo-drag-crossing .demo-placed-5 { left: 266px; top: 152px; opacity: 0; animation: dcr-placed5 14s ease infinite; }
+
+/* Ripples */
+.demo-drag-crossing .demo-glow-1 { left: 106px; top: 90px; }
+.demo-drag-crossing .demo-glow-1 .demo-ripple { animation: dcr-rip1 14s ease infinite; }
+.demo-drag-crossing .demo-glow-2 { left: 268px; top: 85px; }
+.demo-drag-crossing .demo-glow-2 .demo-ripple { animation: dcr-rip2 14s ease infinite; }
+.demo-drag-crossing .demo-glow-3 { left: 106px; top: 162px; }
+.demo-drag-crossing .demo-glow-3 .demo-ripple { animation: dcr-rip3 14s ease infinite; }
+.demo-drag-crossing .demo-glow-4 { left: 197px; top: 122px; }
+.demo-drag-crossing .demo-glow-4 .demo-ripple { animation: dcr-rip4 14s ease infinite; }
+.demo-drag-crossing .demo-glow-5 { left: 268px; top: 158px; }
+.demo-drag-crossing .demo-glow-5 .demo-ripple { animation: dcr-rip5 14s ease infinite; }
+
+/* Match label */
+.demo-drag-crossing .demo-match-tick {
+  position: absolute; left: 50%; top: 128px; transform: translateX(-50%);
+  background: #43A047; color: #fff; font-weight: 700;
+  padding: 6px 18px; border-radius: 20px; font-size: 15px;
+  box-shadow: 0 2px 8px rgba(67,160,71,0.4); white-space: nowrap;
+  animation: dcr-match-tick 14s ease infinite;
+}
+
+/* Cursor */
+.demo-drag-crossing .demo-cursor {
+  left: 200px; top: 150px; z-index: 6; animation: dcr-cursor 14s ease infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes dcr-persist { 0% { opacity:0; } 3% { opacity:1; } 90% { opacity:1; } 94%,100% { opacity:0; } }
+@keyframes dcr-pal1 { 0% { opacity:0; } 3% { opacity:1; } 5% { opacity:1; } 8% { opacity:.3; } 90% { opacity:.3; } 94%,100% { opacity:0; } }
+@keyframes dcr-pal2 { 0% { opacity:0; } 3% { opacity:1; } 19% { opacity:1; } 22% { opacity:.3; } 90% { opacity:.3; } 94%,100% { opacity:0; } }
+@keyframes dcr-pal3 { 0% { opacity:0; } 3% { opacity:1; } 34% { opacity:1; } 37% { opacity:.3; } 90% { opacity:.3; } 94%,100% { opacity:0; } }
+@keyframes dcr-pal4 { 0% { opacity:0; } 3% { opacity:1; } 50% { opacity:1; } 53% { opacity:.3; } 90% { opacity:.3; } 94%,100% { opacity:0; } }
+@keyframes dcr-pal5 { 0% { opacity:0; } 3% { opacity:1; } 66% { opacity:1; } 69% { opacity:.3; } 90% { opacity:.3; } 94%,100% { opacity:0; } }
+
+/* Cursor: pal1→A→B, pal2→B→D, pal3→A→C, pal4→B→C, pal5→C→D */
+@keyframes dcr-cursor {
+  0%   { left: 200px; top: 150px; opacity: 0; }
+  4%   { left: 200px; top: 150px; opacity: 1; }
+  /* → pal1 (sheep-3) */
+  5%   { left: 89px; top: 252px; } 6% { left: 89px; top: 256px; } 7% { left: 89px; top: 252px; }
+  /* drag to A→B */
+  11%  { left: 101px; top: 168px; } 16% { left: 114px; top: 90px; }
+  /* → pal2 (sheep-13) */
+  18%  { left: 136px; top: 252px; } 19% { left: 136px; top: 256px; } 20% { left: 136px; top: 252px; }
+  /* drag to B→D */
+  26%  { left: 206px; top: 166px; } 30% { left: 270px; top: 86px; }
+  /* → pal3 (sheep-8) */
+  33%  { left: 183px; top: 252px; } 34% { left: 183px; top: 256px; } 35% { left: 183px; top: 252px; }
+  /* drag to A→C */
+  40%  { left: 145px; top: 203px; } 45% { left: 114px; top: 163px; }
+  /* → pal4 (sheep-7) */
+  49%  { left: 230px; top: 252px; } 50% { left: 230px; top: 256px; } 51% { left: 230px; top: 252px; }
+  /* drag to B→C (the crossing arrow!) */
+  56%  { left: 220px; top: 186px; } 61% { left: 205px; top: 123px; }
+  /* → pal5 (sheep-16) */
+  65%  { left: 277px; top: 252px; } 66% { left: 277px; top: 256px; } 67% { left: 277px; top: 252px; }
+  /* drag to C→D */
+  72%  { left: 274px; top: 200px; } 77% { left: 272px; top: 160px; }
+  /* drift away */
+  82%  { left: 330px; top: 140px; opacity: 1; }
+  86%  { opacity: 0; }
+  100% { left: 200px; top: 150px; opacity: 0; }
+}
+
+/* Drag+place sheep-3 onto A→B */
+@keyframes dcr-drag1 {
+  0%,4%  { left:81px;top:244px;opacity:0;transform:scale(1); }
+  5%     { left:81px;top:244px;opacity:1;transform:scale(1.1); }
+  11%    { left:93px;top:163px;transform:scale(1.1); }
+  16%    { left:106px;top:82px;opacity:1;transform:scale(1.05); }
+  18%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dcr-placed1 {
+  0%,16% { opacity:0;transform:scale(.6); } 18% { opacity:1;transform:scale(1.15); }
+  20%    { transform:scale(1); } 90% { opacity:1; } 94%,100% { opacity:0; }
+}
+@keyframes dcr-rip1 {
+  0%,16% { opacity:0;transform:scale(.5); } 18% { opacity:1;transform:scale(1); }
+  24%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-13 onto B→D */
+@keyframes dcr-drag2 {
+  0%,18% { left:128px;top:244px;opacity:0;transform:scale(1); }
+  19%    { left:128px;top:244px;opacity:1;transform:scale(1.1); }
+  26%    { left:200px;top:162px;transform:scale(1.1); }
+  30%    { left:266px;top:78px;opacity:1;transform:scale(1.05); }
+  32%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dcr-placed2 {
+  0%,30% { opacity:0;transform:scale(.6); } 32% { opacity:1;transform:scale(1.15); }
+  34%    { transform:scale(1); } 90% { opacity:1; } 94%,100% { opacity:0; }
+}
+@keyframes dcr-rip2 {
+  0%,30% { opacity:0;transform:scale(.5); } 32% { opacity:1;transform:scale(1); }
+  38%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-8 onto A→C */
+@keyframes dcr-drag3 {
+  0%,33% { left:175px;top:244px;opacity:0;transform:scale(1); }
+  34%    { left:175px;top:244px;opacity:1;transform:scale(1.1); }
+  40%    { left:140px;top:200px;transform:scale(1.1); }
+  45%    { left:106px;top:155px;opacity:1;transform:scale(1.05); }
+  47%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dcr-placed3 {
+  0%,45% { opacity:0;transform:scale(.6); } 47% { opacity:1;transform:scale(1.15); }
+  49%    { transform:scale(1); } 90% { opacity:1; } 94%,100% { opacity:0; }
+}
+@keyframes dcr-rip3 {
+  0%,45% { opacity:0;transform:scale(.5); } 47% { opacity:1;transform:scale(1); }
+  53%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-7 onto B→C (the crossing arrow!) */
+@keyframes dcr-drag4 {
+  0%,49% { left:222px;top:244px;opacity:0;transform:scale(1); }
+  50%    { left:222px;top:244px;opacity:1;transform:scale(1.1); }
+  56%    { left:213px;top:180px;transform:scale(1.1); }
+  61%    { left:197px;top:115px;opacity:1;transform:scale(1.05); }
+  63%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dcr-placed4 {
+  0%,61% { opacity:0;transform:scale(.6); } 63% { opacity:1;transform:scale(1.15); }
+  65%    { transform:scale(1); } 90% { opacity:1; } 94%,100% { opacity:0; }
+}
+@keyframes dcr-rip4 {
+  0%,61% { opacity:0;transform:scale(.5); } 63% { opacity:1;transform:scale(1); }
+  69%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+/* Drag+place sheep-16 onto C→D */
+@keyframes dcr-drag5 {
+  0%,65% { left:269px;top:244px;opacity:0;transform:scale(1); }
+  66%    { left:269px;top:244px;opacity:1;transform:scale(1.1); }
+  72%    { left:267px;top:198px;transform:scale(1.1); }
+  77%    { left:266px;top:152px;opacity:1;transform:scale(1.05); }
+  79%    { opacity:0;transform:scale(1); } 100% { opacity:0; }
+}
+@keyframes dcr-placed5 {
+  0%,77% { opacity:0;transform:scale(.6); } 79% { opacity:1;transform:scale(1.15); }
+  81%    { transform:scale(1); } 90% { opacity:1; } 94%,100% { opacity:0; }
+}
+@keyframes dcr-rip5 {
+  0%,77% { opacity:0;transform:scale(.5); } 79% { opacity:1;transform:scale(1); }
+  85%    { opacity:0;transform:scale(1.8); } 100% { opacity:0; }
+}
+
+@keyframes dcr-match-tick {
+  0%,82% { opacity:0;transform:translateX(-50%) scale(.4); }
+  84%    { opacity:1;transform:translateX(-50%) scale(1.15); }
+  86%    { transform:translateX(-50%) scale(1); }
+  91%    { opacity:1; }
+  94%,100% { opacity:0;transform:translateX(-50%) scale(1); }
+}
+
+/* ══════════════════════════════════════════════════
    ACCEPT/REJECT DEMOS — Shared styles
    ══════════════════════════════════════════════════ */
 

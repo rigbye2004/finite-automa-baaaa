@@ -30,6 +30,7 @@ import BadgeNotch from './components/BadgeNotch'
 import './components/TutorialDemo.css'
 import './components/DetailedFeedback.css'
 import './components/BadgeNotch.css'
+import './FinalChallenge.css'
 
 const DEV_MODE_KEY = 'sheep-automata-dev-mode'
 const isDevMode = () => localStorage.getItem(DEV_MODE_KEY) === 'true'
@@ -46,6 +47,7 @@ const FENCE_GHOST_SRC = 'data:image/svg+xml,' + encodeURIComponent(
 
 const edgeTypes = { custom: CustomEdge }
 const nodeTypes = { stateNode: StateNode }
+
 
 interface BuildLevelProps {
   onBack?: () => void
@@ -147,6 +149,8 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     handleStepChange,
     resetAnimation,
   } = useSheepAnimation()
+
+  const [stageComplete, setStageComplete] = useState(false)
 
   const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
   const { settings: a11ySettings } = useAccessibility()
@@ -750,6 +754,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
 
   const isLastLevel = currentLevelId === BUILD_LEVEL_COUNT
 
+
   if (!levelConfig) {
     return (
       <div className="build-level">
@@ -1289,10 +1294,10 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                     ) : (
                       <button
                         className="feedback-btn"
-                        onClick={handleReset}
+                        onClick={() => setStageComplete(true)}
                         style={{ position: 'relative', zIndex: 101 }}
                       >
-                        Play Again
+                        Continue
                       </button>
                     )}
                   </div>
@@ -1334,19 +1339,51 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           <div className="hint-modal" onClick={e => e.stopPropagation()}>
             <p>Are you sure you want to delete this {pendingDelete?.type === 'edge' ? 'arrow' : nodes.find(n => n.id === pendingDelete?.id)?.data.isAccepting ? 'bed' : 'fence'}?</p>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button 
-                className="hint-close" 
+              <button
+                className="hint-close"
                 onClick={confirmDelete}
                 style={{ flex: 1, background: '#c62828' }}
               >
                 Delete
               </button>
-              <button 
-                className="hint-close" 
+              <button
+                className="hint-close"
                 onClick={cancelDelete}
                 style={{ flex: 1, background: '#666' }}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {stageComplete && (
+        <div className="level-complete-overlay">
+          <div className="level-complete-modal">
+            <h2>Stage Complete</h2>
+            <div className="level-complete-score">
+              <span className="final-score">{score} / {BUILD_LEVEL_COUNT}</span>
+            </div>
+            {(() => { const earned = getEarnedBadges(); return earned.length > 0 && (
+              <div className="badges-earned">
+                <h3 className="badges-earned-title">Badges Earned</h3>
+                <div className="badges-earned-list">
+                  {earned.map(badge => (
+                    <div key={badge.id} className="badges-earned-item">
+                      <span className="badges-earned-icon">{badge.icon || '⭐'}</span>
+                      <span className="badges-earned-name">{badge.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )})()}
+            <div className="level-complete-buttons">
+              <button className="btn primary-btn" onClick={() => { setStageComplete(false); handleReset() }}>
+                Play Again
+              </button>
+              <button className="btn secondary-btn" onClick={onBack}>
+                Back to Menu
               </button>
             </div>
           </div>
