@@ -156,8 +156,8 @@ function AppContent() {
                 onClick={() => handleLevelClick('accept-reject')}
                 aria-describedby="level1-desc"
               >
-                <span className="level-btn-text">Stage 1: Accept or Reject</span>
-                <span className="level-btn-desc" id="level1-desc">Can the sheep reach the farmer?</span>
+                <span className="level-btn-text">Stage 1: Does the Farmer Fall Asleep?</span>
+                <span className="level-btn-desc" id="level1-desc">Follow the path and find out!</span>
                 <span className="level-btn-sheep" aria-label={`${level1Progress?.bestStars ?? 0} out of 3 stars`}>
                   {Array.from({ length: 3 }, (_, i) => (
                     <span key={i} className={i < (level1Progress?.bestStars ?? 0) ? 'star-earned' : 'star-unearned'} aria-hidden="true">

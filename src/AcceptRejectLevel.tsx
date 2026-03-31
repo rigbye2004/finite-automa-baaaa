@@ -15,9 +15,10 @@ import type { Badge } from './contexts/GameProgressContext'
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
 
-import { playCorrect, playIncorrect, playHop, playLevelComplete } from './utils/sounds'
+import { playGrumpy, playBaaa, playFanfare, playSnore, muteSounds, unmuteSounds, stopAllAudio } from './utils/sounds'
 import { calculateStars } from './utils/automata'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickARDemo } from './components/TutorialDemo'
+import { StoryIntro, hasSeenIntro, markIntroSeen } from './components/StoryIntro'
 import type { DemoConcept } from './components/TutorialDemo'
 import { DetailedFeedback, type FeedbackData } from './components/DetailedFeedback'
 import { ACCEPT_REJECT_QUESTIONS, ACCEPT_REJECT_QUESTION_COUNT, type AcceptRejectQuestion } from './acceptRejectLevelConfigs'
@@ -183,30 +184,18 @@ interface SavedProgress {
 
 function loadProgress(): SavedProgress | null {
   try {
-    const saved = localStorage.getItem(PROGRESS_KEY)
-    if (saved) {
-      return JSON.parse(saved)
-    }
-  } catch (e) {
-    console.warn('Failed to load progress:', e)
+    return JSON.parse(localStorage.getItem(PROGRESS_KEY)!)
+  } catch {
+    return null
   }
-  return null
 }
 
 function saveProgress(progress: SavedProgress) {
-  try {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
-  } catch (e) {
-    console.warn('Failed to save progress:', e)
-  }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
 }
 
 function clearProgress() {
-  try {
-    localStorage.removeItem(PROGRESS_KEY)
-  } catch (e) {
-    console.warn('Failed to clear progress:', e)
-  }
+  localStorage.removeItem(PROGRESS_KEY)
 }
 
 export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
@@ -234,9 +223,12 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   const [sessionBadges, setSessionBadges] = useState<Badge[]>([])
   const [levelFinished, setLevelFinished] = useState(false)
 
+  const [showStoryIntro, setShowStoryIntro] = useState(() => !hasSeenIntro())
   const [showDemo, setShowDemo] = useState(false)
   const [demoConcept, setDemoConcept] = useState<DemoConcept>('trace-path')
   const [showNudge, setShowNudge] = useState(false)
+  const [nudgeHint, setNudgeHint] = useState(false)
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const questionStartTime = useRef<number>(Date.now())
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null)
@@ -245,6 +237,8 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
 
   // Re-fit the graph whenever font size changes (CSS zoom changes ReactFlow's
   // coordinate measurements, so a fresh fitView is needed to fix edge positions)
+  useEffect(() => { unmuteSounds() }, [])
+
   useEffect(() => {
     if (!reactFlowInstance.current) return
     const timer = setTimeout(() => {
@@ -318,7 +312,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   
   const handleStepWithSound = useCallback((step: number, currentNode: string) => {
     handleStepChange(step, currentNode)
-    if (a11ySettings.soundEffects) playHop()
+    if (a11ySettings.soundEffects) playBaaa()
   }, [handleStepChange, a11ySettings.soundEffects])
 
   const { recordCorrectAnswer, recordIncorrectAnswer, awardStars, checkAndAwardBadge, getEarnedBadges } = useGameProgress()
@@ -392,24 +386,22 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
     setShowDemo(true)
   }
 
-  const pendingSoundRef = useRef<'correct' | 'incorrect' | null>(null)
+  const soundEffectsRef = useRef(a11ySettings.soundEffects)
+  useEffect(() => { soundEffectsRef.current = a11ySettings.soundEffects }, [a11ySettings.soundEffects])
 
-  const onAnimationComplete = useCallback((result: { success: boolean; stoppedAt?: string }) => {
-    handleAnimationComplete(result)
-    if (a11ySettings.soundEffects && pendingSoundRef.current) {
-      if (pendingSoundRef.current === 'correct') playCorrect()
-      else playIncorrect()
-      pendingSoundRef.current = null
+  const onAnimationComplete = useCallback((reachedAccepting: boolean, stuckAt?: string) => {
+    handleAnimationComplete(reachedAccepting, stuckAt)
+    if (soundEffectsRef.current) {
+      if (reachedAccepting) playSnore()
+      else playGrumpy()
     }
-  }, [handleAnimationComplete, a11ySettings.soundEffects])
+  }, [handleAnimationComplete])
 
   const handleAnswer = (selectedAnswer: 'accept' | 'reject') => {
     setAnswer(selectedAnswer)
     setShowResult(true)
 
     const isCorrect = selectedAnswer === question.correctAnswer
-
-    pendingSoundRef.current = isCorrect ? 'correct' : 'incorrect'
 
     startAnimation()
 
@@ -443,6 +435,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   }
 
   const handleNext = () => {
+    stopAllAudio()
     resetAnimation()
     if (returnToQuestion.current !== null) {
       setCurrentQuestion(returnToQuestion.current)
@@ -459,7 +452,8 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   }
 
   const handleLevelComplete = () => {
-    if (a11ySettings.soundEffects) playLevelComplete()
+    muteSounds()
+    if (a11ySettings.soundEffects) playFanfare()
     clearProgress()
     const badges = awardStars('accept-reject', calculateStars(score / ACCEPT_REJECT_QUESTION_COUNT), anyHintUsed)
     if (incorrectAnswers === 0) {
@@ -472,6 +466,8 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   }
 
   const handleRestart = () => {
+    stopAllAudio()
+    unmuteSounds()
     clearProgress()
     resetAnimation()
     
@@ -488,6 +484,29 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
     setSessionBadges([])
   }
 
+  const INACTIVITY_DELAY = 20000
+  const scheduleHintNudgeRef = useRef<(() => void) | null>(null)
+  const scheduleHintNudge = useCallback(() => {
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+    inactivityTimerRef.current = setTimeout(() => {
+      setNudgeHint(true)
+      setTimeout(() => {
+        setNudgeHint(false)
+        scheduleHintNudgeRef.current?.()
+      }, 4500)
+    }, INACTIVITY_DELAY)
+  }, [])
+  scheduleHintNudgeRef.current = scheduleHintNudge
+
+  useEffect(() => {
+    if (levelFinished || isAnimating || showResult) {
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+      return
+    }
+    scheduleHintNudge()
+    return () => { if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current) }
+  }, [currentQuestion, levelFinished, isAnimating, showResult, scheduleHintNudge])
+
   const isCorrect = answer === question.correctAnswer
   const isLastQuestion = currentQuestion === ACCEPT_REJECT_QUESTION_COUNT - 1
 
@@ -500,9 +519,9 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
   }
 
   return (
-    <div className="accept-reject-level">
+    <div className="accept-reject-level" onPointerDown={scheduleHintNudge}>
       <aside className="sheep-panel">
-        <button className="home-btn" onClick={onBack} aria-label="Home">
+        <button className="home-btn" onClick={() => { unmuteSounds(); onBack?.() }} aria-label="Home">
           <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </button>
         <div className="sheep-panel-label">Q{currentQuestion + 1}</div>
@@ -583,7 +602,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
         <header className="header-compact">
           <div style={{flex:1}} />
           <BadgeNotch badges={getEarnedBadges()} />
-          <button className="hint-button" onClick={handleHintClick} aria-label="Get a hint">
+          <button className={`hint-button${nudgeHint ? ' nudge-pulse' : ''}`} onClick={handleHintClick} aria-label="Get a hint">
             💡
           </button>
         </header>
@@ -714,7 +733,7 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
       </div>
       </div>{/* end main-content */}
 
-      {showDemo && !isAnimating && (
+      {showDemo && !isAnimating && !showStoryIntro && (
         <TutorialDemo
           concept={demoConcept}
           onDismiss={() => {
@@ -723,6 +742,10 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
             setTimeout(() => setShowNudge(false), 4500)
           }}
         />
+      )}
+
+      {showStoryIntro && (
+        <StoryIntro onDone={() => { markIntroSeen(); setShowStoryIntro(false) }} />
       )}
 
       {levelFinished && (
@@ -746,11 +769,11 @@ export default function AcceptRejectLevel({ onBack }: AcceptRejectLevelProps) {
               </div>
             )}
             <div className="level-complete-buttons">
-              <button className="btn primary-btn" onClick={handleRestart}>
-                Play Again
-              </button>
-              <button className="btn secondary-btn" onClick={onBack}>
+              <button className="btn primary-btn" onClick={() => { unmuteSounds(); onBack?.() }}>
                 Back to Menu
+              </button>
+              <button className="btn secondary-btn" onClick={handleRestart}>
+                Play Again
               </button>
             </div>
           </div>

@@ -21,7 +21,7 @@ import { getBuildLevelConfig, BUILD_LEVEL_COUNT, type BuildLevelConfig } from '.
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
 
-import { playCorrect, playIncorrect, playHop } from './utils/sounds'
+import { playGrumpy, playBaaa, playSnore, playFanfare, muteSounds, unmuteSounds, stopAllAudio, getAudioRemainingMs } from './utils/sounds'
 import { findAllPaths, pathsMatch, calculateStars } from './utils/automata'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickDemoForState } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
@@ -64,33 +64,22 @@ interface SavedProgress {
 
 function loadProgress(): SavedProgress | null {
   try {
-    const saved = localStorage.getItem(PROGRESS_KEY)
-    if (saved) {
-      return JSON.parse(saved)
-    }
-  } catch (e) {
-    console.warn('Failed to load progress:', e)
+    return JSON.parse(localStorage.getItem(PROGRESS_KEY)!)
+  } catch {
+    return null
   }
-  return null
 }
 
 function saveProgress(progress: SavedProgress) {
-  try {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
-  } catch (e) {
-    console.warn('Failed to save progress:', e)
-  }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
 }
 
 function clearProgress() {
-  try {
-    localStorage.removeItem(PROGRESS_KEY)
-  } catch (e) {
-    console.warn('Failed to clear progress:', e)
-  }
+  localStorage.removeItem(PROGRESS_KEY)
 }
 
-function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
+function BuildLevel({ onBack: onBackProp, initialLevel = 1 }: BuildLevelProps) {
+  const onBack = () => { unmuteSounds(); onBackProp?.() }
   const savedProgress = useRef(loadProgress())
 
   const [currentLevelId, setCurrentLevelId] = useState(() => {
@@ -116,6 +105,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const [completedLevels, setCompletedLevels] = useState<number[]>(savedProgress.current?.completedLevels ?? [])
   const [attempts, setAttempts] = useState(0)
   const [mode, setMode] = useState<'select' | 'connect' | 'delete'>('select')
+  const [pendingTool, setPendingTool] = useState<'fence' | 'bed' | null>(null)
 
   const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null)
   const dragConnectRef = useRef<{ startPos: { x: number; y: number }; nodeId: string } | null>(null)
@@ -127,6 +117,8 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   const [showDemo, setShowDemo] = useState(false)
   const [demoConcept, setDemoConcept] = useState<DemoConcept>('connecting')
   const [showNudge, setShowNudge] = useState<'toolbar' | 'graph' | null>(null)
+  const [nudgeHint, setNudgeHint] = useState(false)
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [showDetailedFeedback, setShowDetailedFeedback] = useState(false)
   const feedbackRef = useRef<HTMLDivElement>(null)
@@ -152,24 +144,25 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
 
   const [stageComplete, setStageComplete] = useState(false)
 
-  const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
+  const { awardStars, recordCorrectAnswer, recordIncorrectAnswer, getEarnedBadges } = useGameProgress()
   const { settings: a11ySettings } = useAccessibility()
 
   const handleStepWithSound = useCallback((step: number, currentNode: string) => {
     handleStepChange(step, currentNode)
-    if (a11ySettings.soundEffects) playHop()
+    if (a11ySettings.soundEffects) playBaaa()
   }, [handleStepChange, a11ySettings.soundEffects])
 
-  const pendingSoundRef = useRef<'correct' | 'incorrect' | null>(null)
+  const soundEffectsRef = useRef(a11ySettings.soundEffects)
+  useEffect(() => { soundEffectsRef.current = a11ySettings.soundEffects }, [a11ySettings.soundEffects])
 
   const handleAllPatternsCompleteWithSound = useCallback((results: any[]) => {
     handleAllPatternsComplete(results)
-    if (a11ySettings.soundEffects && pendingSoundRef.current) {
-      if (pendingSoundRef.current === 'correct') playCorrect()
-      else playIncorrect()
-      pendingSoundRef.current = null
+    if (soundEffectsRef.current) {
+      const allSuccess = results.every((r: any) => r.success)
+      if (allSuccess) setTimeout(() => playSnore(), 400)
+      else playGrumpy()
     }
-  }, [handleAllPatternsComplete, a11ySettings.soundEffects])
+  }, [handleAllPatternsComplete])
 
   useEffect(() => {
     if (!reactFlowInstance.current) return
@@ -187,7 +180,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       saveProgress({
         currentLevelId,
         score,
-        completedLevels
+        completedLevels,
       })
     }
   }, [currentLevelId, score, completedLevels])
@@ -465,6 +458,19 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     setNodes((nds) => [...nds, newNode])
   }, [levelConfig, dropSheepAtPosition, setNodes, findNearestNode, completeConnection, connectingFrom])
 
+  const onPaneClick = useCallback((e: React.MouseEvent) => {
+    if (!pendingTool || !reactFlowInstance.current) return
+    const position = reactFlowInstance.current.screenToFlowPosition({ x: e.clientX, y: e.clientY })
+    const newNode: Node = {
+      id: `state-${nodeIdCounter.current++}`,
+      type: 'stateNode',
+      position,
+      data: { label: `Fence ${nodeIdCounter.current - 1}`, isStart: false, isAccepting: pendingTool === 'bed', sheep: null, showLabel: false },
+    }
+    setNodes((nds) => [...nds, newNode])
+    setPendingTool(null)
+  }, [pendingTool, setNodes])
+
   const onNodeClick = useCallback((_: any, node: Node) => {
     if (isAnimating) return
     if (mode === 'connect') {
@@ -617,6 +623,31 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     edgeIdCounter.current = levelConfig.initialEdges.length + 1
   }
 
+
+  const INACTIVITY_DELAY = 20000
+  const scheduleHintNudgeRef = useRef<(() => void) | null>(null)
+  const scheduleHintNudge = useCallback(() => {
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+    inactivityTimerRef.current = setTimeout(() => {
+      setNudgeHint(true)
+      setTimeout(() => {
+        setNudgeHint(false)
+        scheduleHintNudgeRef.current?.()
+      }, 4500)
+    }, INACTIVITY_DELAY)
+  }, [])
+  scheduleHintNudgeRef.current = scheduleHintNudge
+
+  // Start inactivity timer when level loads; cancel when not applicable
+  useEffect(() => {
+    if (levelComplete || isAnimating) {
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+      return
+    }
+    scheduleHintNudge()
+    return () => { if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current) }
+  }, [currentLevelId, levelComplete, isAnimating, scheduleHintNudge])
+
   const handleSubmit = () => {
     if (!levelConfig) return
 
@@ -634,9 +665,8 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       return
     }
 
-    startAnimation()
-
-    setAttempts(prev => prev + 1)
+    const newAttempts = attempts + 1
+    setAttempts(newAttempts)
     const allPaths = findAllPaths(nodes, edges)
 
     const matched = levelConfig.targetPatterns.filter((pattern) =>
@@ -654,7 +684,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
     const allPatternsMatched = unmatched.length === 0
 
     if (allPatternsMatched) {
-      pendingSoundRef.current = 'correct'
+      startAnimation()
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
         const newScore = score + 1
@@ -663,7 +693,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
         setCompletedLevels(newCompleted)
         saveProgress({ currentLevelId, score: newScore, completedLevels: newCompleted })
       }
-      
+
       setLevelComplete(true)
       setShowDetailedFeedback(true)
       setMessageType('success')
@@ -671,18 +701,23 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       const starsForUnlock = (attempts === 0 && !hintUsedThisLevel) ? 2 : 1
       const starBadges = awardStars(`build-level-${currentLevelId}`, starsForUnlock, hintUsedThisLevel)
       const answerBadges = recordCorrectAnswer(`build-level-${currentLevelId}`, 0)
-      
+
       const finalScore = isFirstCompletion ? score + 1 : score
       const stageBadges = awardStars('build', calculateStars(finalScore / BUILD_LEVEL_COUNT), false)
       starBadges.push(...stageBadges)
-      
+
       const allBadges = [...starBadges, ...answerBadges]
-      const uniqueBadges = allBadges.filter((badge, index, self) => 
+      const uniqueBadges = allBadges.filter((badge, index, self) =>
         index === self.findIndex(b => b.id === badge.id)
       )
       if (uniqueBadges.length > 0) setSessionBadges(prev => [...prev, ...uniqueBadges])
+    } else if (newAttempts >= 3) {
+      startAnimation()
+      setShowDetailedFeedback(true)
+      setMessage('')
+      setMessageType('error')
     } else {
-      pendingSoundRef.current = 'incorrect'
+      startAnimation()
       setShowDetailedFeedback(true)
       setMessage('')
       setMessageType('error')
@@ -690,6 +725,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   }
 
   const handleContinueFromFeedback = () => {
+    stopAllAudio()
     resetAnimation()
     if (levelComplete) {
       let nextLevel: number | null = null
@@ -767,7 +803,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
   }
 
   return (
-    <div className="build-level">
+    <div className="build-level" onPointerDown={scheduleHintNudge}>
       <aside className="sheep-panel">
         <button className="home-btn" onClick={onBack} aria-label="Home">
           <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -791,7 +827,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             const levelNum = i + 1
             const completed = completedLevels.includes(levelNum)
             const isCurrent = levelNum === currentLevelId
-            let status: 'correct' | 'current' | 'future' = 'future'
+            let status: 'correct' | 'incorrect' | 'current' | 'future' = 'future'
             if (completed) status = 'correct'
             else if (isCurrent) status = 'current'
             return (
@@ -808,6 +844,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                   alt=""
                 />
                 {status === 'correct' && <span className="sheep-badge badge-correct">✓</span>}
+                {status === 'incorrect' && <span className="sheep-badge badge-incorrect">✗</span>}
               </div>
             )
           })}
@@ -818,17 +855,17 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
       <header className="header-compact">
         <div style={{flex:1}} />
         <BadgeNotch badges={getEarnedBadges()} />
-        <button className="hint-button" onClick={handleHintClick} title="Show me how">
+        <button className={`hint-button${nudgeHint ? ' nudge-pulse' : ''}`} onClick={handleHintClick} title="Show me how">
           💡
         </button>
       </header>
 
       <div className="game-container">
-        <aside className={`toolbar ${showNudge === 'toolbar' ? 'nudge-pulse' : ''}`} style={{ opacity: isAnimating ? 0.4 : undefined, pointerEvents: isAnimating ? 'none' : undefined }}>
+        <aside className={`toolbar ${showNudge === 'toolbar' ? 'nudge-pulse' : ''}`} style={{ opacity: isAnimating ? 0.35 : undefined, pointerEvents: isAnimating ? 'none' : undefined }}>
           <div className="tool-row-top">
             <div
               className={`tool-cell tool-select ${mode === 'select' ? 'active' : ''}`}
-              onClick={() => { setMode('select'); setConnectingFrom(null); setMousePos(null); setSelectedSheep(null) }}
+              onClick={() => { setMode('select'); setConnectingFrom(null); setMousePos(null); setSelectedSheep(null); setPendingTool(null) }}
               title="Select"
             >
               <svg width={34} height={34} viewBox="0 0 24 24" fill="none">
@@ -838,7 +875,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
 
             <div
               className={`tool-cell tool-delete ${mode === 'delete' ? 'active' : ''}`}
-              onClick={() => { setMode('delete'); setConnectingFrom(null); setMousePos(null); setSelectedEdge(null); setSelectedSheep(null) }}
+              onClick={() => { setMode('delete'); setConnectingFrom(null); setMousePos(null); setSelectedEdge(null); setSelectedSheep(null); setPendingTool(null) }}
               title="Delete"
             >
               <svg width={34} height={34} viewBox="0 0 32 32" fill="none">
@@ -883,9 +920,11 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           <div className="tool-grid">
             {levelConfig.canAddStates && (
               <div
-                className="tool-cell tool-fence"
+                className={`tool-cell tool-fence ${pendingTool === 'fence' ? 'active' : ''}`}
                 draggable
+                onClick={() => { setPendingTool(pendingTool === 'fence' ? null : 'fence'); setSelectedSheep(null); setMode('select'); setConnectingFrom(null) }}
                 onDragStart={(e) => {
+                  setPendingTool(null)
                   e.dataTransfer.setData('application/reactflow', 'stateNode')
                 }}
                 onTouchStart={(e) => startTouchDrag(
@@ -904,7 +943,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                     setNodes((nds) => [...nds, newNode])
                   },
                 )}
-                title="Drag onto the field"
+                title="Click to select, then click the field to place — or drag"
               >
                 <svg width={56} height={48} viewBox="0 0 44 38" fill="none">
                   <rect x="2" y="2" width="7" height="36" rx="1.5" fill="#8B4513" stroke="#5D3A1A" strokeWidth="0.8"/>
@@ -918,9 +957,13 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
 
             {currentLevelId >= 4 && (
               <div
-                className="tool-cell tool-bed"
+                className={`tool-cell tool-bed ${pendingTool === 'bed' ? 'active' : ''}`}
                 draggable
-                onDragStart={(e) => { e.dataTransfer.setData('text/tool', 'bed') }}
+                onClick={() => { setPendingTool(pendingTool === 'bed' ? null : 'bed'); setSelectedSheep(null); setMode('select'); setConnectingFrom(null) }}
+                onDragStart={(e) => {
+                  setPendingTool(null)
+                  e.dataTransfer.setData('text/tool', 'bed')
+                }}
                 onTouchStart={(e) => startTouchDrag(
                   e.touches[0],
                   'bed',
@@ -937,7 +980,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                     setNodes((nds) => [...nds, newNode])
                   },
                 )}
-                title="Drag onto the field"
+                title="Click to select, then click the field to place — or drag"
               >
                 <img src={withBase("sheep-assets/awake-farmer.svg")} width={56} height={44} alt="Bed" className="tool-bed-icon" />
               </div>
@@ -986,7 +1029,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
           <div
             ref={graphRef}
             className={`graph-area ${mode === 'connect' ? 'mode-connect' : mode === 'delete' ? 'mode-delete' : 'mode-select'}${showNudge === 'graph' ? ' nudge-pulse' : ''}`}
-            style={{ pointerEvents: isAnimating ? 'none' : undefined }}
+            style={{ pointerEvents: isAnimating ? 'none' : undefined, cursor: pendingTool ? 'crosshair' : undefined }}
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDropOnGraph}
             onMouseDown={(e) => {
@@ -1076,6 +1119,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
               }
             }}
           >
+
           <ReactFlow
             nodes={styledNodes}
             edges={styledEdges}
@@ -1085,6 +1129,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
             onEdgesChange={onEdgesChange}
             onNodeClick={onNodeClick}
             onEdgeClick={onEdgeClick}
+            onPaneClick={onPaneClick}
             onInit={(instance) => {
               reactFlowInstance.current = instance
             }}
@@ -1294,7 +1339,7 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
                     ) : (
                       <button
                         className="feedback-btn"
-                        onClick={() => setStageComplete(true)}
+                        onClick={() => { muteSounds(); if (a11ySettings.soundEffects) playFanfare(); setStageComplete(true) }}
                         style={{ position: 'relative', zIndex: 101 }}
                       >
                         Continue
@@ -1379,11 +1424,11 @@ function BuildLevel({ onBack, initialLevel = 1 }: BuildLevelProps) {
               </div>
             )})()}
             <div className="level-complete-buttons">
-              <button className="btn primary-btn" onClick={() => { setStageComplete(false); handleReset() }}>
-                Play Again
-              </button>
-              <button className="btn secondary-btn" onClick={onBack}>
+              <button className="btn primary-btn" onClick={onBack}>
                 Back to Menu
+              </button>
+              <button className="btn secondary-btn" onClick={() => { unmuteSounds(); setStageComplete(false); handleReset() }}>
+                Play Again
               </button>
             </div>
           </div>

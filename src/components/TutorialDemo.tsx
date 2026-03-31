@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { withBase } from '../withBase'
+import { useAccessibility } from '../contexts/AccessibilityContext'
+import { speakNarration, stopNarration } from '../utils/sounds'
 import './TutorialDemo.css'
 
 // each demo auto-shows once; after that it's hint-button only
@@ -163,7 +165,6 @@ function SetAcceptingDemo() {
       <div className="demo-el demo-drop-zone" />
       <img className="demo-el demo-bed-icon" src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={40} alt="" />
       <img className="demo-el demo-bed-dragging" src={withBase("sheep-assets/awake-farmer.svg")} width={52} height={40} alt="" />
-      <div className="demo-el demo-new-fence"><FenceIcon size={60} /></div>
       <div className="demo-el demo-accepting-ring" />
       <img className="demo-el demo-bed-placed" src={withBase("sheep-assets/awake-farmer.svg")} width={40} height={32} alt="" />
       <div className="demo-el demo-check">✓</div>
@@ -767,6 +768,28 @@ export function pickDemoForState(
 }
 
 
+const DEMO_NARRATIONS: Record<DemoConcept, string> = {
+  'connecting':    'Draw arrows between fences using the From and Too buttons.',
+  'set-accepting': 'Drag the farmer anywhere to choose where they sleep.',
+  'add-state':     'Drag a new fence from the toolbar onto the canvas.',
+  'place-sheep':   'Drag a sheep onto an arrow to label it.',
+  'build-loop':    'Click a fence twice with From and Too to connect it to itself.',
+  'trace-path':    'Follow the path — each sheep hops along the matching arrow.',
+  'click-edge':    'Click an arrow, then choose which sheep can jump along it.',
+  'drag-single':   'Which sheep goes on the arrow? Drag the right one!',
+  'drag-match':    'Match the pattern by dragging sheep onto the arrows.',
+  'drag-branch':   'Fill in both paths by dragging the right sheep onto each arrow.',
+  'drag-loop':     'The curved arrow loops back. The sheep can jump it zero, one, two, or more times!',
+  'drag-crossing': 'Three patterns with crossing paths! Fill in all the arrows.',
+  'ar-basics':     'The sheep hops along the arrow to the bed, and the farmer falls asleep.',
+  'ar-reject':     'The wrong sheep hits a dead end, so the farmer stays awake.',
+  'ar-sequence':   'Sheep jump one at a time along the path to the bed.',
+  'ar-branch':     'The sheep choose the right path to the bed.',
+  'ar-loop':       'The curved arrow loops back. The sheep can go around it zero, one, two, or more times!',
+  'ar-dead':       'Watch out! A dead end traps the sheep, and the farmer stays awake.',
+  'ar-multi':      'There are two beds. The farmer falls asleep if the sheep reaches either one.',
+}
+
 const DEMO_DURATIONS: Record<string, number> = {
   'connecting': 8500,
   'set-accepting': 4500,
@@ -857,20 +880,37 @@ export function TutorialDemo({ concept, onDismiss }: TutorialDemoProps) {
   const [animKey, setAnimKey] = useState(0)
   const [progress, setProgress] = useState(0)
   const startTime = useRef(Date.now())
+  const { settings } = useAccessibility()
+  const narrationEnabledRef = useRef(settings.narration)
+
+  // Keep ref in sync; stop speech immediately if narration toggled off
+  useEffect(() => {
+    narrationEnabledRef.current = settings.narration
+    if (!settings.narration) stopNarration()
+  }, [settings.narration])
+
+  // Stop narration when demo is dismissed
+  useEffect(() => {
+    return () => stopNarration()
+  }, [])
 
   // Allow Escape to dismiss
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onDismiss() }
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') handleDismiss() }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [onDismiss])
 
-  // Track animation progress for step dots
+  // Track animation progress for step dots; speak narration on each start/replay
   useEffect(() => {
     startTime.current = Date.now()
     setProgress(0)
     setFinished(false)
     const duration = DEMO_DURATIONS[concept] || 5000
+
+    if (narrationEnabledRef.current) {
+      speakNarration(DEMO_NARRATIONS[concept])
+    }
 
     let rafId: number
     const tick = () => {
@@ -887,13 +927,18 @@ export function TutorialDemo({ concept, onDismiss }: TutorialDemoProps) {
     return () => cancelAnimationFrame(rafId)
   }, [concept, animKey])
 
+  const handleDismiss = () => {
+    stopNarration()
+    onDismiss()
+  }
+
   const handleReplay = (e: React.MouseEvent) => {
     e.stopPropagation()
     setAnimKey(k => k + 1)
   }
 
   return (
-    <div className="demo-overlay" onClick={onDismiss}>
+    <div className="demo-overlay" onClick={handleDismiss}>
       <div className="demo-scene" onClick={e => e.stopPropagation()}>
         {/* Title bar */}
         <div className="demo-title-bar">
@@ -951,7 +996,7 @@ export function TutorialDemo({ concept, onDismiss }: TutorialDemoProps) {
         <div className="demo-bottom-bar">
           <div className="demo-bar-spacer" />
           <StepDots concept={concept} progress={progress} finished={finished} />
-          <button className="demo-dismiss" onClick={onDismiss} title="Got it">
+          <button className="demo-dismiss" onClick={handleDismiss} title="Got it">
             <span className="demo-dismiss-icon" aria-hidden="true">👍</span>
             <span className="demo-btn-label">Got it!</span>
           </button>

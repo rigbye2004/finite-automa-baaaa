@@ -12,6 +12,7 @@ export interface AccessibilitySettings {
   largerClickTargets: boolean
   screenReaderMode: boolean
   soundEffects: boolean
+  narration: boolean
 }
 
 const defaultSettings: AccessibilitySettings = {
@@ -25,7 +26,8 @@ const defaultSettings: AccessibilitySettings = {
   reducedMotion: false,
   largerClickTargets: false,
   screenReaderMode: false,
-  soundEffects: false,
+  soundEffects: true,
+  narration: true,
 }
 
 interface AccessibilityContextType {
@@ -44,22 +46,14 @@ const STORAGE_KEY = 'sheep-automata-accessibility'
 export function AccessibilityProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<AccessibilitySettings>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        return { ...defaultSettings, ...JSON.parse(saved) }
-      }
-    } catch (e) {
-      console.warn('Failed to load accessibility settings:', e)
+      return { ...defaultSettings, ...JSON.parse(localStorage.getItem(STORAGE_KEY)!) }
+    } catch {
+      return defaultSettings
     }
-    return defaultSettings
   })
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
-    } catch (e) {
-      console.warn('Failed to save accessibility settings:', e)
-    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)) } catch {}
   }, [settings])
 
   useEffect(() => {

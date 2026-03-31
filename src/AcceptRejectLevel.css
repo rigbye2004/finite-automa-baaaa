@@ -211,6 +211,12 @@
   outline: none;
 }
 
+.accept-reject-level .hint-button.nudge-pulse {
+  animation: hint-nudge 1.1s ease-in-out 4;
+  position: relative;
+  z-index: 100;
+}
+
 /* Game container */
 .accept-reject-level .game-container {
   display: flex;

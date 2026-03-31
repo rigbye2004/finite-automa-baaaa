@@ -20,7 +20,7 @@ import { getDragLevelConfig, DRAG_LEVEL_COUNT, type DragLevelConfig } from './dr
 import { SheepPathAnimator, useSheepAnimation } from './components/SheepPathAnimator'
 import './components/SheepPathAnimator.css'
 
-import { playCorrect, playIncorrect, playHop } from './utils/sounds'
+import { playGrumpy, playBaaa, playSnore, playFanfare, muteSounds, unmuteSounds, stopAllAudio, getAudioRemainingMs } from './utils/sounds'
 import { findAllPaths, pathsMatch, calculateStars } from './utils/automata'
 import { TutorialDemo, hasSeenDemo, markDemoSeen, pickDragDemo } from './components/TutorialDemo'
 import type { DemoConcept } from './components/TutorialDemo'
@@ -53,33 +53,22 @@ interface SavedProgress {
 
 function loadProgress(): SavedProgress | null {
   try {
-    const saved = localStorage.getItem(PROGRESS_KEY)
-    if (saved) {
-      return JSON.parse(saved)
-    }
-  } catch (e) {
-    console.warn('Failed to load progress:', e)
+    return JSON.parse(localStorage.getItem(PROGRESS_KEY)!)
+  } catch {
+    return null
   }
-  return null
 }
 
 function saveProgress(progress: SavedProgress) {
-  try {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
-  } catch (e) {
-    console.warn('Failed to save progress:', e)
-  }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress))
 }
 
 function clearProgress() {
-  try {
-    localStorage.removeItem(PROGRESS_KEY)
-  } catch (e) {
-    console.warn('Failed to clear progress:', e)
-  }
+  localStorage.removeItem(PROGRESS_KEY)
 }
 
-function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
+function DragLevel({ onBack: onBackProp, initialLevel = 1 }: DragLevelProps) {
+  const onBack = () => { unmuteSounds(); onBackProp?.() }
   const savedProgress = useRef(loadProgress())
 
   const [currentLevelId, setCurrentLevelId] = useState(() => {
@@ -102,12 +91,13 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   const [showDemo, setShowDemo] = useState(false)
   const [demoConcept, setDemoConcept] = useState<DemoConcept>('drag-single')
   const [showNudge, setShowNudge] = useState(false)
+  const [nudgeHint, setNudgeHint] = useState(false)
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [levelComplete, setLevelComplete] = useState(false)
   const [attempts, setAttempts] = useState(0)
   
   const [score, setScore] = useState(savedProgress.current?.score ?? 0)
   const [completedLevels, setCompletedLevels] = useState<number[]>(savedProgress.current?.completedLevels ?? [])
-
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null)
 
   const {
@@ -130,24 +120,25 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
   const [sessionBadges, setSessionBadges] = useState<Badge[]>([])
 
-  const { awardStars, recordCorrectAnswer, getEarnedBadges } = useGameProgress()
+  const { awardStars, recordCorrectAnswer, recordIncorrectAnswer, getEarnedBadges } = useGameProgress()
   const { settings: a11ySettings } = useAccessibility()
 
   const handleStepWithSound = useCallback((step: number, currentNode: string) => {
     handleStepChange(step, currentNode)
-    if (a11ySettings.soundEffects) playHop()
+    if (a11ySettings.soundEffects) playBaaa()
   }, [handleStepChange, a11ySettings.soundEffects])
 
-  const pendingSoundRef = useRef<'correct' | 'incorrect' | null>(null)
+  const soundEffectsRef = useRef(a11ySettings.soundEffects)
+  useEffect(() => { soundEffectsRef.current = a11ySettings.soundEffects }, [a11ySettings.soundEffects])
 
   const handleAllPatternsCompleteWithSound = useCallback((results: any[]) => {
     handleAllPatternsComplete(results)
-    if (a11ySettings.soundEffects && pendingSoundRef.current) {
-      if (pendingSoundRef.current === 'correct') playCorrect()
-      else playIncorrect()
-      pendingSoundRef.current = null
+    if (soundEffectsRef.current) {
+      const allSuccess = results.every((r: any) => r.success)
+      if (allSuccess) setTimeout(() => playSnore(), 400)
+      else playGrumpy()
     }
-  }, [handleAllPatternsComplete, a11ySettings.soundEffects])
+  }, [handleAllPatternsComplete])
 
   useEffect(() => {
     if (!reactFlowInstance.current) return
@@ -162,7 +153,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       saveProgress({
         currentLevelId,
         score,
-        completedLevels
+        completedLevels,
       })
     }
   }, [currentLevelId, score, completedLevels])
@@ -267,7 +258,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       setAttempts(0)
       setShowDemo(false)
       setShowDetailedFeedback(false)
-      
+
       const concepts = config.conceptsIntroduced || []
       const demo = pickDragDemo(currentLevelId, concepts)
       if ((concepts.length > 0 || currentLevelId === 6) && !hasSeenDemo(demo)) {
@@ -449,6 +440,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
 
   const handleReset = () => {
     if (!levelConfig) return
+    stopAllAudio()
 
     const newNodes = levelConfig.nodes.map(n => ({ 
       ...n, 
@@ -468,6 +460,31 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     setSessionBadges([])
   }
 
+
+  const INACTIVITY_DELAY = 20000
+  const scheduleHintNudgeRef = useRef<(() => void) | null>(null)
+  const scheduleHintNudge = useCallback(() => {
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+    inactivityTimerRef.current = setTimeout(() => {
+      setNudgeHint(true)
+      setTimeout(() => {
+        setNudgeHint(false)
+        scheduleHintNudgeRef.current?.()
+      }, 4500)
+    }, INACTIVITY_DELAY)
+  }, [])
+  scheduleHintNudgeRef.current = scheduleHintNudge
+
+  // Start inactivity timer when level loads; cancel when not applicable
+  useEffect(() => {
+    if (levelComplete || isAnimating) {
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+      return
+    }
+    scheduleHintNudge()
+    return () => { if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current) }
+  }, [currentLevelId, levelComplete, isAnimating, scheduleHintNudge])
+
   const handleSubmit = () => {
     if (!levelConfig) return
 
@@ -478,9 +495,8 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       return
     }
 
-    startAnimation()
-    
-    setAttempts(prev => prev + 1)
+    const newAttempts = attempts + 1
+    setAttempts(newAttempts)
     const allPaths = findAllPaths(nodes, edges)
 
     const matched = levelConfig.targetPatterns.filter((pattern) =>
@@ -498,7 +514,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     const allPatternsMatched = unmatched.length === 0
 
     if (allPatternsMatched) {
-      pendingSoundRef.current = 'correct'
+      startAnimation()
       const isFirstCompletion = !completedLevels.includes(currentLevelId)
       if (isFirstCompletion) {
         const newScore = score + 1
@@ -511,22 +527,27 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
       setLevelComplete(true)
       setShowDetailedFeedback(true)
       setMessageType('success')
-      
+
       const starsForUnlock = (attempts === 0 && !hintUsedThisLevel) ? 2 : 1
       const starBadges = awardStars(`drag-level-${currentLevelId}`, starsForUnlock, hintUsedThisLevel)
       const answerBadges = recordCorrectAnswer(`drag-level-${currentLevelId}`, 0)
-      
+
       const finalScore = isFirstCompletion ? score + 1 : score
       const stageBadges = awardStars('drag', calculateStars(finalScore / DRAG_LEVEL_COUNT), false)
       starBadges.push(...stageBadges)
-      
+
       const allBadges = [...starBadges, ...answerBadges]
-      const uniqueBadges = allBadges.filter((badge, index, self) => 
+      const uniqueBadges = allBadges.filter((badge, index, self) =>
         index === self.findIndex(b => b.id === badge.id)
       )
       if (uniqueBadges.length > 0) setSessionBadges(prev => [...prev, ...uniqueBadges])
+    } else if (newAttempts >= 3) {
+      startAnimation()
+      setShowDetailedFeedback(true)
+      setMessage('')
+      setMessageType('error')
     } else {
-      pendingSoundRef.current = 'incorrect'
+      startAnimation()
       setShowDetailedFeedback(true)
       setMessage('')
       setMessageType('error')
@@ -534,6 +555,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
   }
 
   const handleContinueFromFeedback = () => {
+    stopAllAudio()
     resetAnimation()
     if (levelComplete) {
       let nextLevel: number | null = null
@@ -546,6 +568,8 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         setAttempts(0)
         setLevelComplete(false)
       } else {
+        muteSounds()
+        if (a11ySettings.soundEffects) playFanfare()
         clearProgress()
       }
     } else {
@@ -601,8 +625,10 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
     )
   }
 
+  const paletteDisabled = isAnimating
+
   return (
-      <div className="app">
+      <div className="app" onPointerDown={scheduleHintNudge}>
         <aside className="sheep-panel">
           <button className="home-btn" onClick={onBack} aria-label="Home">
             <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -626,7 +652,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
               const levelNum = i + 1
               const completed = completedLevels.includes(levelNum)
               const isCurrent = levelNum === currentLevelId
-              let status: 'correct' | 'current' | 'future' = 'future'
+              let status: 'correct' | 'incorrect' | 'current' | 'future' = 'future'
               if (completed) status = 'correct'
               else if (isCurrent) status = 'current'
               return (
@@ -643,6 +669,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
                     alt=""
                   />
                   {status === 'correct' && <span className="sheep-badge badge-correct">✓</span>}
+                  {status === 'incorrect' && <span className="sheep-badge badge-incorrect">✗</span>}
                 </div>
               )
             })}
@@ -653,7 +680,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         <header className="header-compact">
           <div style={{flex:1}} />
           <BadgeNotch badges={getEarnedBadges()} />
-          <button className="hint-button" onClick={handleHintClick} aria-label="Get a hint">
+          <button className={`hint-button${nudgeHint ? ' nudge-pulse' : ''}`} onClick={handleHintClick} aria-label="Get a hint">
             💡
           </button>
         </header>
@@ -710,7 +737,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
           </div>
 
           <aside className="sidebar">
-            {!levelComplete && !showDetailedFeedback && (
+            {!levelComplete && (
               <div className="patterns-with-score">
                 <PatternDisplay patterns={levelConfig.targetPatterns} />
               </div>
@@ -766,7 +793,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
         </div>
 
         <footer className={`footer ${showNudge ? 'nudge-pulse' : ''}`}>
-          <div style={{ opacity: isAnimating ? 0.4 : undefined, pointerEvents: isAnimating ? 'none' : undefined }}>
+          <div style={{ opacity: paletteDisabled ? 0.35 : undefined, pointerEvents: paletteDisabled ? 'none' : undefined }}>
             <SheepPalette
               onSelectSheep={onSelectSheep}
               selectedSheep={selectedSheep}
@@ -780,7 +807,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
               className="btn submit-btn"
               onClick={handleSubmit}
               disabled={levelComplete || isAnimating}
-              style={{ opacity: isAnimating ? 0.4 : undefined }}
+              style={{ opacity: isAnimating ? 0.35 : undefined }}
             >
               <CheckIcon /> Submit
             </button>
@@ -796,7 +823,7 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
               Reset
             </button>
             {isDevMode() && (
-              <button 
+              <button
                 className="btn dev-auto-btn"
                 onClick={handleDevAutoComplete}
                 title="Dev: Auto-complete level"
@@ -847,11 +874,11 @@ function DragLevel({ onBack, initialLevel = 1 }: DragLevelProps) {
               </div>
             )})()}
             <div className="level-complete-buttons">
-              <button className="btn primary-btn" onClick={() => { setStageComplete(false); handleReset() }}>
-                Play Again
-              </button>
-              <button className="btn secondary-btn" onClick={onBack}>
+              <button className="btn primary-btn" onClick={onBack}>
                 Back to Menu
+              </button>
+              <button className="btn secondary-btn" onClick={() => { setStageComplete(false); handleReset() }}>
+                Play Again
               </button>
             </div>
           </div>

@@ -12,6 +12,8 @@ export interface BuildLevelConfig {
   canAddStates: boolean
   canSelfLoop: boolean
   conceptsIntroduced: string[]
+  solutionNodes?: Node[]
+  solutionEdges?: Edge[]
 }
 
 const friendlyName = (id: string): string => {
@@ -52,6 +54,14 @@ const createEdge = (id: string, source: string, target: string): Edge => ({
   data: { sheep: null },
 })
 
+const createSolEdge = (id: string, source: string, target: string, sheep: string): Edge => ({
+  id,
+  source,
+  target,
+  type: 'custom',
+  data: { sheep },
+})
+
 export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
   {
     id: 1,
@@ -70,6 +80,11 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-8'],
     canAddStates: false,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 150, 200, true, false),
+      createNode('end', 550, 200, false, true),
+    ],
+    solutionEdges: [createSolEdge('sol-1', 'start', 'end', 'sheep-3')],
   },
 
   {
@@ -90,6 +105,15 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8'],
     canAddStates: false,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 200, true, false),
+      createNode('middle', 350, 200, false, false),
+      createNode('end', 600, 200, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'middle', 'sheep-3'),
+      createSolEdge('sol-2', 'middle', 'end', 'sheep-8'),
+    ],
   },
 
   {
@@ -112,6 +136,18 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-8', 'sheep-13', 'sheep-16'],
     canAddStates: false,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 250, true, false),
+      createNode('top', 350, 100, false, false),
+      createNode('bottom', 350, 400, false, false),
+      createNode('end', 600, 250, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'top', 'sheep-3'),
+      createSolEdge('sol-2', 'top', 'end', 'sheep-13'),
+      createSolEdge('sol-3', 'start', 'bottom', 'sheep-8'),
+      createSolEdge('sol-4', 'bottom', 'end', 'sheep-16'),
+    ],
   },
 
   {
@@ -131,6 +167,15 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8'],
     canAddStates: false,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 150, 200, true, false),
+      createNode('middle', 400, 200, false, false),
+      createNode('sol-end', 650, 200, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'middle', 'sheep-3'),
+      createSolEdge('sol-2', 'middle', 'sol-end', 'sheep-8'),
+    ],
   },
 
   {
@@ -150,6 +195,15 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8'],
     canAddStates: true,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 200, true, false),
+      createNode('sol-mid', 350, 200, false, false),
+      createNode('end', 600, 200, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'sol-mid', 'sheep-3'),
+      createSolEdge('sol-2', 'sol-mid', 'end', 'sheep-8'),
+    ],
   },
 
   {
@@ -170,6 +224,18 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-8', 'sheep-13', 'sheep-16'],
     canAddStates: true,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 250, true, false),
+      createNode('sol-top', 350, 80, false, false),
+      createNode('sol-bottom', 350, 420, false, false),
+      createNode('end', 700, 250, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'sol-top', 'sheep-3'),
+      createSolEdge('sol-2', 'sol-top', 'end', 'sheep-13'),
+      createSolEdge('sol-3', 'start', 'sol-bottom', 'sheep-8'),
+      createSolEdge('sol-4', 'sol-bottom', 'end', 'sheep-16'),
+    ],
   },
 
   {
@@ -191,6 +257,16 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8'],
     canAddStates: false,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 200, true, false),
+      createNode('loop', 400, 200, false, false),
+      createNode('end', 700, 200, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'loop', 'sheep-3'),
+      createSolEdge('sol-2', 'loop', 'loop', 'sheep-7'),
+      createSolEdge('sol-3', 'loop', 'end', 'sheep-8'),
+    ],
   },
 
   {
@@ -209,6 +285,17 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13'],
     canAddStates: true,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 250, true, false),
+      createNode('sol-a', 350, 250, false, false),
+      createNode('sol-b', 600, 250, false, false),
+      createNode('sol-end', 850, 250, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'sol-a', 'sheep-3'),
+      createSolEdge('sol-2', 'sol-a', 'sol-b', 'sheep-8'),
+      createSolEdge('sol-3', 'sol-b', 'sol-end', 'sheep-13'),
+    ],
   },
 
   {
@@ -228,6 +315,20 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
     canAddStates: true,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 100, 250, true, false),
+      createNode('sol-a', 350, 100, false, false),
+      createNode('sol-b', 350, 400, false, false),
+      createNode('sol-c', 600, 400, false, false),
+      createNode('sol-end', 750, 250, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'sol-a', 'sheep-3'),
+      createSolEdge('sol-2', 'sol-a', 'sol-end', 'sheep-13'),
+      createSolEdge('sol-3', 'start', 'sol-b', 'sheep-8'),
+      createSolEdge('sol-4', 'sol-b', 'sol-c', 'sheep-7'),
+      createSolEdge('sol-5', 'sol-c', 'sol-end', 'sheep-16'),
+    ],
   },
 
   {
@@ -248,6 +349,21 @@ export const BUILD_LEVEL_CONFIGS: BuildLevelConfig[] = [
     availableSheep: ['sheep-1', 'sheep-3', 'sheep-7', 'sheep-8', 'sheep-16'],
     canAddStates: true,
     canSelfLoop: true,
+    solutionNodes: [
+      createNode('start', 50, 250, true, false),
+      createNode('sol-a', 250, 100, false, false),
+      createNode('sol-b', 250, 400, false, false),
+      createNode('sol-c', 500, 250, false, false),
+      createNode('sol-end', 750, 250, false, true),
+    ],
+    solutionEdges: [
+      createSolEdge('sol-1', 'start', 'sol-a', 'sheep-3'),
+      createSolEdge('sol-2', 'start', 'sol-b', 'sheep-8'),
+      createSolEdge('sol-3', 'sol-a', 'sol-c', 'sheep-7'),
+      createSolEdge('sol-4', 'sol-b', 'sol-c', 'sheep-7'),
+      createSolEdge('sol-5', 'sol-c', 'sol-c', 'sheep-7'),
+      createSolEdge('sol-6', 'sol-c', 'sol-end', 'sheep-16'),
+    ],
   },
 ]
 

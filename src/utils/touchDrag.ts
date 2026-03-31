@@ -33,12 +33,12 @@ export function startTouchDrag(
     const t = moveEvent.touches[0]
     const dx = t.clientX - startX
     const dy = t.clientY - startY
+    moveEvent.preventDefault()
     if (!hasMoved) {
       if (Math.hypot(dx, dy) < 8) return
       hasMoved = true
       createGhost(t.clientX, t.clientY)
     }
-    moveEvent.preventDefault()
     if (ghost) {
       ghost.style.left = `${t.clientX}px`
       ghost.style.top = `${t.clientY}px`

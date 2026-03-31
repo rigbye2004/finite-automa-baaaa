@@ -119,8 +119,8 @@
 .pattern-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  gap: 5px;
+  padding: 3px 8px;
   background: #FFEBEE;
   border-radius: 8px;
   margin-bottom: 4px;
@@ -128,8 +128,8 @@
 }
 
 .pattern-row img {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
 }
 
 
@@ -204,6 +204,8 @@
   background: #E8F5E9;
   border-color: #4CAF50;
 }
+
+
 
 
 /* ═══════════════════════════════════════

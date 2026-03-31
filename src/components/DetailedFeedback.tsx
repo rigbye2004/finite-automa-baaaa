@@ -108,11 +108,11 @@ export function PatternMatchFeedback({ matchedPatterns, unmatchedPatterns, onCon
         {unmatchedPatterns.map((pattern, i) => (
           <div key={i} className="pattern-row">
             {pattern.map((sheep, j) => (
-              <img 
+              <img
                 key={j}
                 src={withBase(`sheep-assets/${sheep}.svg`)}
-                width={44} 
-                height={44} 
+                width={44}
+                height={44}
                 alt={sheep}
               />
             ))}

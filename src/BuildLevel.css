@@ -149,6 +149,15 @@
   background: #43A047;
 }
 
+.build-level .sheep-slot.status-incorrect {
+  filter: none;
+  background: #FFF3E0;
+}
+
+.build-level .badge-incorrect {
+  background: #E53935;
+}
+
 /* Score label at bottom of panel */
 
 @keyframes sheep-pop-build {
@@ -206,6 +215,12 @@
   background: #BF360C;
   outline: 3px solid white;
   outline-offset: 2px;
+}
+
+.build-level .hint-button.nudge-pulse {
+  animation: hint-nudge 1.1s ease-in-out 4;
+  position: relative;
+  z-index: 100;
 }
 
 /* Hint overlay - covers entire screen */
@@ -433,6 +448,13 @@
   background: #f5f5f5;
 }
 
+.build-level .tool-fence.active {
+  border-color: #42A5F5;
+  border-style: solid;
+  background: #E3F2FD;
+  cursor: crosshair;
+}
+
 /* Bed - dashed border like fence, drag cursor */
 .build-level .tool-bed {
   border-style: dashed;
@@ -444,6 +466,13 @@
 .build-level .tool-bed:hover {
   border-color: #FF9800;
   background: #FFF3E0;
+}
+
+.build-level .tool-bed.active {
+  border-color: #FF9800;
+  border-style: solid;
+  background: #FFF3E0;
+  cursor: crosshair;
 }
 
 /* Delete */
@@ -484,7 +513,8 @@
   align-content: start;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
+  padding: 3px;
 }
 
 .build-level .toolbar-sheep-item {
@@ -517,7 +547,6 @@
 .build-level .toolbar-sheep-item.selected {
   border-color: #4CAF50;
   background: #E8F5E9;
-  transform: scale(1.06);
 }
 
 .build-level .toolbar-sheep-item:last-child:nth-child(odd) {
@@ -591,6 +620,7 @@
   flex: 1;
   min-height: 100%;
 }
+
 
 /* Fit to View button */
 .build-level .fit-view-btn {

@@ -15,7 +15,6 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
   const panelRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  // Focus management: save trigger, move focus in, restore on close
   useEffect(() => {
     if (isOpen) {
       previousFocusRef.current = document.activeElement as HTMLElement
@@ -26,7 +25,6 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
     }
   }, [isOpen])
 
-  // Focus trap + Escape to close
   useEffect(() => {
     if (!isOpen) return
 
@@ -201,6 +199,36 @@ export function AccessibilityPanel({ isOpen, onClose }: AccessibilityPanelProps)
                 <span className="toggle-label">
                   Bigger buttons
                   <small>Buttons will be bigger and easier to tap</small>
+                </span>
+              </label>
+            </div>
+
+            <div className="a11y-option">
+              <label className="a11y-toggle">
+                <input
+                  type="checkbox"
+                  checked={settings.soundEffects}
+                  onChange={e => updateSetting('soundEffects', e.target.checked)}
+                />
+                <span className="toggle-switch"></span>
+                <span className="toggle-label">
+                  Sound effects
+                  <small>Turn off if you prefer a quiet experience</small>
+                </span>
+              </label>
+            </div>
+
+            <div className="a11y-option">
+              <label className="a11y-toggle">
+                <input
+                  type="checkbox"
+                  checked={settings.narration}
+                  onChange={e => updateSetting('narration', e.target.checked)}
+                />
+                <span className="toggle-switch"></span>
+                <span className="toggle-label">
+                  Read demos aloud
+                  <small>A voice explains each tutorial animation</small>
                 </span>
               </label>
             </div>

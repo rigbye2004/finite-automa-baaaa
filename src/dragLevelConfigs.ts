@@ -10,6 +10,7 @@ export interface DragLevelConfig {
   targetPatterns: string[][]
   availableSheep: string[]
   conceptsIntroduced: string[]
+  solutionEdgeMap: Record<string, string>
 }
 
 const friendlyName = (id: string): string => {
@@ -68,6 +69,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3'],
     ],
     availableSheep: ['sheep-3', 'sheep-8'],
+    solutionEdgeMap: { 'e-start-end': 'sheep-3' },
   },
 
   {
@@ -89,6 +91,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3', 'sheep-8'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8'],
+    solutionEdgeMap: { 'e-start-middle': 'sheep-3', 'e-middle-end': 'sheep-8' },
   },
 
   {
@@ -112,6 +115,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3', 'sheep-7', 'sheep-8'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13'],
+    solutionEdgeMap: { 'e-start-a': 'sheep-3', 'e-a-b': 'sheep-7', 'e-b-end': 'sheep-8' },
   },
 
   {
@@ -137,6 +141,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-8', 'sheep-16'],
     ],
     availableSheep: ['sheep-3', 'sheep-8', 'sheep-13', 'sheep-16'],
+    solutionEdgeMap: { 'e-start-top': 'sheep-3', 'e-start-bottom': 'sheep-8', 'e-top-end': 'sheep-13', 'e-bottom-end': 'sheep-16' },
   },
 
   {
@@ -162,6 +167,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-8', 'sheep-16'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
+    solutionEdgeMap: { 'e-start-top': 'sheep-3', 'e-start-bottom': 'sheep-8', 'e-top-end': 'sheep-13', 'e-bottom-end': 'sheep-16' },
   },
 
   {
@@ -189,6 +195,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3', 'sheep-7', 'sheep-16'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
+    solutionEdgeMap: { 'e-start-1': 'sheep-3', 'e-1-end': 'sheep-13', 'e-start-2': 'sheep-8', 'e-2-end': 'sheep-16', 'e-1-2': 'sheep-7' },
   },
 
   {
@@ -212,6 +219,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3', 'sheep-7', 'sheep-8'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13'],
+    solutionEdgeMap: { 'e-start-loop': 'sheep-3', 'e-loop-self': 'sheep-7', 'e-loop-end': 'sheep-8' },
   },
 
   {
@@ -239,6 +247,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-8', 'sheep-16'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
+    solutionEdgeMap: { 'e-start-top': 'sheep-3', 'e-start-bottom': 'sheep-8', 'e-top-self': 'sheep-7', 'e-top-end': 'sheep-13', 'e-bottom-end': 'sheep-16' },
   },
 
   {
@@ -263,6 +272,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3', 'sheep-16'],
     ],
     availableSheep: ['sheep-3', 'sheep-7', 'sheep-13', 'sheep-16'],
+    solutionEdgeMap: { 'e-start-middle': 'sheep-3', 'e-middle-top': 'sheep-13', 'e-middle-bottom': 'sheep-16' },
   },
 
   {
@@ -292,6 +302,7 @@ export const DRAG_LEVEL_CONFIGS: DragLevelConfig[] = [
       ['sheep-3', 'sheep-7', 'sheep-13', 'sheep-16'],
     ],
     availableSheep: ['sheep-1', 'sheep-3', 'sheep-7', 'sheep-8', 'sheep-13', 'sheep-16'],
+    solutionEdgeMap: { 'e-start-a': 'sheep-3', 'e-start-b': 'sheep-8', 'e-a-c': 'sheep-7', 'e-b-c': 'sheep-7', 'e-c-self': 'sheep-13', 'e-c-end': 'sheep-16' },
   },
 ]
 
