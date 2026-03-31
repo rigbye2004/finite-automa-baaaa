@@ -14,12 +14,6 @@ import './accessibility.css'
 import './components/AccessibilityPanel.css'
 import './components/DevTools.css'
 
-const UNLOCK_ALL_KEY = 'sheep-automata-unlock-all'
-
-// Auto-unlock all levels for user study
-if (localStorage.getItem(UNLOCK_ALL_KEY) === null) {
-  localStorage.setItem(UNLOCK_ALL_KEY, 'true')
-}
 
 function AppContent() {
   const [level, setLevel] = useState<'menu' | 'accept-reject' | 'drag' | 'build'>('menu')
@@ -27,9 +21,9 @@ function AppContent() {
   const [showAccessibility, setShowAccessibility] = useState(false)
   const [lockedMessage, setLockedMessage] = useState<string | null>(null)
 
-  const { totalStars, getEarnedBadges, getLevelProgress } = useGameProgress()
+  const { getEarnedBadges, getLevelProgress } = useGameProgress()
   const { settings } = useAccessibility()
-  
+
   const earnedBadges = getEarnedBadges()
   const level1Progress = getLevelProgress('accept-reject')
   const level2Progress = getLevelProgress('drag')
@@ -48,11 +42,8 @@ function AppContent() {
   }
   const level3Progress = getLevelProgress('build')
 
-  const devUnlockAll = localStorage.getItem(UNLOCK_ALL_KEY) === 'true'
-  const level2Unlocked = devUnlockAll ||
-    (level1Progress && (level1Progress.bestStars >= 1 || level1Progress.completedQuestions >= 5))
-  const level3Unlocked = devUnlockAll ||
-    (level2Progress && (level2Progress.bestStars >= 1 || level2Progress.completedQuestions >= 5))
+  const level2Unlocked = true
+  const level3Unlocked = true
 
   const handleLevelClick = (targetLevel: 'accept-reject' | 'drag' | 'build') => {
     if (targetLevel === 'drag' && !level2Unlocked) {
